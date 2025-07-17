@@ -2,26 +2,48 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Cuestionario</title>
+<title>Evaluador de Ciberseguridad</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<h2>Cuestionario de Ciberseguridad</h2>
-<p><strong>Empresa:</strong> {{ datos.empresa }}</p>
-<p><strong>Contacto:</strong> {{ datos.contacto }}</p>
-<p><strong>Email:</strong> {{ datos.email }}</p>
-<p><strong>Sector:</strong> {{ datos.sector }}</p>
-<p><strong>Ciudad:</strong> {{ datos.ciudad }}</p>
-<p><strong>País:</strong> {{ datos.pais }}</p>
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="80">
+    <h1>Evaluador de Postura de Ciberseguridad</h1>
+</header>
+<main>
+<form method="POST">
+    <h2>Datos de la empresa</h2>
+    <label>Nombre de la empresa <input type="text" name="empresa" required></label>
+    <label>Persona de contacto <input type="text" name="contacto" required></label>
+    <label>Email <input type="email" name="email" required></label>
+    <label>Sector
+        <select name="sector" required>
+            <option>Servicios</option>
+            <option>Manufactura</option>
+            <option>Tecnología</option>
+            <option>Alimentos</option>
+            <option>Legales</option>
+            <option>Contables</option>
+            <option>Distribución</option>
+            <option>Otros</option>
+        </select>
+    </label>
+    <label>Ciudad <input type="text" name="ciudad" required></label>
+    <label>País <input type="text" name="pais" value="Colombia" required></label>
 
-<form>
-  {% for pregunta in preguntas %}
-    <p><strong>{{ pregunta.texto }}</strong></p>
-    {% for opcion in pregunta.opciones %}
-      <input type="radio" name="{{ pregunta.id }}" value="{{ opcion }}"> {{ opcion }}<br>
+    <h2>Cuestionario</h2>
+    {% for pregunta in preguntas %}
+    <fieldset>
+        <legend>{{ pregunta.texto }}</legend>
+        {% for opcion in pregunta.opciones %}
+        <label><input type="radio" name="{{ pregunta.id }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+        {% endfor %}
+    </fieldset>
     {% endfor %}
-  {% endfor %}
-  <br>
-  <button type="submit">Enviar respuestas</button>
+
+    <button type="submit">Enviar respuestas</button>
 </form>
+</main>
 </body>
 </html>
+

@@ -1,9 +1,31 @@
-<!doctype html>
-<html>
-<head><title>Resultado</title></head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resultado de Evaluación</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
 <body>
-<h1>Resultado para {{ nombre }}</h1>
-<p>Puntaje total: {{ puntaje }}</p>
-<p style="color: {{ color }};">Postura: {{ categoria }}</p>
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="80">
+    <h1>Resultado de la Evaluación</h1>
+</header>
+<main>
+    <h2>{{ empresa }}</h2>
+    <p><strong>Contacto:</strong> {{ contacto }} | <strong>Email:</strong> {{ email }}</p>
+    <p><strong>Sector:</strong> {{ sector }} | <strong>Ciudad:</strong> {{ ciudad }} | <strong>País:</strong> {{ pais }}</p>
+
+    <h2 style="color: {{ color }}">Postura de Ciberseguridad: {{ postura }}</h2>
+    <p>Puntaje total: {{ porcentaje|round(2) }}%</p>
+
+    <h3>Respuestas</h3>
+    <ul>
+        {% for pregunta, respuesta in respuestas.items() %}
+        <li><strong>{{ pregunta }}</strong>: {{ respuesta }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">Volver a evaluar</a>
+</main>
 </body>
 </html>
