@@ -3,37 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <title>Resultados</title>
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<div class="container">
-<img src="/static/logo.png" alt="Logo" width="150">
-<h1>Resultado de la Evaluación</h1>
+<header>
+<img src="/static/logo.png" alt="Logo" height="50">
+<h1>Resultados de la Evaluación</h1>
+</header>
 
-<p><strong>Puntaje:</strong> {{ puntaje }} / {{ max_puntaje }} ({{ porcentaje }}%)</p>
-<p><strong>Categoría:</strong> {{ categoria }}</p>
+<p><strong>{{ empresa }}</strong>, tu porcentaje de postura de ciberseguridad es:</p>
+<h2>{{ porcentaje }}%</h2>
+<p><strong>{{ nivel[1] }}</strong>: {{ nivel[2] }}</p>
 
-<h2>Tabla de referencia:</h2>
-<ul>
-<li>0–30%: Riesgo crítico</li>
-<li>31–60%: Riesgo elevado</li>
-<li>61–80%: Buena base</li>
-<li>81–100%: Postura robusta</li>
-</ul>
-
-{% if recomendaciones %}
-<h2>Recomendaciones:</h2>
-<ul>
-{% for r in recomendaciones %}
-<li>{{ r }}</li>
+<table>
+<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+<tbody>
+{% for k,v in respuestas.items() %}
+<tr><td>{{ k }}</td><td>{{ v }}</td></tr>
 {% endfor %}
-</ul>
-{% else %}
-<p>¡Excelente! Tu empresa tiene una postura sólida.</p>
-{% endif %}
+</tbody>
+</table>
 
-<br><a href="/">Volver a inicio</a>
-</div>
+<a href="/">Volver a inicio</a>
 </body>
 </html>
-
