@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Pregunta {{ num+1 }}</title>
+</head>
+<body>
+  <h2>Pregunta {{ num+1 }}:</h2>
+  <p>{{ pregunta.texto }}</p>
+  <form method="post">
+    {% for opcion in pregunta.opciones %}
+      <input type="radio" name="respuesta" value="{{ opcion }}" required> {{ opcion }}<br>
+    {% endfor %}
+    <br>
+    <button type="submit">Siguiente</button>
+  </form>
+</body>
+</html>
