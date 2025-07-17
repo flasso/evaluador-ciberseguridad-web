@@ -1,48 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Evaluador de Ciberseguridad</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header>
-<img src="/static/logo.png" alt="Logo" height="50">
-<h1>Evaluador de Postura de Ciberseguridad</h1>
-<p>Completa el formulario para conocer tu nivel de seguridad y recomendaciones.</p>
+  <h1><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50"> Evaluador de Ciberseguridad</h1>
 </header>
 
-<form method="POST">
-<h2>Datos de la Empresa</h2>
-<input type="text" name="empresa" placeholder="Nombre de la empresa" required>
-<input type="text" name="contacto" placeholder="Nombre de contacto" required>
-<input type="email" name="email" placeholder="Correo electrónico" required>
-<input type="text" name="ciudad" placeholder="Ciudad" required>
-<input type="text" name="pais" value="Colombia" required>
-<select name="sector" required>
-<option disabled selected>Selecciona sector</option>
-<option>Servicios</option>
-<option>Manufactura</option>
-<option>Tecnología</option>
-<option>Alimentos</option>
-<option>Legales</option>
-<option>Contables</option>
-<option>Distribución</option>
-<option>Otros</option>
-</select>
-
-<h2>Cuestionario</h2>
-{% for pregunta in preguntas %}
-<fieldset>
-<legend>{{ pregunta.texto }}</legend>
-{% for opcion in pregunta.opciones %}
-<label><input type="radio" name="p_{{ pregunta.id }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
-{% endfor %}
-</fieldset>
-{% endfor %}
-
-<button type="submit">Enviar</button>
-</form>
+<main>
+  <h2>Responde las siguientes preguntas</h2>
+  <form method="post">
+    {% for pregunta in preguntas %}
+      <div>
+        <label><strong>{{ pregunta.texto }}</strong></label><br>
+        {% if pregunta.opciones %}
+          {% for opcion in pregunta.opciones %}
+            <label><input type="radio" name="{{ pregunta.id }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+          {% endfor %}
+        {% else %}
+          <input type="text" name="{{ pregunta.id }}" value="{{ pregunta.valor_defecto or '' }}" required>
+        {% endif %}
+      </div>
+      <hr>
+    {% endfor %}
+    <button type="submit">Enviar Respuestas</button>
+  </form>
+</main>
 
 </body>
 </html>

@@ -1,30 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Resultados</title>
+<meta charset="utf-8">
+<title>Resultados de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header>
-<img src="/static/logo.png" alt="Logo" height="50">
-<h1>Resultados de la Evaluación</h1>
+  <h1><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50"> Resultados</h1>
 </header>
 
-<p><strong>{{ empresa }}</strong>, tu porcentaje de postura de ciberseguridad es:</p>
-<h2>{{ porcentaje }}%</h2>
-<p><strong>{{ concepto[0] }}</strong>: {{ concepto[1] }}</p>
+<main>
+  <h2>Tu puntuación: {{ porcentaje | round(2) }}%</h2>
 
-<h3>Detalle de Respuestas:</h3>
-<table>
-<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-<tbody>
-{% for p in preguntas %}
-<tr><td>{{ p.texto }}</td><td>{{ respuestas[p.id] }}</td></tr>
-{% endfor %}
-</tbody>
-</table>
+  <h3>Tabla de referencia</h3>
+  <ul>
+    <li><strong>0-30%</strong>: Riesgo Crítico — Es urgente implementar medidas de seguridad.</li>
+    <li><strong>31-60%</strong>: Riesgo Elevado — Existen importantes brechas por corregir.</li>
+    <li><strong>61-80%</strong>: Buena Base — Tienes una base pero aún hay puntos por mejorar.</li>
+    <li><strong>81-100%</strong>: Postura Robusta — Excelente trabajo, sigue monitoreando.</li>
+  </ul>
 
-<a href="/">Volver a inicio</a>
+  <h3>Recomendaciones</h3>
+  {% if porcentaje < 81 %}
+    <p>Tu evaluación muestra áreas de mejora. Te sugerimos:</p>
+    <ul>
+      <li>Designar un responsable claro de ciberseguridad.</li>
+      <li>Implementar firewalls y asegurarte que sean bien gestionados.</li>
+      <li>Actualizar sistemas y contar con antivirus empresarial con EDR.</li>
+      <li>Probar copias de seguridad y aislarlas para protección ante ransomware.</li>
+      <li>Capacitar a todo el personal y establecer planes de respuesta a incidentes.</li>
+    </ul>
+  {% else %}
+    <p>¡Felicidades! Tu empresa demuestra una postura sólida. Sigue así, revisa periódicamente y actualiza tus medidas.</p>
+  {% endif %}
+
+  <h3>Tus respuestas</h3>
+  <table>
+    <thead>
+      <tr><th>Pregunta</th><th>Respuesta</th></tr>
+    </thead>
+    <tbody>
+      {% for pregunta in preguntas %}
+        <tr>
+          <td>{{ pregunta.texto }}</td>
+          <td>{{ respuestas[pregunta.id] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ url_for('index') }}">Volver a evaluar</a></p>
+</main>
+
 </body>
 </html>

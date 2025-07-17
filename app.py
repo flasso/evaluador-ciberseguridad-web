@@ -3,59 +3,68 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 PREGUNTAS = [
-    {"id": "responsable_ti", "texto": "¿Tu empresa tiene un responsable claro y competente en TI o ciberseguridad?", "opciones": ["Sí, especializado", "Sí, pero no especializado", "No", "No sé"]},
-    {"id": "monitoreo", "texto": "¿Se realiza monitoreo regular de la seguridad (logs, accesos, antivirus)?", "opciones": ["Sí, diario", "Sí, semanal", "No", "No sé"]},
-    {"id": "inventario", "texto": "¿Existe un inventario actualizado de equipos, software y datos críticos?", "opciones": ["Sí, actualizado", "Sí, pero desactualizado", "No", "No sé"]},
-    {"id": "firewall", "texto": "¿La empresa tiene un firewall dedicado de hardware o UTM para proteger la red?", "opciones": ["Sí, bien gestionado", "Sí, pero mal gestionado", "No", "No sé"]},
-    {"id": "firewall_gestion", "texto": "¿Quién configura y monitorea el firewall?", "opciones": ["Especialista en ciberseguridad", "TI interno no especializado", "Proveedor externo no especializado", "No tengo firewall"]},
-    {"id": "wifi", "texto": "¿La red Wi-Fi empresarial está aislada para invitados y protegida?", "opciones": ["Sí, aislada y segura", "Sí, pero débil", "No", "No sé"]},
-    {"id": "antivirus", "texto": "¿Todos los equipos tienen antivirus empresarial con EDR?", "opciones": ["Sí, con EDR", "Sí, sin EDR", "Básico o gratuito", "No"]},
-    {"id": "actualizaciones", "texto": "¿Las actualizaciones de sistema y software son automáticas y regulares?", "opciones": ["Sí, automáticas", "Sí, manuales", "No", "No sé"]},
-    {"id": "contrasenas", "texto": "¿Se usan contraseñas fuertes y gestores de contraseñas?", "opciones": ["Sí, estrictas con gestor", "Sí, pero inconsistentes", "No", "No sé"]},
-    {"id": "mfa", "texto": "¿Las cuentas críticas tienen autenticación multifactor (MFA)?", "opciones": ["Sí, en todas", "Sí, en algunas", "No", "No sé"]},
-    {"id": "backup_frecuencia", "texto": "¿Se hacen backups diarios o más frecuentes?", "opciones": ["Sí, diarios", "Semanal", "Mensual", "No"]},
-    {"id": "backup_pruebas", "texto": "¿Se prueban las copias de seguridad para su restauración?", "opciones": ["Sí, regularmente", "Ocasionalmente", "No", "No sé"]},
-    {"id": "backup_offline", "texto": "¿Se guarda una copia aislada u offline?", "opciones": ["Sí", "No", "No sé", "No aplica"]},
-    {"id": "backup_responsable", "texto": "¿Existe un responsable de los respaldos y recuperación?", "opciones": ["Sí, designado", "No claramente", "No", "No sé"]},
-    {"id": "capacitacion", "texto": "¿Los empleados reciben capacitación regular en ciberseguridad?", "opciones": ["Sí, anual", "Ocasional", "Nunca", "No sé"]},
-    {"id": "reporte", "texto": "¿Los empleados saben cómo reportar incidentes?", "opciones": ["Sí, claro", "Sí, informal", "No", "No sé"]}
+    {"id": "q_empresa", "texto": "Nombre de la empresa"},
+    {"id": "q_contacto", "texto": "Nombre del contacto"},
+    {"id": "q_email", "texto": "Correo electrónico"},
+    {"id": "q_sector", "texto": "Sector empresarial", "opciones": [
+        "Servicios", "Manufactura", "Tecnología", "Alimentos", "Legales", "Contables", "Distribución", "Otro"
+    ]},
+    {"id": "q_ciudad", "texto": "Ciudad"},
+    {"id": "q_pais", "texto": "País", "valor_defecto": "Colombia"},
+    {"id": "q_personal_ti", "texto": "¿Cuenta con personal encargado de TI?", "opciones": [
+        "Sí, especializado", "Sí, no especializado", "No", "No sé"
+    ]},
+    {"id": "q_inventario", "texto": "¿Tiene inventario actualizado de activos digitales?", "opciones": [
+        "Sí, actualizado", "Sí, parcial", "No", "No sé"
+    ]},
+    {"id": "q_firewall", "texto": "¿Cuenta con firewall de hardware?", "opciones": [
+        "Sí, bien gestionado", "Sí, pero mal gestionado", "No", "No sé"
+    ]},
+    {"id": "q_gestion_firewall", "texto": "¿Quién gestiona el firewall?", "opciones": [
+        "Personal especializado", "Proveedor externo", "No gestionado", "No tengo firewall"
+    ]},
+    {"id": "q_antivirus", "texto": "¿Todos los equipos tienen antivirus con EDR?", "opciones": [
+        "Sí, en todos", "Sí, en algunos", "No", "No sé"
+    ]},
+    {"id": "q_actualizaciones", "texto": "¿Actualizan el sistema operativo y software?", "opciones": [
+        "Sí, automáticamente", "Sí, manual", "No", "No sé"
+    ]},
+    {"id": "q_mfa", "texto": "¿Usan autenticación multifactor (MFA) en cuentas críticas?", "opciones": [
+        "Sí, en todas", "En algunas", "No", "No sé"
+    ]},
+    {"id": "q_backups", "texto": "¿Realizan y prueban copias de seguridad regularmente?", "opciones": [
+        "Sí, probadas", "Sí, no probadas", "No", "No sé"
+    ]},
+    {"id": "q_plan_incidentes", "texto": "¿Tienen un plan documentado de respuesta a incidentes?", "opciones": [
+        "Sí, probado", "Sí, no probado", "No", "No sé"
+    ]},
+    {"id": "q_capacitacion", "texto": "¿Capacitan al personal en ciberseguridad?", "opciones": [
+        "Sí, regularmente", "Sí, ocasionalmente", "No", "No sé"
+    ]},
+    {"id": "q_monitoreo", "texto": "¿Monitorean eventos de seguridad?", "opciones": [
+        "Sí, diario", "Sí, semanal", "No", "No sé"
+    ]},
 ]
 
-REFERENCIA = [
-    (80, "Postura Robusta", "Tu empresa demuestra un alto nivel de ciberseguridad. Mantén las buenas prácticas y sigue mejorando."),
-    (60, "Base Buena", "Tienes fundamentos sólidos, pero hay áreas claras para mejorar."),
-    (30, "Riesgo Elevado", "Tu empresa está en riesgo significativo. Es importante tomar acción rápidamente."),
-    (0,  "Riesgo Crítico", "Tu empresa es altamente vulnerable. Se requieren acciones urgentes.")
-]
+PUNTUACION_OPCIONES = {
+    "Sí, especializado": 5, "Sí, actualizado": 5, "Sí, bien gestionado": 5,
+    "Sí, en todos": 5, "Sí, automáticamente": 5, "Sí, en todas": 5,
+    "Sí, probadas": 5, "Sí, probado": 5, "Sí, regularmente": 5, "Sí, diario": 5,
+    "Sí, parcial": 3, "Sí, pero mal gestionado": 3, "Sí, en algunos": 3,
+    "Sí, manual": 3, "En algunas": 3, "Sí, no probadas": 3, "Sí, no probado": 3,
+    "Sí, ocasionalmente": 3, "Sí, semanal": 3,
+    "No": 0, "No gestionado": 0, "No tengo firewall": 0, "No sé": 0
+}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        datos = request.form
-        respuestas = {}
-        puntaje = 0
-
-        for pregunta in PREGUNTAS:
-            rid = pregunta["id"]
-            respuesta = datos.get(f"p_{rid}")
-            respuestas[rid] = respuesta
-            if respuesta and respuesta.startswith("Sí"):
-                puntaje += 1
-
-        porcentaje = round(puntaje / len(PREGUNTAS) * 100)
-
-        for umbral, nivel, descripcion in REFERENCIA:
-            if porcentaje >= umbral:
-                concepto = (nivel, descripcion)
-                break
-
-        empresa = datos.get("empresa")
-
-        return render_template("resultados.html", empresa=empresa, porcentaje=porcentaje, concepto=concepto, preguntas=PREGUNTAS, respuestas=respuestas)
-
+        respuestas = {k: v for k, v in request.form.items()}
+        puntuacion = sum(PUNTUACION_OPCIONES.get(v, 0) for k, v in respuestas.items() if k.startswith("q_"))
+        maximo = len([p for p in PREGUNTAS if p['id'].startswith("q_") and p.get("opciones")]) * 5
+        porcentaje = (puntuacion / maximo) * 100 if maximo else 0
+        return render_template("resultados.html", respuestas=respuestas, preguntas=PREGUNTAS, porcentaje=porcentaje)
     return render_template("index.html", preguntas=PREGUNTAS)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
-
+    app.run(host="0.0.0.0", port=5000, debug=True)
