@@ -1,34 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>Evaluador de Ciberseguridad</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<meta charset="UTF-8">
+<title>Evaluador Ciberseguridad</title>
+<link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-<header>
-  <h1><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50"> Evaluador de Ciberseguridad</h1>
-</header>
-
-<main>
-  <h2>Responde las siguientes preguntas</h2>
-  <form method="post">
-    {% for pregunta in preguntas %}
-      <div>
-        <label><strong>{{ pregunta.texto }}</strong></label><br>
-        {% if pregunta.opciones %}
-          {% for opcion in pregunta.opciones %}
-            <label><input type="radio" name="{{ pregunta.id }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
-          {% endfor %}
-        {% else %}
-          <input type="text" name="{{ pregunta.id }}" value="{{ pregunta.valor_defecto or '' }}" required>
-        {% endif %}
-      </div>
-      <hr>
-    {% endfor %}
-    <button type="submit">Enviar Respuestas</button>
-  </form>
-</main>
-
+    <div class="container">
+        <img src="/static/logo.png" alt="Logo" width="150">
+        <h1>Evaluador de Ciberseguridad</h1>
+        <form method="POST">
+            {% for pregunta in preguntas %}
+                <div class="pregunta">
+                    <label>{{ pregunta.texto }}</label><br>
+                    {% if pregunta.tipo == "texto" %}
+                        <input type="text" name="{{ pregunta.id }}" value="{{ pregunta.valor_defecto or '' }}" required>
+                    {% elif pregunta.tipo == "select" %}
+                        <select name="{{ pregunta.id }}" required>
+                            {% for opcion in pregunta.opciones %}
+                                <option>{{ opcion }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
 </body>
 </html>
+
