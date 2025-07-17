@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+</head>
+<body>
+<h1>Resultados de la Evaluación</h1>
+
+<p><strong>Puntaje:</strong> {{ porcentaje }}%</p>
+<p><strong>Postura:</strong> {{ postura }}</p>
+<p>{{ descripcion }}</p>
+
+<h2>Respuestas:</h2>
+<ul>
+    {% for pregunta, respuesta in respuestas %}
+        <li>{{ pregunta }}: <strong>{{ respuesta }}</strong></li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

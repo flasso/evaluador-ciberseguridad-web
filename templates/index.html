@@ -1,13 +1,35 @@
 <!doctype html>
-<html>
-<head><title>Inicio</title></head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluador de Ciberseguridad</title>
+</head>
 <body>
 <h1>Evaluador de Ciberseguridad</h1>
-<form method="post">
-  Nombre de empresa: <input name="nombre" required><br>
-  Sector: <input name="sector" required><br>
-  Tamaño: <input name="tamano" required><br>
-  <button type="submit">Comenzar</button>
+<form method="POST">
+    <label>Nombre de la empresa:</label>
+    <input type="text" name="empresa" required><br>
+
+    <label>Nombre de contacto:</label>
+    <input type="text" name="contacto" required><br>
+
+    <label>Correo electrónico:</label>
+    <input type="email" name="email" required><br>
+
+    <label>Sector:</label>
+    <select name="sector">
+        {% for s in sectores %}
+            <option value="{{s}}">{{s}}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Ciudad:</label>
+    <input type="text" name="ciudad" required><br>
+
+    <label>País:</label>
+    <input type="text" name="pais" value="{{pais_defecto}}" required><br>
+
+    <button type="submit">Comenzar Evaluación</button>
 </form>
 </body>
 </html>
