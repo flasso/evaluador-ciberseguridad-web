@@ -3,32 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Evaluador de Ciberseguridad</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-  <h1>Evaluador de Postura de Ciberseguridad</h1>
-  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="80">
-</header>
-
+<h1>Evaluador de Ciberseguridad</h1>
 <form method="POST">
-  {% for grupo, preguntas in preguntas.items() %}
-    <fieldset>
-      <legend>{{ grupo }}</legend>
-      {% for campo, texto in preguntas %}
-        <label>{{ texto }}
-          <select name="{{ campo }}">
-            {% for opcion in opciones %}
-              <option value="{{ opcion }}">{{ opcion }}</option>
+{% for grupo in preguntas %}
+    <h2>{{ grupo.grupo }}</h2>
+    {% for pregunta in grupo.preguntas %}
+        <label>{{ pregunta.texto }}</label><br>
+        {% if pregunta.tipo == "text" or pregunta.tipo == "email" %}
+            <input type="{{ pregunta.tipo }}" name="{{ pregunta.id }}" value="{{ pregunta.valor or '' }}"><br><br>
+        {% elif pregunta.tipo == "select" %}
+            <select name="{{ pregunta.id }}">
+            {% for opcion in pregunta.opciones %}
+                <option>{{ opcion }}</option>
             {% endfor %}
-          </select>
-        </label>
-      {% endfor %}
-    </fieldset>
-  {% endfor %}
-  <button type="submit">Enviar Respuestas</button>
+            </select><br><br>
+        {% else %}
+            <select name="{{ pregunta.id }}">
+            {% for opcion in pregunta.opciones %}
+                <option>{{ opcion }}</option>
+            {% endfor %}
+            </select><br><br>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+<input type="submit" value="Enviar">
 </form>
-
 </body>
 </html>
-

@@ -2,86 +2,99 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Opciones estándar
-opciones = ['Sí', 'No', 'Parcialmente', 'No sé']
+# Tabla de referencia
+REFERENCIA = [
+    (0, 30, "RIESGO CRÍTICO", "Necesitas actuar de inmediato. Tu empresa es altamente vulnerable."),
+    (31, 60, "RIESGO ELEVADO", "Hay muchas debilidades que debes corregir cuanto antes."),
+    (61, 80, "BUENA BASE", "Tu postura es aceptable, pero con áreas de mejora."),
+    (81, 100, "POSTURA ROBUSTA", "Excelente, sigue manteniendo y revisando periódicamente.")
+]
 
-# Definición de las preguntas agrupadas
-preguntas = {
-    "Gestión y visibilidad": [
-        ("responsable_seguridad", "¿Tu empresa cuenta con un responsable formal de seguridad de la información?"),
-        ("monitoreo_seguridad", "¿Se realiza monitoreo regular de eventos de seguridad?"),
-        ("inventario_activos", "¿Tienes un inventario actualizado de activos (equipos, datos, software)?"),
-    ],
-    "Protección de red y perímetro": [
-        ("firewall", "¿Tu empresa cuenta con un firewall de red?"),
-        ("revision_firewall", "¿El firewall es revisado y configurado periódicamente?"),
-        ("wifi_segura", "¿Tu red Wi-Fi está segura y separada de invitados?"),
-    ],
-    "Protección de dispositivos y datos": [
-        ("antivirus", "¿Todos los equipos cuentan con antivirus con EDR actualizado?"),
-        ("actualizaciones", "¿Los sistemas operativos se actualizan regularmente?"),
-        ("contraseñas", "¿Las contraseñas son fuertes y únicas?"),
-        ("mfa", "¿Se usa autenticación multifactor (MFA) en cuentas críticas?"),
-    ],
-    "Respaldo y recuperación": [
-        ("backups_frecuencia", "¿Las copias de seguridad son diarias o frecuentes?"),
-        ("backups_prueba", "¿Las copias de seguridad se prueban periódicamente?"),
-        ("backups_offline", "¿Tienes copias de seguridad offline o inmutables?"),
-    ],
-    "Concientización y respuesta": [
-        ("capacitacion", "¿El personal recibe capacitación regular en ciberseguridad?"),
-        ("plan_incidentes", "¿Existe un plan documentado de respuesta a incidentes?"),
-        ("reporte_incidentes", "¿Los empleados saben cómo reportar incidentes?"),
-    ]
-}
-
-# Puntuación por respuesta
-puntos = {
-    "Sí": 3,
-    "Parcialmente": 1,
-    "No": 0,
-    "No sé": 0
-}
+# Definir las preguntas por grupo
+PREGUNTAS = [
+    {
+        "grupo": "Datos de la Empresa",
+        "preguntas": [
+            {"id": "empresa", "texto": "Nombre de la empresa", "tipo": "text"},
+            {"id": "contacto", "texto": "Nombre del contacto", "tipo": "text"},
+            {"id": "email", "texto": "Correo electrónico", "tipo": "email"},
+            {"id": "sector", "texto": "Sector", "tipo": "select", "opciones": ["Servicios", "Manufactura", "Tecnología", "Alimentos", "Legales", "Contables", "Distribución", "Otros"]},
+            {"id": "ciudad", "texto": "Ciudad", "tipo": "text"},
+            {"id": "pais", "texto": "País", "tipo": "text", "valor": "Colombia"}
+        ]
+    },
+    {
+        "grupo": "Gestión y Visibilidad",
+        "preguntas": [
+            {"id": "responsable", "texto": "¿Hay un responsable claro de TI?", "opciones": ["Sí, dedicado", "Sí, parcial", "Externo", "No"]},
+            {"id": "monitoreo", "texto": "¿Se monitorean los eventos de seguridad?", "opciones": ["Diario", "Semanal", "Solo cuando hay problemas", "No"]}
+        ]
+    },
+    {
+        "grupo": "Protección de Red",
+        "preguntas": [
+            {"id": "firewall", "texto": "¿Cuenta con un firewall de hardware o UTM?", "opciones": ["Sí, bien gestionado", "Sí, pero no bien gestionado", "No tiene", "No sabe"]},
+            {"id": "wifi", "texto": "¿La red Wi-Fi está segura (WPA2/WPA3, separada para invitados)?", "opciones": ["Sí", "Parcial", "No", "No sabe"]}
+        ]
+    },
+    {
+        "grupo": "Protección de Dispositivos y Datos",
+        "preguntas": [
+            {"id": "antivirus", "texto": "¿Todos los equipos tienen antivirus con EDR?", "opciones": ["Sí, todos", "La mayoría", "Gratis o básicos", "No"]},
+            {"id": "actualizaciones", "texto": "¿Las actualizaciones son automáticas y regulares?", "opciones": ["Sí, automatizado", "Manual, regular", "Ocasional", "No"]}
+        ]
+    },
+    {
+        "grupo": "Respaldo y Continuidad",
+        "preguntas": [
+            {"id": "backup", "texto": "¿Realizan copias de seguridad diarias y probadas?", "opciones": ["Sí, diario", "Semanal", "Mensual", "No"]},
+            {"id": "plan", "texto": "¿Tienen plan documentado de respuesta a incidentes?", "opciones": ["Sí, probado", "Sí, sin probar", "No", "No sabe"]}
+        ]
+    }
+]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        respuestas = {}
-        puntaje_obtenido = 0
+        respuestas = dict(request.form)
+        puntuacion = 0
         maximo = 0
+        recomendaciones = []
 
-        for grupo, lista in preguntas.items():
-            for campo, texto in lista:
-                resp = request.form.get(campo, "No sé")
-                respuestas[texto] = resp
-                puntaje_obtenido += puntos.get(resp, 0)
-                maximo += 3
+        # Calcular puntuación (5, 3, 1, 0)
+        for grupo in PREGUNTAS[1:]:  # Saltar encabezado
+            for preg in grupo["preguntas"]:
+                resp = respuestas.get(preg["id"], "")
+                if resp.startswith("Sí"):
+                    puntos = 5
+                elif resp in ["Parcial", "Semanal", "Manual, regular", "La mayoría", "Sí, sin probar"]:
+                    puntos = 3
+                elif resp in ["Solo cuando hay problemas", "Gratis o básicos", "Mensual", "No sabe"]:
+                    puntos = 1
+                else:
+                    puntos = 0
+                puntuacion += puntos
+                maximo += 5
 
-        porcentaje = round((puntaje_obtenido / maximo) * 100)
+        porcentaje = int((puntuacion / maximo) * 100) if maximo > 0 else 0
 
-        # Tabla de referencia
-        if porcentaje >= 81:
-            categoria = "Postura robusta"
-            recomendacion = "¡Felicidades! Mantén las buenas prácticas y revisa periódicamente."
-        elif porcentaje >= 61:
-            categoria = "Buena base"
-            recomendacion = "Bien, pero puedes mejorar puntos clave para subir al siguiente nivel."
-        elif porcentaje >= 31:
-            categoria = "Riesgo elevado"
-            recomendacion = "Debes priorizar las áreas débiles y fortalecer tus controles."
+        concepto = ""
+        for minimo, maximo_rango, postura, mensaje in REFERENCIA:
+            if minimo <= porcentaje <= maximo_rango:
+                concepto = f"{postura}: {mensaje}"
+
+        if porcentaje <= 60:
+            recomendaciones.append("Te recomendamos contactar a un especialista en ciberseguridad para diseñar un plan de mejora.")
         else:
-            categoria = "Riesgo crítico"
-            recomendacion = "Actúa de inmediato: tu empresa es muy vulnerable."
+            recomendaciones.append("Sigue revisando y mejorando continuamente tus prácticas de seguridad.")
 
-        return render_template(
-            "resultados.html",
-            respuestas=respuestas,
-            porcentaje=porcentaje,
-            categoria=categoria,
-            recomendacion=recomendacion
-        )
+        return render_template("resultados.html",
+                               respuestas=respuestas,
+                               porcentaje=porcentaje,
+                               concepto=concepto,
+                               recomendaciones=recomendaciones)
 
-    return render_template("index.html", preguntas=preguntas, opciones=opciones)
+    return render_template("index.html", preguntas=PREGUNTAS)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)

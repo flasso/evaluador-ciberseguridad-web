@@ -3,40 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Resultados</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-  <h1>Resultado de tu Evaluación</h1>
-</header>
+<h1>Resultados de tu Evaluación</h1>
+<p>Puntaje: {{ porcentaje }}%</p>
+<p>{{ concepto }}</p>
 
-<table>
-<thead>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-</thead>
-<tbody>
-{% for campo, respuesta in respuestas.items() %}
-<tr>
-<td>{{ campo.replace('_', ' ').capitalize() }}</td>
-<td>{{ respuesta }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<p>✅ <strong>Tu postura general:</strong> se recomienda revisar las áreas con respuestas “No” o “Parcialmente” y fortalecerlas con políticas claras, capacitación, y herramientas especializadas.</p>
-
-<p>📊 <strong>Tabla de referencia:</strong></p>
+<h2>Recomendaciones</h2>
 <ul>
-<li>81–100%: Postura robusta</li>
-<li>61–80%: Buena base</li>
-<li>31–60%: Riesgo elevado</li>
-<li>0–30%: Riesgo crítico</li>
+{% for rec in recomendaciones %}
+    <li>{{ rec }}</li>
+{% endfor %}
 </ul>
 
-<p>💡 <strong>Recomendación:</strong> Ponte en contacto con tu proveedor de TI o un MSSP para priorizar las áreas débiles identificadas y definir un plan de acción.</p>
-
-<a href="/">Volver a inicio</a>
+<h2>Tus Respuestas</h2>
+<table border="1">
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for clave, valor in respuestas.items() %}
+<tr><td>{{ clave }}</td><td>{{ valor }}</td></tr>
+{% endfor %}
+</table>
 
 </body>
 </html>
