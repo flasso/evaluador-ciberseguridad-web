@@ -4,97 +4,77 @@ app = Flask(__name__)
 
 # Tabla de referencia
 REFERENCIA = [
-    (0, 30, "RIESGO CRÍTICO", "Necesitas actuar de inmediato. Tu empresa es altamente vulnerable."),
-    (31, 60, "RIESGO ELEVADO", "Hay muchas debilidades que debes corregir cuanto antes."),
-    (61, 80, "BUENA BASE", "Tu postura es aceptable, pero con áreas de mejora."),
-    (81, 100, "POSTURA ROBUSTA", "Excelente, sigue manteniendo y revisando periódicamente.")
+    (0, 30, "RIESGO CRÍTICO", "Actúa de inmediato. La empresa es altamente vulnerable."),
+    (31, 60, "RIESGO ALTO", "Existen brechas importantes que debes corregir."),
+    (61, 80, "BUENA BASE", "Hay buenas prácticas, pero aún puedes mejorar."),
+    (81, 100, "POSTURA ROBUSTA", "Excelente. Mantén y revisa periódicamente.")
 ]
 
-# Definir las preguntas por grupo
-PREGUNTAS = [
-    {
-        "grupo": "Datos de la Empresa",
-        "preguntas": [
-            {"id": "empresa", "texto": "Nombre de la empresa", "tipo": "text"},
-            {"id": "contacto", "texto": "Nombre del contacto", "tipo": "text"},
-            {"id": "email", "texto": "Correo electrónico", "tipo": "email"},
-            {"id": "sector", "texto": "Sector", "tipo": "select", "opciones": ["Servicios", "Manufactura", "Tecnología", "Alimentos", "Legales", "Contables", "Distribución", "Otros"]},
-            {"id": "ciudad", "texto": "Ciudad", "tipo": "text"},
-            {"id": "pais", "texto": "País", "tipo": "text", "valor": "Colombia"}
-        ]
-    },
-    {
-        "grupo": "Gestión y Visibilidad",
-        "preguntas": [
-            {"id": "responsable", "texto": "¿Hay un responsable claro de TI?", "opciones": ["Sí, dedicado", "Sí, parcial", "Externo", "No"]},
-            {"id": "monitoreo", "texto": "¿Se monitorean los eventos de seguridad?", "opciones": ["Diario", "Semanal", "Solo cuando hay problemas", "No"]}
-        ]
-    },
-    {
-        "grupo": "Protección de Red",
-        "preguntas": [
-            {"id": "firewall", "texto": "¿Cuenta con un firewall de hardware o UTM?", "opciones": ["Sí, bien gestionado", "Sí, pero no bien gestionado", "No tiene", "No sabe"]},
-            {"id": "wifi", "texto": "¿La red Wi-Fi está segura (WPA2/WPA3, separada para invitados)?", "opciones": ["Sí", "Parcial", "No", "No sabe"]}
-        ]
-    },
-    {
-        "grupo": "Protección de Dispositivos y Datos",
-        "preguntas": [
-            {"id": "antivirus", "texto": "¿Todos los equipos tienen antivirus con EDR?", "opciones": ["Sí, todos", "La mayoría", "Gratis o básicos", "No"]},
-            {"id": "actualizaciones", "texto": "¿Las actualizaciones son automáticas y regulares?", "opciones": ["Sí, automatizado", "Manual, regular", "Ocasional", "No"]}
-        ]
-    },
-    {
-        "grupo": "Respaldo y Continuidad",
-        "preguntas": [
-            {"id": "backup", "texto": "¿Realizan copias de seguridad diarias y probadas?", "opciones": ["Sí, diario", "Semanal", "Mensual", "No"]},
-            {"id": "plan", "texto": "¿Tienen plan documentado de respuesta a incidentes?", "opciones": ["Sí, probado", "Sí, sin probar", "No", "No sabe"]}
-        ]
-    }
+# Grupos y preguntas
+GRUPOS = [
+    ("Datos de la Empresa", [
+        ("empresa", "Nombre de la empresa"),
+        ("contacto", "Nombre del contacto"),
+        ("email", "Correo electrónico"),
+        ("sector", "Sector", ["Servicios", "Manufactura", "Tecnología", "Alimentos", "Legales", "Contables", "Distribución", "Otros"]),
+        ("ciudad", "Ciudad"),
+        ("pais", "País", ["Colombia", "Otro"])
+    ]),
+    ("Gestión y Visibilidad", [
+        ("responsable", "¿Tienes un responsable de TI?", ["Sí, dedicado", "Sí, parcial", "Externo", "No"]),
+        ("monitoreo", "¿Se monitorean eventos de seguridad?", ["Sí, diario", "Sí, semanal", "Solo cuando hay problemas", "No"]),
+        ("inventario", "¿Existe un inventario actualizado de equipos y datos?", ["Sí, completo", "Sí, parcial", "No", "No sabe"])
+    ]),
+    ("Protección de Red", [
+        ("firewall", "¿Cuentas con un firewall de hardware/UTM?", ["Sí, bien gestionado", "Sí, mal gestionado", "No", "No sabe"]),
+        ("wifi", "¿La red Wi-Fi está segura (WPA2/WPA3, separada para invitados)?", ["Sí", "Parcial", "No", "No sabe"])
+    ]),
+    ("Protección de Dispositivos y Datos", [
+        ("antivirus", "¿Tienen antivirus con EDR?", ["Sí, todos", "La mayoría", "Gratis o básico", "No"]),
+        ("actualizaciones", "¿Las actualizaciones son automáticas?", ["Sí, automatizadas", "Manual y regular", "Ocasional", "No"]),
+        ("mfa", "¿Usan autenticación multifactor (MFA)?", ["Sí, en todas", "En algunas", "No", "No sabe"])
+    ]),
+    ("Respaldo y Continuidad", [
+        ("backups", "¿Hacen backups diarios y probados?", ["Sí, diario y probado", "Semanal", "Mensual", "No"]),
+        ("plan", "¿Tienen plan documentado de respuesta a incidentes?", ["Sí, probado", "Sí, sin probar", "No", "No sabe"])
+    ])
 ]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        respuestas = dict(request.form)
-        puntuacion = 0
-        maximo = 0
-        recomendaciones = []
+        data = dict(request.form)
+        puntaje, maximo = 0, 0
 
-        # Calcular puntuación (5, 3, 1, 0)
-        for grupo in PREGUNTAS[1:]:  # Saltar encabezado
-            for preg in grupo["preguntas"]:
-                resp = respuestas.get(preg["id"], "")
-                if resp.startswith("Sí"):
-                    puntos = 5
-                elif resp in ["Parcial", "Semanal", "Manual, regular", "La mayoría", "Sí, sin probar"]:
-                    puntos = 3
-                elif resp in ["Solo cuando hay problemas", "Gratis o básicos", "Mensual", "No sabe"]:
-                    puntos = 1
+        respuestas = {}
+        for grupo, preguntas in GRUPOS[1:]:
+            for p in preguntas:
+                val = data.get(p[0], "")
+                respuestas[p[1]] = val
+                if val.startswith("Sí"):
+                    puntaje += 5
+                elif val in ["Parcial", "Semanal", "Manual y regular", "La mayoría", "Sí, sin probar"]:
+                    puntaje += 3
+                elif val in ["Solo cuando hay problemas", "Gratis o básico", "Mensual", "No sabe"]:
+                    puntaje += 1
                 else:
-                    puntos = 0
-                puntuacion += puntos
+                    puntaje += 0
                 maximo += 5
 
-        porcentaje = int((puntuacion / maximo) * 100) if maximo > 0 else 0
+        porcentaje = int(puntaje / maximo * 100)
+        postura = next((desc for minv, maxv, _, desc in REFERENCIA if minv <= porcentaje <= maxv), "")
+        concepto = next((name for minv, maxv, name, _ in REFERENCIA if minv <= porcentaje <= maxv), "")
 
-        concepto = ""
-        for minimo, maximo_rango, postura, mensaje in REFERENCIA:
-            if minimo <= porcentaje <= maximo_rango:
-                concepto = f"{postura}: {mensaje}"
-
+        recomendaciones = []
         if porcentaje <= 60:
-            recomendaciones.append("Te recomendamos contactar a un especialista en ciberseguridad para diseñar un plan de mejora.")
-        else:
-            recomendaciones.append("Sigue revisando y mejorando continuamente tus prácticas de seguridad.")
+            recomendaciones.append("Contrata un especialista para reforzar tu postura de ciberseguridad.")
+        recomendaciones.append("Revisa las áreas más débiles e implementa las mejores prácticas.")
+        recomendaciones.append("Evalúa periódicamente tu seguridad para mantenerla actualizada.")
 
-        return render_template("resultados.html",
-                               respuestas=respuestas,
-                               porcentaje=porcentaje,
-                               concepto=concepto,
-                               recomendaciones=recomendaciones)
-
-    return render_template("index.html", preguntas=PREGUNTAS)
+        return render_template("resultados.html", data=data, respuestas=respuestas,
+                               porcentaje=porcentaje, concepto=concepto, postura=postura,
+                               referencia=REFERENCIA, recomendaciones=recomendaciones)
+    return render_template("index.html", grupos=GRUPOS)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

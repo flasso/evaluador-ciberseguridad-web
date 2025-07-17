@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>Evaluador de Ciberseguridad</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+h1 { color: #004080; }
+h2 { color: #0077cc; }
+label { display: block; margin-top: 10px; }
+</style>
 </head>
 <body>
+<img src="{{ url_for('static', filename='logo.png') }}" width="150" style="float:right">
 <h1>Evaluador de Ciberseguridad</h1>
 <form method="POST">
-{% for grupo in preguntas %}
-    <h2>{{ grupo.grupo }}</h2>
-    {% for pregunta in grupo.preguntas %}
-        <label>{{ pregunta.texto }}</label><br>
-        {% if pregunta.tipo == "text" or pregunta.tipo == "email" %}
-            <input type="{{ pregunta.tipo }}" name="{{ pregunta.id }}" value="{{ pregunta.valor or '' }}"><br><br>
-        {% elif pregunta.tipo == "select" %}
-            <select name="{{ pregunta.id }}">
-            {% for opcion in pregunta.opciones %}
-                <option>{{ opcion }}</option>
+{% for grupo, preguntas in grupos %}
+    <h2>{{ grupo }}</h2>
+    {% for p in preguntas %}
+        <label>{{ p[1] }}</label>
+        {% if p|length == 3 %}
+            <select name="{{ p[0] }}">
+            {% for o in p[2] %}
+                <option>{{ o }}</option>
             {% endfor %}
-            </select><br><br>
+            </select>
         {% else %}
-            <select name="{{ pregunta.id }}">
-            {% for opcion in pregunta.opciones %}
-                <option>{{ opcion }}</option>
-            {% endfor %}
-            </select><br><br>
+            <input type="text" name="{{ p[0] }}">
         {% endif %}
     {% endfor %}
 {% endfor %}
-<input type="submit" value="Enviar">
+<br><input type="submit" value="Enviar">
 </form>
 </body>
 </html>

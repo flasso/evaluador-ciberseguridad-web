@@ -3,26 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <title>Resultados</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+h1 { color: #004080; }
+h2 { color: #0077cc; }
+table { border-collapse: collapse; width: 100%; }
+td, th { border: 1px solid #ccc; padding: 5px; }
+</style>
 </head>
 <body>
-<h1>Resultados de tu Evaluación</h1>
-<p>Puntaje: {{ porcentaje }}%</p>
-<p>{{ concepto }}</p>
+<h1>Resultados de la Evaluación</h1>
+<p><strong>Puntaje:</strong> {{ porcentaje }}%</p>
+<p><strong>Postura:</strong> {{ concepto }}</p>
+<p>{{ postura }}</p>
+
+<h2>Tabla de referencia</h2>
+<table>
+<tr><th>Rango</th><th>Postura</th><th>Concepto</th></tr>
+{% for minv, maxv, name, desc in referencia %}
+<tr><td>{{ minv }} - {{ maxv }}%</td><td>{{ name }}</td><td>{{ desc }}</td></tr>
+{% endfor %}
+</table>
 
 <h2>Recomendaciones</h2>
 <ul>
-{% for rec in recomendaciones %}
-    <li>{{ rec }}</li>
+{% for r in recomendaciones %}
+<li>{{ r }}</li>
 {% endfor %}
 </ul>
 
 <h2>Tus Respuestas</h2>
-<table border="1">
+<table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for clave, valor in respuestas.items() %}
-<tr><td>{{ clave }}</td><td>{{ valor }}</td></tr>
+{% for pregunta, resp in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ resp }}</td></tr>
 {% endfor %}
 </table>
-
 </body>
 </html>
