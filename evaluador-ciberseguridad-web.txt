@@ -1,0 +1,7 @@
+evaluador-ciberseguridad-web/
+├── app.py
+├── requirements.txt
+└── templates/
+    ├── index.html
+    ├── cuestionario.html
+    └── resultados.html

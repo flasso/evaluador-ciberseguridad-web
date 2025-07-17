@@ -1,18 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Cuestionario</title>
+<meta charset="UTF-8">
+<title>Cuestionario</title>
 </head>
 <body>
-<h1>Cuestionario de Ciberseguridad</h1>
-<form method="POST" action="/resultados">
-    {% for pregunta in preguntas %}
-        <p>{{ loop.index }}. {{ pregunta }}</p>
-        <label><input type="radio" name="p{{loop.index0}}" value="Sí" required> Sí</label>
-        <label><input type="radio" name="p{{loop.index0}}" value="No" required> No</label>
+<h2>Cuestionario de Ciberseguridad</h2>
+<p><strong>Empresa:</strong> {{ datos.empresa }}</p>
+<p><strong>Contacto:</strong> {{ datos.contacto }}</p>
+<p><strong>Email:</strong> {{ datos.email }}</p>
+<p><strong>Sector:</strong> {{ datos.sector }}</p>
+<p><strong>Ciudad:</strong> {{ datos.ciudad }}</p>
+<p><strong>País:</strong> {{ datos.pais }}</p>
+
+<form>
+  {% for pregunta in preguntas %}
+    <p><strong>{{ pregunta.texto }}</strong></p>
+    {% for opcion in pregunta.opciones %}
+      <input type="radio" name="{{ pregunta.id }}" value="{{ opcion }}"> {{ opcion }}<br>
     {% endfor %}
-    <button type="submit">Ver Resultados</button>
+  {% endfor %}
+  <br>
+  <button type="submit">Enviar respuestas</button>
 </form>
 </body>
 </html>

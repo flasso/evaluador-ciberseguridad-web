@@ -1,36 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Evaluador de Ciberseguridad</title>
+<meta charset="UTF-8">
+<title>Inicio - Evaluador Ciberseguridad</title>
 </head>
 <body>
-<h1>Evaluador de Ciberseguridad</h1>
+<h2>Datos de la Empresa</h2>
 <form method="POST">
-    <label>Nombre de la empresa:</label>
-    <input type="text" name="empresa" required><br>
+  <label>Empresa:</label><br>
+  <input type="text" name="empresa" required><br>
 
-    <label>Nombre de contacto:</label>
-    <input type="text" name="contacto" required><br>
+  <label>Contacto:</label><br>
+  <input type="text" name="contacto" required><br>
 
-    <label>Correo electrónico:</label>
-    <input type="email" name="email" required><br>
+  <label>Email:</label><br>
+  <input type="email" name="email" required><br>
 
-    <label>Sector:</label>
-    <select name="sector">
-        {% for s in sectores %}
-            <option value="{{s}}">{{s}}</option>
-        {% endfor %}
-    </select><br>
+  <label>Sector:</label><br>
+  <select name="sector" required>
+    <option>Servicios</option>
+    <option>Manufactura</option>
+    <option>Tecnología</option>
+    <option>Alimentos</option>
+    <option>Legales</option>
+    <option>Contables</option>
+    <option>Distribución</option>
+    <option>Otros</option>
+  </select><br>
 
-    <label>Ciudad:</label>
-    <input type="text" name="ciudad" required><br>
+  <label>Ciudad:</label><br>
+  <input type="text" name="ciudad" required><br>
 
-    <label>País:</label>
-    <input type="text" name="pais" value="{{pais_defecto}}" required><br>
+  <label>País:</label><br>
+  <input type="text" name="pais" value="Colombia"><br><br>
 
-    <button type="submit">Comenzar Evaluación</button>
+  <button type="submit">Comenzar</button>
 </form>
 </body>
 </html>
-

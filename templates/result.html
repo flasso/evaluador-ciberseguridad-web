@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resultado</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; }
+div { background: #fff; padding: 20px; border-radius: 8px; }
+h1 { color: #333; }
+</style>
+</head>
+<body>
+<div>
+<h1>Resultado de la Evaluación</h1>
+<p><strong>Postura de Ciberseguridad:</strong> {{ postura }}</p>
+
+<h2>Respuestas:</h2>
+<ul>
+{% for clave, valor in respuestas.items() %}
+  <li><strong>{{ clave.replace('_', ' ').capitalize() }}:</strong> {{ valor }}</li>
+{% endfor %}
+</ul>
+
+<a href="/">Volver al inicio</a>
+</div>
+</body>
+</html>
+
+
