@@ -1,57 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>Resultados de Evaluación</title>
+<meta charset="UTF-8">
+<title>Resultados</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header>
-  <h1><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50"> Resultados</h1>
+  <h1>Resultado de tu Evaluación</h1>
 </header>
 
-<main>
-  <h2>Tu puntuación: {{ porcentaje | round(2) }}%</h2>
+<table>
+<thead>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+</thead>
+<tbody>
+{% for campo, respuesta in respuestas.items() %}
+<tr>
+<td>{{ campo.replace('_', ' ').capitalize() }}</td>
+<td>{{ respuesta }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 
-  <h3>Tabla de referencia</h3>
-  <ul>
-    <li><strong>0-30%</strong>: Riesgo Crítico — Es urgente implementar medidas de seguridad.</li>
-    <li><strong>31-60%</strong>: Riesgo Elevado — Existen importantes brechas por corregir.</li>
-    <li><strong>61-80%</strong>: Buena Base — Tienes una base pero aún hay puntos por mejorar.</li>
-    <li><strong>81-100%</strong>: Postura Robusta — Excelente trabajo, sigue monitoreando.</li>
-  </ul>
+<p>✅ <strong>Tu postura general:</strong> se recomienda revisar las áreas con respuestas “No” o “Parcialmente” y fortalecerlas con políticas claras, capacitación, y herramientas especializadas.</p>
 
-  <h3>Recomendaciones</h3>
-  {% if porcentaje < 81 %}
-    <p>Tu evaluación muestra áreas de mejora. Te sugerimos:</p>
-    <ul>
-      <li>Designar un responsable claro de ciberseguridad.</li>
-      <li>Implementar firewalls y asegurarte que sean bien gestionados.</li>
-      <li>Actualizar sistemas y contar con antivirus empresarial con EDR.</li>
-      <li>Probar copias de seguridad y aislarlas para protección ante ransomware.</li>
-      <li>Capacitar a todo el personal y establecer planes de respuesta a incidentes.</li>
-    </ul>
-  {% else %}
-    <p>¡Felicidades! Tu empresa demuestra una postura sólida. Sigue así, revisa periódicamente y actualiza tus medidas.</p>
-  {% endif %}
+<p>📊 <strong>Tabla de referencia:</strong></p>
+<ul>
+<li>81–100%: Postura robusta</li>
+<li>61–80%: Buena base</li>
+<li>31–60%: Riesgo elevado</li>
+<li>0–30%: Riesgo crítico</li>
+</ul>
 
-  <h3>Tus respuestas</h3>
-  <table>
-    <thead>
-      <tr><th>Pregunta</th><th>Respuesta</th></tr>
-    </thead>
-    <tbody>
-      {% for pregunta in preguntas %}
-        <tr>
-          <td>{{ pregunta.texto }}</td>
-          <td>{{ respuestas[pregunta.id] }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<p>💡 <strong>Recomendación:</strong> Ponte en contacto con tu proveedor de TI o un MSSP para priorizar las áreas débiles identificadas y definir un plan de acción.</p>
 
-  <p><a href="{{ url_for('index') }}">Volver a evaluar</a></p>
-</main>
+<a href="/">Volver a inicio</a>
 
 </body>
 </html>
