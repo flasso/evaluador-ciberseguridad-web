@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Resultado</title>
-</head>
+<!doctype html>
+<html>
+<head><title>Resultado</title></head>
 <body>
-  <h1>✅ Resultado</h1>
-  <p>Gracias por completar la evaluación, {{ session.nombre }} de {{ session.empresa }}.</p>
-  <h2>Respuestas:</h2>
-  <ul>
-    {% for pregunta, respuesta in respuestas.items() %}
-      <li>{{ pregunta }}: {{ respuesta }}</li>
-    {% endfor %}
-  </ul>
+<h1>Resultado para {{ nombre }}</h1>
+<p>Puntaje total: {{ puntaje }}</p>
+<p style="color: {{ color }};">Postura: {{ categoria }}</p>
 </body>
 </html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head><title>{{ modulo.titulo }}</title></head>
+<body>
+<h1>{{ modulo.titulo }}</h1>
+<form method="post">
+  {% for pregunta in modulo.preguntas %}
+    <p>{{ pregunta.texto }}</p>
+    {% for texto, puntos in pregunta.opciones %}
+      <input type="radio" name="{{ pregunta.id }}" value="{{ puntos }}" required> {{ texto }}<br>
+    {% endfor %}
+  {% endfor %}
+  <button type="submit">Siguiente</button>
+</form>
+</body>
+</html>
+
