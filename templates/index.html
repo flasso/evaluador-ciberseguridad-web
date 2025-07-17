@@ -2,39 +2,95 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Inicio - Evaluador Ciberseguridad</title>
+<title>Evaluador de Ciberseguridad</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<h2>Datos de la Empresa</h2>
-<form method="POST">
-  <label>Empresa:</label><br>
-  <input type="text" name="empresa" required><br>
+<div class="container">
+<img src="/static/logo.png" alt="Logo" width="150">
+<h1>Evaluador de Ciberseguridad</h1>
 
-  <label>Contacto:</label><br>
-  <input type="text" name="contacto" required><br>
+<form method="post">
+<h2>Información General</h2>
+<input name="empresa" placeholder="Nombre de la empresa" required><br>
+<input name="contacto" placeholder="Nombre del contacto" required><br>
+<input name="email" placeholder="Email" required><br>
+<input name="ciudad" placeholder="Ciudad" required><br>
+<input name="pais" value="Colombia"><br>
+<select name="sector">
+<option>Servicios</option>
+<option>Manufactura</option>
+<option>Tecnología</option>
+<option>Alimentos</option>
+<option>Legales</option>
+<option>Contables</option>
+<option>Distribución</option>
+<option>Otros</option>
+</select>
 
-  <label>Email:</label><br>
-  <input type="email" name="email" required><br>
+<h2>Gestión y Visibilidad</h2>
+<p>¿Cuenta con personal encargado de TI?</p>
+<select name="personal_ti">
+<option>Sí</option>
+<option>No</option>
+<option>No sé</option>
+</select>
+<p>¿Hay un responsable claro de las copias de seguridad?</p>
+<select name="responsable_backups">
+<option>Sí</option>
+<option>No</option>
+<option>No sé</option>
+</select>
 
-  <label>Sector:</label><br>
-  <select name="sector" required>
-    <option>Servicios</option>
-    <option>Manufactura</option>
-    <option>Tecnología</option>
-    <option>Alimentos</option>
-    <option>Legales</option>
-    <option>Contables</option>
-    <option>Distribución</option>
-    <option>Otros</option>
-  </select><br>
+<h2>Protección de Red</h2>
+<p>¿Cuenta con firewall y lo revisan?</p>
+<select name="firewall">
+<option>Sí</option>
+<option>No reviso configuración</option>
+<option>No tengo firewall</option>
+<option>No sé</option>
+</select>
 
-  <label>Ciudad:</label><br>
-  <input type="text" name="ciudad" required><br>
+<h2>Protección de Dispositivos</h2>
+<p>¿Usan software original?</p>
+<select name="software_original">
+<option>Sí</option>
+<option>No</option>
+<option>No sé</option>
+</select>
+<p>¿Las actualizaciones del sistema son automáticas?</p>
+<select name="actualizaciones">
+<option>Automáticas</option>
+<option>Manuales</option>
+<option>Nunca</option>
+<option>No sé</option>
+</select>
+<p>¿Tienen autenticación multifactor (MFA)?</p>
+<select name="mfa">
+<option>Sí</option>
+<option>No</option>
+<option>No sé</option>
+</select>
 
-  <label>País:</label><br>
-  <input type="text" name="pais" value="Colombia"><br><br>
+<h2>Respaldo y Recuperación</h2>
+<p>¿Frecuencia de las copias de seguridad?</p>
+<select name="backups">
+<option>Diario</option>
+<option>Semanal</option>
+<option>Nunca</option>
+<option>No sé</option>
+</select>
 
-  <button type="submit">Comenzar</button>
+<h2>Concientización</h2>
+<p>¿El personal recibe capacitación en ciberseguridad?</p>
+<select name="capacitacion">
+<option>Sí</option>
+<option>No</option>
+<option>No sé</option>
+</select>
+
+<br><button type="submit">Enviar respuestas</button>
 </form>
+</div>
 </body>
 </html>

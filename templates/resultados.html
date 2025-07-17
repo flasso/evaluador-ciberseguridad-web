@@ -1,22 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Resultados</title>
+<meta charset="UTF-8">
+<title>Resultados</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<h1>Resultados de la Evaluación</h1>
+<div class="container">
+<img src="/static/logo.png" alt="Logo" width="150">
+<h1>Resultado de la Evaluación</h1>
 
-<p><strong>Puntaje:</strong> {{ porcentaje }}%</p>
-<p><strong>Postura:</strong> {{ postura }}</p>
-<p>{{ descripcion }}</p>
+<p><strong>Puntaje:</strong> {{ puntaje }} / {{ max_puntaje }} ({{ porcentaje }}%)</p>
+<p><strong>Categoría:</strong> {{ categoria }}</p>
 
-<h2>Respuestas:</h2>
+<h2>Tabla de referencia:</h2>
 <ul>
-    {% for pregunta, respuesta in respuestas %}
-        <li>{{ pregunta }}: <strong>{{ respuesta }}</strong></li>
-    {% endfor %}
+<li>0–30%: Riesgo crítico</li>
+<li>31–60%: Riesgo elevado</li>
+<li>61–80%: Buena base</li>
+<li>81–100%: Postura robusta</li>
 </ul>
 
+{% if recomendaciones %}
+<h2>Recomendaciones:</h2>
+<ul>
+{% for r in recomendaciones %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>¡Excelente! Tu empresa tiene una postura sólida.</p>
+{% endif %}
+
+<br><a href="/">Volver a inicio</a>
+</div>
 </body>
 </html>
+
