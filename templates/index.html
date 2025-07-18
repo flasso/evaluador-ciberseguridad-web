@@ -2,36 +2,29 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador de Ciberseguridad</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h1, h2 { color: #003366; }
-hr { margin: 20px 0; }
-button { padding: 10px 20px; background-color: #003366; color: #fff; border: none; cursor: pointer; }
-button:hover { background-color: #005599; }
-fieldset { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
-legend { font-weight: bold; }
-</style>
+<title>Evaluador Ciberseguridad</title>
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="120" alt="Logo">
+<img src="{{ url_for('static', filename='logo.png') }}" width="120">
 <h1>Evaluador de Postura de Ciberseguridad</h1>
-<p>Por favor responde todas las preguntas para obtener tu diagnóstico.</p>
-
 <form method="post">
   {% for segmento, preguntas in segmentos.items() %}
     <fieldset>
-      <legend>{{ segmento }}</legend>
-      {% for idx, (pregunta, opciones) in preguntas|list %}
+      <legend><strong>{{ segmento }}</strong></legend>
+      {% for pregunta_opciones in preguntas %}
+        {% set pregunta = pregunta_opciones[0] %}
+        {% set opciones = pregunta_opciones[1] %}
         <p><strong>{{ pregunta }}</strong></p>
         {% for opcion in opciones %}
-          <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+          <label><input type="radio" name="{{ segmento }}_{{ loop.index0 }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
         {% endfor %}
         <br>
       {% endfor %}
     </fieldset>
+    <hr>
   {% endfor %}
   <button type="submit">Enviar</button>
 </form>
 </body>
 </html>
+
