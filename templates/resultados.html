@@ -3,41 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Resultados</title>
-<style>
-body { font-family: Arial; margin: 20px; }
-h1 { color: #004080; }
-h2 { color: #0077cc; }
-table { border-collapse: collapse; width: 100%; }
-td, th { border: 1px solid #ccc; padding: 5px; }
-</style>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
 </head>
 <body>
-<h1>Resultados de la Evaluación</h1>
-<p><strong>Puntaje:</strong> {{ porcentaje }}%</p>
-<p><strong>Postura:</strong> {{ concepto }}</p>
-<p>{{ postura }}</p>
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
+<h1>Resultados de Evaluación</h1>
 
-<h2>Tabla de referencia</h2>
-<table>
-<tr><th>Rango</th><th>Postura</th><th>Concepto</th></tr>
-{% for minv, maxv, name, desc in referencia %}
-<tr><td>{{ minv }} - {{ maxv }}%</td><td>{{ name }}</td><td>{{ desc }}</td></tr>
-{% endfor %}
-</table>
+<p><strong>Promedio General:</strong> {{ promedio_general }}%</p>
+<p><strong>Concepto:</strong> {{ concepto }}</p>
 
-<h2>Recomendaciones</h2>
+<h2>Resultados por sección:</h2>
 <ul>
-{% for r in recomendaciones %}
-<li>{{ r }}</li>
+{% for seccion, porc in porcentajes.items() %}
+<li>{{ seccion }}: {{ porc }}%</li>
 {% endfor %}
 </ul>
 
-<h2>Tus Respuestas</h2>
+<h2>Respuestas:</h2>
 <table>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, resp in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ resp }}</td></tr>
+<tr><th>Sección</th><th>Pregunta</th><th>Respuesta</th></tr>
+{% for seccion, resp in respuestas.items() %}
+{% for q, r in resp %}
+<tr><td>{{ seccion }}</td><td>{{ q }}</td><td>{{ r }}</td></tr>
+{% endfor %}
 {% endfor %}
 </table>
+
 </body>
 </html>

@@ -3,33 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>Evaluador de Ciberseguridad</title>
-<style>
-body { font-family: Arial; margin: 20px; }
-h1 { color: #004080; }
-h2 { color: #0077cc; }
-label { display: block; margin-top: 10px; }
-</style>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="150" style="float:right">
-<h1>Evaluador de Ciberseguridad</h1>
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
+<h1>Evaluador de Postura de Ciberseguridad</h1>
+
 <form method="POST">
-{% for grupo, preguntas in grupos %}
-    <h2>{{ grupo }}</h2>
-    {% for p in preguntas %}
-        <label>{{ p[1] }}</label>
-        {% if p|length == 3 %}
-            <select name="{{ p[0] }}">
-            {% for o in p[2] %}
-                <option>{{ o }}</option>
-            {% endfor %}
-            </select>
-        {% else %}
-            <input type="text" name="{{ p[0] }}">
-        {% endif %}
-    {% endfor %}
+{% for seccion, qs in preguntas.items() %}
+<section>
+<h2>{{ seccion }}</h2>
+{% for idx, (q, opciones) in enumerate(qs) %}
+<p><strong>{{ q }}</strong></p>
+{% if opciones %}
+{% for op in opciones %}
+<label><input type="radio" name="{{seccion}}_{{idx}}" value="{{op}}" required> {{op}}</label><br>
 {% endfor %}
-<br><input type="submit" value="Enviar">
+{% else %}
+<input type="text" name="{{seccion}}_{{idx}}" required><br>
+{% endif %}
+{% endfor %}
+</section>
+{% endfor %}
+<button type="submit">Enviar respuestas</button>
 </form>
 </body>
 </html>
+
