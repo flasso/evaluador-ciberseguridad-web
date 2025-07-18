@@ -1,19 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultados</title>
+<title>Resultado</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="120">
-<h1>Resultados de la Evaluación</h1>
-<table border="1">
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
-{% endfor %}
-</table>
-<p>Recomendaciones generales: Revisa las áreas débiles, prioriza implementar un responsable de TI, monitoreo, firewall profesional, MFA y backups offline. Contacta a un especialista para una auditoría completa.</p>
+<div class="container">
+  <h1>Resultado de tu Evaluación</h1>
+  <p>Puntaje: {{ porcentaje|round(2) }}%</p>
+
+  {% if porcentaje >= 80 %}
+    <p>🎯 Excelente: Tienes una postura sólida. Continúa así.</p>
+  {% elif porcentaje >= 50 %}
+    <p>⚠️ Media: Hay áreas de mejora. Revisa tus brechas.</p>
+  {% else %}
+    <p>🚨 Crítica: Necesitas tomar acciones urgentes y consultar a un especialista.</p>
+  {% endif %}
+
+  <h2>Tus Respuestas:</h2>
+  <ul>
+    {% for segmento, preguntas in preguntas %}
+      <li><strong>{{ segmento }}</strong>
+        <ul>
+        {% for idx, (q, opciones) in enumerate(preguntas) %}
+          <li>{{ q }}: {{ respuestas.get("p_" + segmento + "_" + idx|string, "No respondida") }}</li>
+        {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{{ url_for('index') }}">Volver a la encuesta</a>
+</div>
 </body>
 </html>
