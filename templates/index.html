@@ -7,22 +7,43 @@
 <body>
 <img src="{{ url_for('static', filename='logo.png') }}" width="120">
 <h1>Evaluador de Postura de Ciberseguridad</h1>
+
 <form method="post">
+  <fieldset>
+    <legend>Datos de la Empresa</legend>
+    <label>Empresa: <input type="text" name="empresa" required></label><br>
+    <label>Contacto: <input type="text" name="contacto" required></label><br>
+    <label>Email: <input type="email" name="email" required></label><br>
+    <label>Sector: 
+      <select name="sector">
+        <option>Servicios</option>
+        <option>Manufactura</option>
+        <option>Tecnología</option>
+        <option>Alimentos</option>
+        <option>Legales</option>
+        <option>Contables</option>
+        <option>Distribución</option>
+        <option>Otros</option>
+      </select>
+    </label><br>
+    <label>Ciudad: <input type="text" name="ciudad"></label><br>
+    <label>País: <input type="text" name="pais" value="Colombia"></label><br>
+  </fieldset>
+  <hr>
+
   {% for segmento, preguntas in segmentos.items() %}
-    <fieldset>
-      <legend><strong>{{ segmento }}</strong></legend>
-      {% for pregunta_opciones in preguntas %}
-        {% set pregunta = pregunta_opciones[0] %}
-        {% set opciones = pregunta_opciones[1] %}
-        <p><strong>{{ pregunta }}</strong></p>
-        {% for opcion in opciones %}
-          <label><input type="radio" name="{{ segmento }}_{{ loop.index0 }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
-        {% endfor %}
-        <br>
+    <h2>{{ segmento }}</h2>
+    {% for idx, (pregunta, opciones) in questions|default([]) %}
+      <p>{{ pregunta }}</p>
+      {% for opcion in opciones %}
+        <label>
+          <input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}
+        </label><br>
       {% endfor %}
-    </fieldset>
+    {% endfor %}
     <hr>
   {% endfor %}
+
   <button type="submit">Enviar</button>
 </form>
 </body>

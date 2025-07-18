@@ -9,8 +9,8 @@ segmentos = {
         ("¿Existe inventario actualizado de activos?", ["Sí, detallado", "Parcial", "No actualizado", "No"])
     ],
     "Protección de Red": [
-        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No"]),
-        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No se gestiona"]),
+        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No tengo firewall"]),
+        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No tengo firewall"]),
         ("¿Wi-Fi está separado y seguro?", ["Sí, WPA3 y redes separadas", "Solo una red segura", "No seguro", "No sé"])
     ],
     "Protección de Dispositivos": [
