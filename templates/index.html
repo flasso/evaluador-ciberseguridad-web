@@ -2,34 +2,23 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador de Ciberseguridad</title>
-<style>
-body { font-family: Arial; margin: 20px; }
-h1 { color: #004080; }
-h2 { color: #0077cc; }
-label { display: block; margin-top: 10px; }
-</style>
+<title>Evaluador Ciberseguridad</title>
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="150" style="float:right">
-<h1>Evaluador de Ciberseguridad</h1>
-<form method="POST">
-{% for grupo, preguntas in grupos %}
-    <h2>{{ grupo }}</h2>
-    {% for p in preguntas %}
-        <label>{{ p[1] }}</label>
-        {% if p|length == 3 %}
-            <select name="{{ p[0] }}">
-            {% for o in p[2] %}
-                <option>{{ o }}</option>
-            {% endfor %}
-            </select>
-        {% else %}
-            <input type="text" name="{{ p[0] }}">
-        {% endif %}
+<img src="{{ url_for('static', filename='logo.png') }}" width="120">
+<h1>Evaluador de Postura de Ciberseguridad</h1>
+<form method="post">
+  {% for segmento, preguntas in segmentos.items() %}
+    <h2>{{ segmento }}</h2>
+    {% for idx, (pregunta, opciones) in enumerate(preguntas) %}
+      <p>{{ pregunta }}</p>
+      {% for opcion in opciones %}
+        <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}"> {{ opcion }}</label><br>
+      {% endfor %}
     {% endfor %}
-{% endfor %}
-<br><input type="submit" value="Enviar">
+    <hr>
+  {% endfor %}
+  <button type="submit">Enviar</button>
 </form>
 </body>
 </html>
