@@ -35,7 +35,11 @@ segmentos = {
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        respuestas = dict(request.form)
+        respuestas = {}
+        for segmento, preguntas in segmentos.items():
+            for idx, (pregunta, opciones) in enumerate(preguntas):
+                key = f"{segmento}_{idx}"
+                respuestas[pregunta] = request.form.get(key, "No respondida")
         return render_template("resultados.html", respuestas=respuestas)
     return render_template("index.html", segmentos=segmentos)
 

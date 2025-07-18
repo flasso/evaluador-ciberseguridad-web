@@ -2,17 +2,41 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultados</title>
+<title>Resultados de la Evaluación</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1 { color: #003366; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { border: 1px solid #ccc; padding: 8px; }
+th { background-color: #003366; color: #fff; }
+.recomendaciones { margin-top: 20px; }
+</style>
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="120">
+<img src="{{ url_for('static', filename='logo.png') }}" width="120" alt="Logo">
 <h1>Resultados de la Evaluación</h1>
-<table border="1">
+
+<table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
 {% for pregunta, respuesta in respuestas.items() %}
 <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
 {% endfor %}
 </table>
-<p>Recomendaciones generales: revise las áreas débiles e implemente medidas correctivas con apoyo de un especialista.</p>
+
+<div class="recomendaciones">
+<h2>Recomendaciones Generales</h2>
+<p>Analiza las áreas donde seleccionaste opciones débiles o desconocidas. Prioriza las siguientes acciones:</p>
+<ul>
+<li>Designa un responsable claro de TI y ciberseguridad.</li>
+<li>Implementa monitoreo constante de la seguridad.</li>
+<li>Configura correctamente un firewall de hardware y separa las redes Wi-Fi.</li>
+<li>Asegura que todos los dispositivos tengan antivirus empresarial con EDR.</li>
+<li>Activa MFA y establece políticas de contraseñas robustas.</li>
+<li>Realiza y prueba respaldos con regularidad, incluyendo copias offline.</li>
+<li>Documenta y prueba planes de continuidad y respuesta a incidentes.</li>
+<li>Capacita periódicamente a los empleados.</li>
+</ul>
+<p>Para una asesoría más detallada, considera contactar a un especialista en ciberseguridad.</p>
+</div>
 </body>
 </html>

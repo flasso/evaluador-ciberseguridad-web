@@ -2,21 +2,34 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador Ciberseguridad</title>
+<title>Evaluador de Ciberseguridad</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1, h2 { color: #003366; }
+hr { margin: 20px 0; }
+button { padding: 10px 20px; background-color: #003366; color: #fff; border: none; cursor: pointer; }
+button:hover { background-color: #005599; }
+fieldset { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+legend { font-weight: bold; }
+</style>
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="120">
+<img src="{{ url_for('static', filename='logo.png') }}" width="120" alt="Logo">
 <h1>Evaluador de Postura de Ciberseguridad</h1>
+<p>Por favor responde todas las preguntas para obtener tu diagnóstico.</p>
+
 <form method="post">
   {% for segmento, preguntas in segmentos.items() %}
-    <h2>{{ segmento }}</h2>
-    {% for idx, (pregunta, opciones) in enumerate(preguntas) %}
-      <p>{{ pregunta }}</p>
-      {% for opcion in opciones %}
-        <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}"> {{ opcion }}</label><br>
+    <fieldset>
+      <legend>{{ segmento }}</legend>
+      {% for idx, (pregunta, opciones) in preguntas|list %}
+        <p><strong>{{ pregunta }}</strong></p>
+        {% for opcion in opciones %}
+          <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+        {% endfor %}
+        <br>
       {% endfor %}
-    {% endfor %}
-    <hr>
+    </fieldset>
   {% endfor %}
   <button type="submit">Enviar</button>
 </form>
