@@ -1,42 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <title>Evaluador de Ciberseguridad</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h1 { color: #004080; }
-fieldset { margin-bottom: 20px; }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
-<h1>Evaluador de Ciberseguridad</h1>
-
-<form method="POST">
-  <fieldset>
-    <legend>Datos Generales</legend>
-    Empresa: <input name="empresa" required><br>
-    Nombre Contacto: <input name="nombre" required><br>
-    Correo Electrónico: <input name="correo" required><br>
-    Ciudad: <input name="ciudad" required><br>
-    País: <input name="pais" value="Colombia" required><br>
-  </fieldset>
-
-  {% for seccion in secciones %}
-  <fieldset>
-    <legend>{{ seccion.titulo }}</legend>
-    {% for pregunta in seccion.preguntas %}
-      <p><strong>{{ pregunta }}</strong><br>
-      {% for texto, valor in opciones %}
-        <label><input type="radio" name="{{ pregunta }}" value="{{ valor }}" required> {{ texto }}</label><br>
+<div class="container">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
+  <h1>Evaluador de Postura de Ciberseguridad</h1>
+  <form method="post">
+    {% for segmento, preguntas in preguntas %}
+      <h2>{{ segmento }}</h2>
+      {% for q, opciones in preguntas %}
+        <p>{{ loop.index }}. {{ q }}</p>
+        {% if opciones %}
+          {% for idx, op in enumerate(opciones) %}
+            <label><input type="radio" name="p_{{ segmento }}_{{ loop.parent.loop.index0 }}" value="{{ idx }}"> {{ op }}</label><br>
+          {% endfor %}
+        {% else %}
+          <input type="text" name="p_{{ segmento }}_{{ loop.parent.loop.index0 }}">
+        {% endif %}
       {% endfor %}
-      </p>
     {% endfor %}
-  </fieldset>
-  {% endfor %}
-
-  <button type="submit">Enviar</button>
-</form>
+    <button type="submit">Enviar Respuestas</button>
+  </form>
+</div>
 </body>
 </html>

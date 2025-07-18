@@ -1,53 +1,38 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>Resultados</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h1 { color: #004080; }
-table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-th { background-color: #f0f0f0; }
-</style>
+<meta charset="UTF-8">
+<title>Resultado</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
-<h1>Resultados de la Evaluación</h1>
+<div class="container">
+  <h1>Resultado de tu Evaluación</h1>
+  <p>Puntaje: {{ porcentaje|round(2) }}%</p>
 
-<p><strong>Empresa:</strong> {{ empresa }}</p>
-<p><strong>Contacto:</strong> {{ nombre }}</p>
-<p><strong>Ciudad:</strong> {{ ciudad }}</p>
-<p><strong>País:</strong> {{ pais }}</p>
+  {% if porcentaje >= 80 %}
+    <p>🎯 Excelente: Tienes una postura sólida. Continúa así.</p>
+  {% elif porcentaje >= 50 %}
+    <p>⚠️ Media: Hay áreas de mejora. Revisa tus brechas.</p>
+  {% else %}
+    <p>🚨 Crítica: Necesitas tomar acciones urgentes y consultar a un especialista.</p>
+  {% endif %}
 
-<p><strong>Puntaje general:</strong> {{ porcentaje }}%</p>
-<p><strong>Concepto:</strong> {{ concepto }}</p>
+  <h2>Tus Respuestas:</h2>
+  <ul>
+    {% for segmento, preguntas in preguntas %}
+      <li><strong>{{ segmento }}</strong>
+        <ul>
+        {% for idx, (q, opciones) in enumerate(preguntas) %}
+          <li>{{ q }}: {{ respuestas.get("p_" + segmento + "_" + idx|string, "No respondida") }}</li>
+        {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
 
-<h2>Resultados por Sección</h2>
-<ul>
-  {% for titulo, (puntos, maximo) in puntajes.items() %}
-    <li>{{ titulo }}: {{ puntos }} / {{ maximo }}</li>
-  {% endfor %}
-</ul>
-
-<h2>Tabla de Preguntas y Respuestas</h2>
-<table>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for seccion in secciones %}
-  {% for pregunta in seccion.preguntas %}
-  <tr>
-    <td>{{ pregunta }}</td>
-    <td>
-      {% for texto, valor in opciones %}
-        {% if respuestas[pregunta] == valor %}
-          {{ texto }}
-        {% endif %}
-      {% endfor %}
-    </td>
-  </tr>
-  {% endfor %}
-{% endfor %}
-</table>
+  <a href="{{ url_for('index') }}">Volver a la encuesta</a>
+</div>
 </body>
 </html>
+
