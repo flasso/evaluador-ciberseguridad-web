@@ -2,78 +2,105 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Definimos las preguntas por sección
-preguntas = {
-    "Información General": [
-        ("Nombre de la empresa", ""),
-        ("Persona de contacto", ""),
-        ("Correo electrónico", ""),
-        ("Ciudad", ""),
-        ("País", "Colombia"),
-    ],
-    "Infraestructura": [
-        ("¿Tiene firewall de hardware o UTM?", ["Sí", "No", "No sé", "Solo software"]),
-        ("¿Revisa regularmente la configuración del firewall?", ["Sí", "No", "No sé", "No tengo firewall"]),
-        ("¿Tiene WiFi con WPA2/WPA3 y red de invitados separada?", ["Sí", "No", "No sé", "Solo red básica"]),
-        ("¿Todos los equipos tienen antivirus con EDR?", ["Sí", "No", "No sé", "Solo en algunos equipos"]),
-    ],
-    "Gestión TI": [
-        ("¿Cuenta con personal responsable de TI o seguridad?", ["Sí dedicado", "Sí parcial", "No", "Proveedor externo"]),
-        ("¿Realizan copias de seguridad periódicas?", ["Sí diario", "Semanal", "Mensual", "No"]),
-        ("¿Las copias son probadas y están offline/inmutables?", ["Sí", "No", "No sé", "Solo online"]),
-    ],
-    "Concienciación y Respuesta": [
-        ("¿Capacitan a los empleados en ciberseguridad?", ["Sí anual", "Ocasional", "Nunca", "No sé"]),
-        ("¿Tienen plan de respuesta a incidentes?", ["Sí probado", "Sí documentado", "Idea básica", "No"]),
-    ]
-}
+# Definición de las preguntas segmentadas
+secciones = [
+    {
+        "titulo": "Gestión y Visibilidad",
+        "preguntas": [
+            "¿Su empresa cuenta con un responsable de TI?",
+            "¿Se monitorea la seguridad periódicamente?",
+            "¿Tiene inventario actualizado de equipos y software?"
+        ]
+    },
+    {
+        "titulo": "Protección de Red y Perímetro",
+        "preguntas": [
+            "¿Cuenta con un firewall de hardware o UTM?",
+            "¿El firewall está bien configurado y gestionado?",
+            "¿La red Wi-Fi está aislada para invitados?"
+        ]
+    },
+    {
+        "titulo": "Protección de Dispositivos y Datos",
+        "preguntas": [
+            "¿Todos los equipos tienen antivirus con EDR?",
+            "¿Las actualizaciones de sistema son automáticas?",
+            "¿Las contraseñas cumplen con políticas fuertes?",
+            "¿Se usa autenticación multifactor (MFA)?"
+        ]
+    },
+    {
+        "titulo": "Respaldo y Recuperación",
+        "preguntas": [
+            "¿Realiza copias de seguridad diarias?",
+            "¿Prueba regularmente sus respaldos?",
+            "¿Cuenta con copias offline o inmutables?"
+        ]
+    },
+    {
+        "titulo": "Concientización y Respuesta a Incidentes",
+        "preguntas": [
+            "¿Capacita al personal sobre phishing?",
+            "¿Existe un canal para reportar incidentes?",
+            "¿Tiene plan de respuesta a incidentes?"
+        ]
+    }
+]
 
-# Ponderación por respuesta (orden: mejor a peor)
-puntajes = [3, 2, 1, 0]
+opciones = [
+    ("Sí, completamente", 4),
+    ("Parcialmente", 2),
+    ("No", 0),
+    ("No sé", 1)
+]
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        nombre = request.form.get("nombre")
+        correo = request.form.get("correo")
+        empresa = request.form.get("empresa")
+        ciudad = request.form.get("ciudad")
+        pais = request.form.get("pais")
+
         respuestas = {}
-        totales = {}
-        max_puntos = {}
-        for seccion, qs in preguntas.items():
-            respuestas[seccion] = []
-            totales[seccion] = 0
-            max_puntos[seccion] = 0
-            for i, (q, opciones) in enumerate(qs):
-                clave = f"{seccion}_{i}"
-                val = request.form.get(clave)
-                if isinstance(opciones, list):
-                    puntos = puntajes[opciones.index(val)] if val in opciones else 0
-                    totales[seccion] += puntos
-                    max_puntos[seccion] += max(puntajes)
-                respuestas[seccion].append((q, val))
+        puntajes = {}
+        total_puntos = 0
+        total_max = 0
 
-        # Calcular porcentajes por sección
-        porcentajes = {
-            seccion: round((totales[seccion]/max_puntos[seccion])*100) if max_puntos[seccion] > 0 else 0
-            for seccion in preguntas.keys()
-        }
-        promedio_general = round(sum(porcentajes.values())/len(porcentajes))
+        for seccion in secciones:
+            sec_puntos = 0
+            sec_max = len(seccion["preguntas"]) * 4
+            for pregunta in seccion["preguntas"]:
+                valor = int(request.form.get(pregunta, 0))
+                respuestas[pregunta] = valor
+                sec_puntos += valor
+                total_puntos += valor
+            puntajes[seccion["titulo"]] = (sec_puntos, sec_max)
+            total_max += sec_max
 
-        # Determinar concepto
-        if promedio_general >= 80:
-            concepto = "Su postura es BUENA. Mantenga las buenas prácticas y continúe mejorando."
-        elif promedio_general >= 60:
-            concepto = "Su postura es ACEPTABLE, pero con áreas de mejora. Tome acciones inmediatas."
-        elif promedio_general >= 40:
-            concepto = "Su postura es de RIESGO ELEVADO. Urge implementar medidas."
+        porcentaje = round((total_puntos / total_max) * 100)
+
+        # Tabla de referencia y concepto
+        if porcentaje >= 80:
+            concepto = "Su postura de ciberseguridad es ROBUSTA. Mantenga las buenas prácticas."
+        elif porcentaje >= 60:
+            concepto = "Su postura es BUENA, pero aún hay oportunidades claras de mejora."
+        elif porcentaje >= 40:
+            concepto = "Su postura es DÉBIL. Se recomienda tomar medidas urgentes."
         else:
-            concepto = "Su postura es CRÍTICA. Requiere intervención urgente de especialistas."
+            concepto = "Su postura es CRÍTICA. Requiere intervención inmediata de un especialista."
 
-        return render_template("resultados.html", respuestas=respuestas, porcentajes=porcentajes,
-                               promedio_general=promedio_general, concepto=concepto)
+        return render_template("resultados.html", nombre=nombre, empresa=empresa,
+                               ciudad=ciudad, pais=pais,
+                               porcentaje=porcentaje, concepto=concepto,
+                               puntajes=puntajes, secciones=secciones,
+                               respuestas=respuestas, opciones=opciones)
 
-    return render_template("index.html", preguntas=preguntas)
+    return render_template("index.html", secciones=secciones, opciones=opciones)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, host="0.0.0.0")
 

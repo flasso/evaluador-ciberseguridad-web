@@ -1,32 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Evaluador de Ciberseguridad</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1 { color: #004080; }
+fieldset { margin-bottom: 20px; }
+</style>
 </head>
 <body>
 <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
-<h1>Evaluador de Postura de Ciberseguridad</h1>
+<h1>Evaluador de Ciberseguridad</h1>
 
 <form method="POST">
-{% for seccion, qs in preguntas.items() %}
-<section>
-<h2>{{ seccion }}</h2>
-{% for idx, (q, opciones) in enumerate(qs) %}
-<p><strong>{{ q }}</strong></p>
-{% if opciones %}
-{% for op in opciones %}
-<label><input type="radio" name="{{seccion}}_{{idx}}" value="{{op}}" required> {{op}}</label><br>
-{% endfor %}
-{% else %}
-<input type="text" name="{{seccion}}_{{idx}}" required><br>
-{% endif %}
-{% endfor %}
-</section>
-{% endfor %}
-<button type="submit">Enviar respuestas</button>
+  <fieldset>
+    <legend>Datos Generales</legend>
+    Empresa: <input name="empresa" required><br>
+    Nombre Contacto: <input name="nombre" required><br>
+    Correo Electrónico: <input name="correo" required><br>
+    Ciudad: <input name="ciudad" required><br>
+    País: <input name="pais" value="Colombia" required><br>
+  </fieldset>
+
+  {% for seccion in secciones %}
+  <fieldset>
+    <legend>{{ seccion.titulo }}</legend>
+    {% for pregunta in seccion.preguntas %}
+      <p><strong>{{ pregunta }}</strong><br>
+      {% for texto, valor in opciones %}
+        <label><input type="radio" name="{{ pregunta }}" value="{{ valor }}" required> {{ texto }}</label><br>
+      {% endfor %}
+      </p>
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
+
+  <button type="submit">Enviar</button>
 </form>
 </body>
 </html>
-

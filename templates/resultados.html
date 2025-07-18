@@ -1,33 +1,53 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Resultados</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1 { color: #004080; }
+table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background-color: #f0f0f0; }
+</style>
 </head>
 <body>
 <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
-<h1>Resultados de Evaluación</h1>
+<h1>Resultados de la Evaluación</h1>
 
-<p><strong>Promedio General:</strong> {{ promedio_general }}%</p>
+<p><strong>Empresa:</strong> {{ empresa }}</p>
+<p><strong>Contacto:</strong> {{ nombre }}</p>
+<p><strong>Ciudad:</strong> {{ ciudad }}</p>
+<p><strong>País:</strong> {{ pais }}</p>
+
+<p><strong>Puntaje general:</strong> {{ porcentaje }}%</p>
 <p><strong>Concepto:</strong> {{ concepto }}</p>
 
-<h2>Resultados por sección:</h2>
+<h2>Resultados por Sección</h2>
 <ul>
-{% for seccion, porc in porcentajes.items() %}
-<li>{{ seccion }}: {{ porc }}%</li>
-{% endfor %}
+  {% for titulo, (puntos, maximo) in puntajes.items() %}
+    <li>{{ titulo }}: {{ puntos }} / {{ maximo }}</li>
+  {% endfor %}
 </ul>
 
-<h2>Respuestas:</h2>
+<h2>Tabla de Preguntas y Respuestas</h2>
 <table>
-<tr><th>Sección</th><th>Pregunta</th><th>Respuesta</th></tr>
-{% for seccion, resp in respuestas.items() %}
-{% for q, r in resp %}
-<tr><td>{{ seccion }}</td><td>{{ q }}</td><td>{{ r }}</td></tr>
-{% endfor %}
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for seccion in secciones %}
+  {% for pregunta in seccion.preguntas %}
+  <tr>
+    <td>{{ pregunta }}</td>
+    <td>
+      {% for texto, valor in opciones %}
+        {% if respuestas[pregunta] == valor %}
+          {{ texto }}
+        {% endif %}
+      {% endfor %}
+    </td>
+  </tr>
+  {% endfor %}
 {% endfor %}
 </table>
-
 </body>
 </html>
