@@ -9,8 +9,8 @@ segmentos = {
         ("¿Existe inventario actualizado de activos?", ["Sí, detallado", "Parcial", "No actualizado", "No"])
     ],
     "Protección de Red": [
-        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No tengo firewall"]),
-        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No tengo firewall"]),
+        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No"]),
+        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No se gestiona"]),
         ("¿Wi-Fi está separado y seguro?", ["Sí, WPA3 y redes separadas", "Solo una red segura", "No seguro", "No sé"])
     ],
     "Protección de Dispositivos": [
@@ -24,11 +24,6 @@ segmentos = {
         ("¿Prueban restaurar backups?", ["Sí, documentado", "Ocasional", "Nunca", "No sé"]),
         ("¿Backups offline/inmutables?", ["Sí", "No", "No sé", "Desconozco"]),
         ("¿Plan de continuidad del negocio?", ["Sí, probado", "Documentado sin probar", "Idea básica", "No"])
-    ],
-    "Concienciación y Respuesta": [
-        ("¿Capacitación regular a empleados?", ["Sí, anual", "Ocasional", "Nunca", "No sé"]),
-        ("¿Procedimiento de reporte de incidentes?", ["Sí, claro", "Verbal", "No existe", "No sé"]),
-        ("¿Plan de respuesta a incidentes?", ["Sí, probado", "Documentado", "Básico", "No"])
     ]
 }
 
