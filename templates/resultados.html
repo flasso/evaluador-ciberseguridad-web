@@ -2,37 +2,42 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultado</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>Resultados</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+h1 { color: #004080; }
+h2 { color: #0077cc; }
+table { border-collapse: collapse; width: 100%; }
+td, th { border: 1px solid #ccc; padding: 5px; }
+</style>
 </head>
 <body>
-<div class="container">
-  <h1>Resultado de tu Evaluación</h1>
-  <p>Puntaje: {{ porcentaje|round(2) }}%</p>
+<h1>Resultados de la Evaluación</h1>
+<p><strong>Puntaje:</strong> {{ porcentaje }}%</p>
+<p><strong>Postura:</strong> {{ concepto }}</p>
+<p>{{ postura }}</p>
 
-  {% if porcentaje >= 80 %}
-    <p>🎯 Excelente: Tienes una postura sólida. Continúa así.</p>
-  {% elif porcentaje >= 50 %}
-    <p>⚠️ Media: Hay áreas de mejora. Revisa tus brechas.</p>
-  {% else %}
-    <p>🚨 Crítica: Necesitas tomar acciones urgentes y consultar a un especialista.</p>
-  {% endif %}
+<h2>Tabla de referencia</h2>
+<table>
+<tr><th>Rango</th><th>Postura</th><th>Concepto</th></tr>
+{% for minv, maxv, name, desc in referencia %}
+<tr><td>{{ minv }} - {{ maxv }}%</td><td>{{ name }}</td><td>{{ desc }}</td></tr>
+{% endfor %}
+</table>
 
-  <h2>Tus Respuestas:</h2>
-  <ul>
-    {% for segmento, preguntas in preguntas %}
-      <li><strong>{{ segmento }}</strong>
-        <ul>
-        {% for idx, (q, opciones) in enumerate(preguntas) %}
-          <li>{{ q }}: {{ respuestas.get("p_" + segmento + "_" + idx|string, "No respondida") }}</li>
-        {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+<h2>Recomendaciones</h2>
+<ul>
+{% for r in recomendaciones %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
 
-  <a href="{{ url_for('index') }}">Volver a la encuesta</a>
-</div>
+<h2>Tus Respuestas</h2>
+<table>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for pregunta, resp in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ resp }}</td></tr>
+{% endfor %}
+</table>
 </body>
 </html>
-
