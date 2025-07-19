@@ -6,9 +6,20 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados</h1></header>
-<p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
+<header><h1>Resultados de la Evaluación</h1></header>
 
+<p><strong>Empresa:</strong> {{ datos.empresa }} | <strong>Nombre:</strong> {{ datos.nombre }} | <strong>Email:</strong> {{ datos.email }} | <strong>Sector:</strong> {{ datos.sector }} | <strong>País:</strong> {{ datos.pais }}</p>
+
+<h2>Postura General: {{ porcentaje }}%</h2>
+<p>Referencia:</p>
+<ul>
+  <li>80-100%: Robusta</li>
+  <li>60-79%: Aceptable</li>
+  <li>40-59%: Riesgosa</li>
+  <li>&lt;40%: Crítica</li>
+</ul>
+
+<h3>Respuestas</h3>
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
 {% for pregunta, respuesta in respuestas.items() %}
@@ -16,9 +27,14 @@
 {% endfor %}
 </table>
 
-<h2>Postura general: … %</h2>
-<p>Referencia: 80-100% Robusta, 60-79% Aceptable, 40-59% Riesgosa, &lt;40% Crítica</p>
-<p>Recomendaciones: Fortalezca áreas débiles, implemente MFA, considere MSSP si no tiene personal especializado, respalde regularmente y eduque a su personal.</p>
+<h3>Recomendaciones</h3>
+<ul>
+  <li>Fortalezca las áreas más débiles.</li>
+  <li>Implemente MFA en todas las cuentas críticas.</li>
+  <li>Contrate un proveedor MSSP si no tiene personal especializado.</li>
+  <li>Respaldos diarios y pruebas de restauración periódicas.</li>
+  <li>Eduque y capacite regularmente a su personal.</li>
+</ul>
 
 </body>
 </html>

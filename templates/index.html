@@ -6,8 +6,7 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
-<img src="/static/logo.png" alt="Logo" width="100">
+<header><h1>Evaluador de Ciberseguridad</h1></header>
 <form method="post">
   <fieldset>
     <legend>Datos de la Empresa</legend>
@@ -21,11 +20,12 @@
   {% for segmento, preguntas in segmentos %}
   <fieldset>
     <legend>{{ segmento }}</legend>
-    {% for idx, (pregunta, opciones) in preguntas|list %}
-    <label>{{ pregunta }}</label>
-    {% for opcion in opciones %}
-      <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}<br>
-    {% endfor %}
+    {% for idx, (pregunta, opciones) in enumerate(preguntas) %}
+      <label>{{ pregunta }}</label><br>
+      {% for opcion in opciones %}
+        <input type="radio" name="pregunta{{loop.index0}}_{{idx}}" value="{{ opcion }}" required> {{ opcion }}
+      {% endfor %}
+      <br><br>
     {% endfor %}
   </fieldset>
   {% endfor %}
