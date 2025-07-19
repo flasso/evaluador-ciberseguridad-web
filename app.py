@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+# Datos de las preguntas segmentadas
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
@@ -9,13 +10,13 @@ segmentos = [
         ("¿Tienen inventario actualizado de equipos/datos?", ["Sí, detallado", "Sí, incompleto", "Parcial", "No"]),
     ]),
     ("Protección de Red", [
-        ("¿Tienen firewall de hardware o UTM?", ["Sí, gestionado", "Sí, mal configurado", "Solo software", "No", "No tengo firewall"]),
+        ("¿Tienen firewall de hardware o UTM?", ["Sí, gestionado", "Sí, mal configurado", "Solo software", "No", "No tiene firewall"]),
         ("¿Quién gestiona el firewall?", ["Experto interno", "Proveedor MSSP", "TI no especializado", "No hay firewall"]),
         ("¿Wi-Fi está segura y separada para invitados?", ["Sí, WPA3", "Sí, pero débil", "No seguro", "No"]),
     ]),
     ("Protección de Dispositivos", [
         ("¿Tienen antivirus/EDR en todos los equipos?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
-        ("¿Contraseñas son seguras y se actualizan regularmente?", ["Sí, política y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
+        ("¿Las contraseñas son seguras y se actualizan periódicamente?", ["Sí, política clara", "Sí, pero inconsistente", "No mucho", "No"]),
         ("¿Actualizaciones de sistema/software son automáticas?", ["Sí, automatizadas", "Manual regular", "Irregular", "No"]),
         ("¿Tienen MFA activada en cuentas críticas?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
     ]),
@@ -29,9 +30,10 @@ segmentos = [
 def index():
     if request.method == 'POST':
         respuestas = dict(request.form)
-        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
-    return render_template("index.html", segmentos=segmentos)
+        return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos)
+    return render_template('index.html', segmentos=segmentos)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+
 
