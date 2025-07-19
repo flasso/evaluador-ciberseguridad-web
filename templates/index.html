@@ -18,13 +18,13 @@
     <input name="pais" placeholder="País" value="Colombia">
   </fieldset>
 
-  {% for segmento, preguntas in segmentos %}
+  {% for s_idx, (segmento, preguntas) in enumerate(segmentos) %}
   <fieldset>
     <legend>{{ segmento }}</legend>
-    {% for pregunta in preguntas %}
-      <p><strong>{{ pregunta[0] }}</strong></p>
-      {% for opcion in pregunta[1] %}
-        <input type="radio" name="q{{ loop.index0 }}_{{ loop.parentloop.index0 }}" value="{{ loop.index0 }}" required> {{ opcion }}<br>
+    {% for p_idx, (pregunta, opciones) in enumerate(preguntas) %}
+      <p><strong>{{ pregunta }}</strong></p>
+      {% for o_idx, opcion in enumerate(opciones) %}
+        <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
       {% endfor %}
     {% endfor %}
   </fieldset>
@@ -34,4 +34,3 @@
 </form>
 </body>
 </html>
-
