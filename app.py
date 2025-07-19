@@ -31,7 +31,15 @@ def index():
     if request.method == "POST":
         respuestas = dict(request.form)
         return render_template("resultados.html", respuestas=respuestas)
-    return render_template("index.html", segmentos=segmentos)
+
+    segmentos_indexados = []
+    for s_idx, (segmento, preguntas) in enumerate(segmentos):
+        preguntas_indexadas = []
+        for p_idx, (pregunta, opciones) in enumerate(preguntas):
+            preguntas_indexadas.append((p_idx, pregunta, opciones))
+        segmentos_indexados.append((s_idx, segmento, preguntas_indexadas))
+
+    return render_template("index.html", segmentos=segmentos_indexados)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

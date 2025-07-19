@@ -6,8 +6,9 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados</h1></header>
-<p>Gracias por completar la evaluación. Aquí están tus respuestas:</p>
+<header><h1>Resultados de la Evaluación</h1></header>
+
+<p>Gracias por completar la evaluación. Aquí están tus resultados:</p>
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
@@ -16,7 +17,21 @@
 {% endfor %}
 </table>
 
-<p>Revisa las áreas débiles y fortalece tu postura. Si necesitas asesoría profesional, contáctanos.</p>
+<h2>Postura general: … %</h2>
+<p>Referencia: <br>
+✅ 80-100% Robusta <br>
+🟡 60-79% Aceptable <br>
+🟥 40-59% Riesgosa <br>
+🚨 &lt;40% Crítica</p>
+
+<h3>Recomendaciones</h3>
+<ul>
+  <li>Fortalezca las áreas débiles detectadas.</li>
+  <li>Implemente autenticación multifactor (MFA).</li>
+  <li>Considere servicios gestionados si no tiene personal especializado.</li>
+  <li>Realice respaldos regulares y pruebe la restauración.</li>
+  <li>Eduque y concientice a su personal.</li>
+</ul>
 
 </body>
 </html>
