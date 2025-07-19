@@ -7,26 +7,32 @@
 </head>
 <body>
 <header><h1>Resultados</h1></header>
-<p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
 
-<h2>Postura general: {{ porcentaje }}%</h2>
-<p>Referencia: 80-100% Robusta, 60-79% Aceptable, 40-59% Riesgosa, &lt;40% Crítica</p>
+<p><strong>Postura general:</strong> {{ porcentaje }}%</p>
+<p><strong>Diagnóstico:</strong> {{ concepto }}</p>
 
+<h2>Tabla de Referencia</h2>
+<ul>
+<li>80-100%: Robusta</li>
+<li>60-79%: Aceptable</li>
+<li>40-59%: Riesgosa</li>
+<li>&lt;40%: Crítica</li>
+</ul>
+
+<h2>Respuestas</h2>
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta in preguntas %}
+    <tr>
+      <td>{{ pregunta[0] }}</td>
+      <td>{{ respuestas['q' ~ loop.index0 ~ '_' ~ loop.parentloop.index0] }}</td>
+    </tr>
+    {% endfor %}
 {% endfor %}
 </table>
 
-<h3>Recomendaciones:</h3>
-<ul>
-<li>Fortalezca las áreas con puntajes bajos</li>
-<li>Implemente autenticación multifactor (MFA)</li>
-<li>Realice copias de seguridad periódicas y pruebe su restauración</li>
-<li>Capacite a su personal</li>
-<li>Considere contratar un MSSP si no tiene personal interno especializado</li>
-</ul>
+<p><strong>Recomendaciones:</strong> Revise las áreas débiles detectadas, active MFA, implemente una política de contraseñas, verifique respaldos y considere apoyo externo si no cuenta con personal especializado.</p>
 
 </body>
 </html>
