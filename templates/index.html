@@ -6,26 +6,26 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Evaluador de Ciberseguridad</h1></header>
+<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<img src="/static/logo.png" alt="Logo" width="100">
 <form method="post">
   <fieldset>
     <legend>Datos de la Empresa</legend>
     <input name="empresa" placeholder="Empresa" required>
     <input name="nombre" placeholder="Nombre" required>
     <input name="email" type="email" placeholder="Email" required>
-    <input name="sector" placeholder="Sector">
+    <input name="sector" placeholder="Sector" value="Servicios">
     <input name="pais" placeholder="País" value="Colombia">
   </fieldset>
 
-  {% for segmento, preguntas in segmentos %}
+  {% for s_idx, (segmento, preguntas) in enumerate(segmentos) %}
   <fieldset>
     <legend>{{ segmento }}</legend>
-    {% for pregunta, opciones in preguntas %}
-      <label>{{ pregunta }}</label><br>
-      {% for opcion in opciones %}
-        <input type="radio" name="pregunta{{ loop.parent.loop.index0 }}_{{ loop.index0 }}" value="{{ opcion }}" required> {{ opcion }}
-      {% endfor %}
-      <br><br>
+    {% for p_idx, (pregunta, opciones) in enumerate(preguntas) %}
+    <label>{{ pregunta }}</label>
+    {% for o_idx, opcion in enumerate(opciones) %}
+      <input type="radio" name="q_{{s_idx}}_{{p_idx}}" value="{{ opcion }}" required> {{ opcion }}<br>
+    {% endfor %}
     {% endfor %}
   </fieldset>
   {% endfor %}

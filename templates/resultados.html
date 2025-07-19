@@ -1,17 +1,22 @@
-<h3>Postura general: {{ porcentaje }}% — {{ concepto }}</h3>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resultados</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<header><h1>Resultados</h1></header>
+<p>Gracias por completar la evaluación. Aquí están tus respuestas:</p>
 
 <table>
-<tr><th>Rango (%)</th><th>Interpretación</th></tr>
-<tr><td>80-100</td><td>Robusta</td></tr>
-<tr><td>60-79</td><td>Aceptable</td></tr>
-<tr><td>40-59</td><td>Riesgosa</td></tr>
-<tr><td>0-39</td><td>Crítica</td></tr>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for pregunta, respuesta in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% endfor %}
 </table>
 
-<h3>Recomendaciones</h3>
-<ul>
-{% for rec in recomendaciones %}
-  <li>{{ rec }}</li>
-{% endfor %}
-</ul>
+<p>Revisa las áreas débiles y fortalece tu postura. Si necesitas asesoría profesional, contáctanos.</p>
 
+</body>
+</html>
