@@ -2,49 +2,35 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador Ciberseguridad</title>
+<title>Evaluador de Ciberseguridad</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<img src="{{ url_for('static', filename='logo.png') }}" width="120">
-<h1>Evaluador de Postura de Ciberseguridad</h1>
+<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<img src="/static/logo.png" alt="Logo" width="100">
 <form method="post">
+  <fieldset>
+    <legend>Datos de la Empresa</legend>
+    <input name="empresa" placeholder="Empresa" required>
+    <input name="nombre" placeholder="Nombre" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="sector" placeholder="Sector">
+    <input name="pais" placeholder="País" value="Colombia">
+  </fieldset>
 
-<h2>Datos Generales</h2>
-<label>Empresa: <input type="text" name="Empresa" required></label><br>
-<label>Contacto: <input type="text" name="Contacto" required></label><br>
-<label>Email: <input type="email" name="Email" required></label><br>
-<label>Sector:
-  <select name="Sector">
-    <option>Servicios</option>
-    <option>Manufactura</option>
-    <option>Tecnología</option>
-    <option>Alimentos</option>
-    <option>Legales</option>
-    <option>Contables</option>
-    <option>Distribución</option>
-    <option>Otro</option>
-  </select>
-</label><br>
-<label>País: <input type="text" name="País" value="Colombia"></label><br>
-<hr>
-
-{% for segmento, preguntas in segmentos.items() %}
-  <div class="segmento">
-    <h2>{{ segmento }}</h2>
-    {% for pregunta_opciones in preguntas %}
-      {% set idx = loop.index0 %}
-      <p>{{ pregunta_opciones[0] }}</p>
-      {% for opcion in pregunta_opciones[1] %}
-        <label>
-          <input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}
-        </label><br>
-      {% endfor %}
+  {% for segmento, preguntas in segmentos %}
+  <fieldset>
+    <legend>{{ segmento }}</legend>
+    {% for idx, (pregunta, opciones) in preguntas|list %}
+    <label>{{ pregunta }}</label>
+    {% for opcion in opciones %}
+      <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}<br>
     {% endfor %}
-    <hr>
-  </div>
-{% endfor %}
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
 
-<button type="submit">Enviar</button>
+  <button type="submit">Enviar</button>
 </form>
 </body>
 </html>

@@ -2,37 +2,35 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-segmentos = {
-    "Gestión y Visibilidad": [
-        ("¿Quién es el responsable de TI y ciberseguridad?", ["Dedicado y certificado", "Personal administrativo", "Proveedor externo", "Nadie"]),
-        ("¿Hay monitoreo regular de seguridad?", ["Diario", "Semanal", "Solo ante incidentes", "No"]),
-        ("¿Existe inventario actualizado de activos?", ["Sí, detallado", "Parcial", "No actualizado", "No"])
-    ],
-    "Protección de Red": [
-        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No"]),
-        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No se gestiona"]),
-        ("¿Wi-Fi está separado y seguro?", ["Sí, WPA3 y redes separadas", "Solo una red segura", "No seguro", "No sé"])
-    ],
-    "Protección de Dispositivos": [
-        ("¿Todos tienen antivirus con EDR?", ["Sí, empresarial en todos", "En la mayoría", "Gratuitos", "No"]),
-        ("¿Actualizaciones automáticas activas?", ["Sí, automatizadas", "Sí, manuales", "Irregulares", "No"]),
-        ("¿Política de contraseñas fuertes?", ["Sí, con gestor", "Inconsistente", "No clara", "No"]),
-        ("¿MFA activado en cuentas críticas?", ["Sí en todas", "En algunas", "Pocas", "Ninguna"])
-    ],
-    "Respaldo y Continuidad": [
-        ("¿Backups diarios de datos críticos?", ["Sí, diarios", "Semanales", "Mensuales", "Nunca"]),
-        ("¿Prueban restaurar backups?", ["Sí, documentado", "Ocasional", "Nunca", "No sé"]),
-        ("¿Backups offline/inmutables?", ["Sí", "No", "No sé", "Desconozco"]),
-        ("¿Plan de continuidad del negocio?", ["Sí, probado", "Documentado sin probar", "Idea básica", "No"])
-    ]
-}
+segmentos = [
+    ("Gestión y Visibilidad", [
+        ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
+        ("¿Monitorean la seguridad regularmente?", ["Diario/24x7", "Semanal", "Mensual", "No"]),
+        ("¿Tienen inventario actualizado de equipos/datos?", ["Sí, detallado", "Sí, incompleto", "Parcial", "No"]),
+    ]),
+    ("Protección de Red", [
+        ("¿Tienen firewall de hardware o UTM?", ["Sí, gestionado", "Sí, mal configurado", "Solo software", "No"]),
+        ("¿Quién gestiona el firewall?", ["Experto interno", "Proveedor MSSP", "TI no especializado", "No hay firewall"]),
+        ("¿Wi-Fi está segura y separada para invitados?", ["Sí, WPA3", "Sí, pero débil", "No seguro", "No"]),
+    ]),
+    ("Protección de Dispositivos", [
+        ("¿Tienen antivirus/EDR en todos los equipos?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
+        ("¿Actualizaciones de sistema/software son automáticas?", ["Sí, automatizadas", "Manual regular", "Irregular", "No"]),
+        ("¿Contraseñas son fuertes y únicas?", ["Sí, política y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
+        ("¿Tienen MFA activada en cuentas críticas?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
+    ]),
+    ("Respaldo y Conciencia", [
+        ("¿Respaldan datos críticos a diario?", ["Sí, diario", "Semanal", "Mensual", "No"]),
+        ("¿Prueban restauración de respaldos?", ["Sí, programada", "Ocasional", "Nunca", "No sabe"]),
+    ])
+]
 
-@app.route("/", methods=["GET", "POST"])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == "POST":
+    if request.method == 'POST':
         respuestas = dict(request.form)
-        return render_template("resultados.html", respuestas=respuestas)
-    return render_template("index.html", segmentos=segmentos)
+        return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos)
+    return render_template('index.html', segmentos=segmentos)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host='0.0.0.0', port=5000)
