@@ -6,9 +6,11 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados de la Evaluación</h1></header>
+<header><h1>Resultados</h1></header>
+<p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
 
-<p>Gracias por completar la evaluación. Aquí están tus resultados:</p>
+<h2>Postura general: {{ porcentaje }}%</h2>
+<p>Referencia: 80-100% Robusta, 60-79% Aceptable, 40-59% Riesgosa, &lt;40% Crítica</p>
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
@@ -17,20 +19,13 @@
 {% endfor %}
 </table>
 
-<h2>Postura general: … %</h2>
-<p>Referencia: <br>
-✅ 80-100% Robusta <br>
-🟡 60-79% Aceptable <br>
-🟥 40-59% Riesgosa <br>
-🚨 &lt;40% Crítica</p>
-
-<h3>Recomendaciones</h3>
+<h3>Recomendaciones:</h3>
 <ul>
-  <li>Fortalezca las áreas débiles detectadas.</li>
-  <li>Implemente autenticación multifactor (MFA).</li>
-  <li>Considere servicios gestionados si no tiene personal especializado.</li>
-  <li>Realice respaldos regulares y pruebe la restauración.</li>
-  <li>Eduque y concientice a su personal.</li>
+<li>Fortalezca las áreas con puntajes bajos</li>
+<li>Implemente autenticación multifactor (MFA)</li>
+<li>Realice copias de seguridad periódicas y pruebe su restauración</li>
+<li>Capacite a su personal</li>
+<li>Considere contratar un MSSP si no tiene personal interno especializado</li>
 </ul>
 
 </body>
