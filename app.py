@@ -1,46 +1,37 @@
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+segmentos = [
+    ("Gestión y Visibilidad", [
+        ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
+        ("¿Monitorean la seguridad regularmente?", ["Diario/24x7", "Semanal", "Mensual", "No"]),
+        ("¿Tienen inventario actualizado de equipos/datos?", ["Sí, detallado", "Sí, incompleto", "Parcial", "No"]),
+    ]),
+    ("Protección de Red", [
+        ("¿Tienen firewall de hardware o UTM?", ["Sí, gestionado", "Sí, mal configurado", "Solo software", "No"]),
+        ("¿Quién gestiona el firewall?", ["Experto interno", "Proveedor MSSP", "TI no especializado", "No hay firewall"]),
+        ("¿Wi-Fi está segura y separada para invitados?", ["Sí, WPA3", "Sí, pero débil", "No seguro", "No"]),
+    ]),
+    ("Protección de Dispositivos", [
+        ("¿Tienen antivirus/EDR en todos los equipos?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
+        ("¿Actualizaciones de sistema/software son automáticas?", ["Sí, automatizadas", "Manual regular", "Irregular", "No"]),
+        ("¿Contraseñas son fuertes y únicas?", ["Sí, política y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
+        ("¿Tienen MFA activada en cuentas críticas?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
+    ]),
+    ("Respaldo y Conciencia", [
+        ("¿Respaldan datos críticos a diario?", ["Sí, diario", "Semanal", "Mensual", "No"]),
+        ("¿Prueban restauración de respaldos?", ["Sí, programada", "Ocasional", "Nunca", "No sabe"]),
+    ])
+]
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        datos = dict(request.form)
-        respuestas = {k: v for k, v in datos.items() if k.startswith("pregunta")}
-
-        # Calcular puntaje
-        puntaje_total = 0
-        max_puntaje = 0
-        recomendaciones = []
-
-        for key, respuesta in respuestas.items():
-            if respuesta == "Dedicado y certificado" or respuesta.startswith("Sí"):
-                puntaje_total += 5
-            elif respuesta == "Interno no exclusivo" or "Manual" in respuesta or "Inconsistente" in respuesta:
-                puntaje_total += 3
-            elif respuesta == "Proveedor externo" or "Gratis" in respuesta:
-                puntaje_total += 2
-            else:
-                puntaje_total += 0
-            max_puntaje += 5
-
-            if respuesta in ["No", "No seguro", "No hay firewall", "No sabe"]:
-                recomendaciones.append(f"Mejorar: {key} — respuesta actual: {respuesta}")
-
-        porcentaje = round((puntaje_total / max_puntaje) * 100)
-
-        if porcentaje < 40:
-            concepto = "Crítica"
-        elif porcentaje < 60:
-            concepto = "Riesgosa"
-        elif porcentaje < 80:
-            concepto = "Aceptable"
-        else:
-            concepto = "Robusta"
-
-        return render_template(
-            "resultados.html",
-            datos=datos,
-            respuestas=respuestas,
-            porcentaje=porcentaje,
-            concepto=concepto,
-            recomendaciones=recomendaciones,
-        )
-
+        respuestas = dict(request.form)
+        # Aquí podrías calcular porcentaje, concepto y recomendaciones con IA si lo deseas
+        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
     return render_template("index.html", segmentos=segmentos)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
