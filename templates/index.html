@@ -1,12 +1,46 @@
-{% for s_idx in range(segmentos|length) %}
-<fieldset>
-  <legend>{{ segmentos[s_idx][0] }}</legend>
-  {% for p_idx in range(segmentos[s_idx][1]|length) %}
-    <label>{{ segmentos[s_idx][1][p_idx][0] }}</label><br>
-    {% for opcion in segmentos[s_idx][1][p_idx][1] %}
-      <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
-    {% endfor %}
-  {% endfor %}
-</fieldset>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Evaluador de Ciberseguridad</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<img src="/static/logo.png" alt="Logo" width="100">
+<form method="post">
+  <fieldset>
+    <legend>Datos de la Empresa</legend>
+    <input name="empresa" placeholder="Empresa" required>
+    <input name="nombre" placeholder="Nombre" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <select name="sector" required>
+      <option value="">Seleccione sector</option>
+      <option>Servicios</option>
+      <option>Manufactura</option>
+      <option>Tecnología</option>
+      <option>Alimentos</option>
+      <option>Legales</option>
+      <option>Contables</option>
+      <option>Distribución</option>
+      <option>Otros</option>
+    </select>
+    <input name="pais" placeholder="País" value="Colombia">
+  </fieldset>
 
+  {% for s_idx in range(segmentos|length) %}
+  <fieldset>
+    <legend>{{ segmentos[s_idx][0] }}</legend>
+    {% for p_idx in range(segmentos[s_idx][1]|length) %}
+      <label>{{ segmentos[s_idx][1][p_idx][0] }}</label><br>
+      {% for opcion in segmentos[s_idx][1][p_idx][1] %}
+        <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
+      {% endfor %}
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
+
+  <button type="submit">Enviar</button>
+</form>
+</body>
+</html>

@@ -9,30 +9,23 @@
 <header><h1>Resultados</h1></header>
 <p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
 
-<h2>Porcentaje total: {{ porcentaje }}%</h2>
-
-<h3>Tabla de referencia</h3>
-<ul>
-<li>80-100%: Robusta</li>
-<li>60-79%: Aceptable</li>
-<li>40-59%: Riesgosa</li>
-<li>&lt;40%: Crítica</li>
-</ul>
-
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in resultados %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% for key, value in respuestas.items() %}
+<tr><td>{{ key }}</td><td>{{ value }}</td></tr>
 {% endfor %}
 </table>
 
-<h3>Recomendaciones</h3>
+<h2>Postura general: … %</h2>
+<p>Referencia: 80-100% Robusta, 60-79% Aceptable, 40-59% Riesgosa, &lt;40% Crítica</p>
+
+<h3>Recomendaciones generales:</h3>
 <ul>
-  <li>Fortalezca las áreas con calificaciones bajas o críticas.</li>
-  <li>Implemente autenticación multifactor (MFA) en todas las cuentas críticas.</li>
-  <li>Si no tiene personal especializado, considere contratar un proveedor MSSP.</li>
-  <li>Realice respaldos frecuentes y pruebe su restauración regularmente.</li>
-  <li>Capacite a su personal en ciberseguridad y concienciación.</li>
+  <li>Fortalezca las áreas con respuestas débiles.</li>
+  <li>Implemente MFA en cuentas críticas.</li>
+  <li>Revise políticas de contraseñas y actualizaciones.</li>
+  <li>Considere un proveedor MSSP si no cuenta con personal especializado.</li>
+  <li>Eduque al personal regularmente sobre ciberseguridad.</li>
 </ul>
 
 </body>
