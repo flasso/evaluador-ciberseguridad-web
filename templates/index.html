@@ -3,24 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Evaluador Ciberseguridad</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; }
+  h1 { color: #003366; }
+  .segmento { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+</style>
 </head>
 <body>
 <img src="{{ url_for('static', filename='logo.png') }}" width="120">
 <h1>Evaluador de Postura de Ciberseguridad</h1>
 <form method="post">
+  <p><label>Empresa: <input type="text" name="empresa" required></label></p>
+  <p><label>Nombre: <input type="text" name="nombre" required></label></p>
+  <p><label>Email: <input type="email" name="email" required></label></p>
+  <p><label>Sector:
+    <select name="sector">
+      <option>Servicios</option>
+      <option>Manufactura</option>
+      <option>Tecnología</option>
+      <option>Alimentos</option>
+      <option>Legales</option>
+      <option>Contables</option>
+      <option>Distribución</option>
+      <option>Otros</option>
+    </select>
+  </label></p>
+  <p><label>País: <input type="text" name="pais" value="Colombia"></label></p>
+
   {% for segmento, preguntas in segmentos.items() %}
-    <h2>{{ segmento }}</h2>
-    {% for idx, pregunta_opciones in preguntas|list %}
-      {% set pregunta = pregunta_opciones[0] %}
-      {% set opciones = pregunta_opciones[1] %}
-      <p>{{ pregunta }}</p>
-      {% for opcion in opciones %}
-        <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+    <div class="segmento">
+      <h2>{{ segmento }}</h2>
+      {% for idx, pregunta_opciones in enumerate(preguntas) %}
+        <p>{{ pregunta_opciones[0] }}</p>
+        {% for opcion in pregunta_opciones[1] %}
+          <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
-    <hr>
+    </div>
   {% endfor %}
-  <button type="submit">Enviar</button>
+  <p><button type="submit">Enviar</button></p>
 </form>
 </body>
 </html>
