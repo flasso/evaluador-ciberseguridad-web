@@ -2,29 +2,25 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador de Ciberseguridad</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>Evaluador Ciberseguridad</title>
 </head>
 <body>
-<div class="container">
-  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
-  <h1>Evaluador de Postura de Ciberseguridad</h1>
-  <form method="post">
-    {% for segmento, preguntas in preguntas %}
-      <h2>{{ segmento }}</h2>
-      {% for q, opciones in preguntas %}
-        <p>{{ loop.index }}. {{ q }}</p>
-        {% if opciones %}
-          {% for idx, op in enumerate(opciones) %}
-            <label><input type="radio" name="p_{{ segmento }}_{{ loop.parent.loop.index0 }}" value="{{ idx }}"> {{ op }}</label><br>
-          {% endfor %}
-        {% else %}
-          <input type="text" name="p_{{ segmento }}_{{ loop.parent.loop.index0 }}">
-        {% endif %}
+<img src="{{ url_for('static', filename='logo.png') }}" width="120">
+<h1>Evaluador de Postura de Ciberseguridad</h1>
+<form method="post">
+  {% for segmento, preguntas in segmentos.items() %}
+    <h2>{{ segmento }}</h2>
+    {% for idx, pregunta_opciones in preguntas|list %}
+      {% set pregunta = pregunta_opciones[0] %}
+      {% set opciones = pregunta_opciones[1] %}
+      <p>{{ pregunta }}</p>
+      {% for opcion in opciones %}
+        <label><input type="radio" name="{{ segmento }}_{{ idx }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
       {% endfor %}
     {% endfor %}
-    <button type="submit">Enviar Respuestas</button>
-  </form>
-</div>
+    <hr>
+  {% endfor %}
+  <button type="submit">Enviar</button>
+</form>
 </body>
 </html>

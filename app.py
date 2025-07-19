@@ -1,50 +1,38 @@
 from flask import Flask, render_template, request
+
 app = Flask(__name__)
 
-# Segmentos y preguntas
-PREGUNTAS = [
-    ("Información General", [
-        ("¿Nombre de la empresa?", []),
-        ("¿Nombre del contacto?", []),
-        ("¿Correo electrónico?", []),
-        ("¿Sector de la empresa?", ["Servicios", "Manufactura", "Tecnología", "Alimentos", "Legales", "Contables", "Distribución", "Otros"]),
-        ("¿Ciudad?", []),
-        ("¿País?", ["Colombia", "Otro"])
-    ]),
-    ("Infraestructura y Seguridad", [
-        ("¿Cuenta con firewall de red?", ["Sí, bien configurado", "Sí, pero no sé su estado", "No tengo firewall", "No sé"]),
-        ("¿Revisa periódicamente la configuración del firewall?", ["Sí, regularmente", "Sí, ocasionalmente", "No", "No tengo firewall"]),
-        ("¿Cuenta con antivirus con EDR en todos los equipos?", ["Sí, todos", "Parcialmente", "No", "No sé"]),
-        ("¿La red WiFi tiene contraseña fuerte y separada por invitados?", ["Sí, ambas cosas", "Solo contraseña fuerte", "No", "No sé"])
-    ]),
-    ("Gestión y Continuidad", [
-        ("¿Tiene un responsable de TI o ciberseguridad?", ["Sí, interno", "Sí, externo (MSSP)", "No", "No sé"]),
-        ("¿Cuenta con respaldos periódicos probados?", ["Sí, bien gestionados", "A veces", "No", "No sé"]),
-        ("¿Tiene plan de continuidad y recuperación ante desastres?", ["Sí", "Parcial", "No", "No sé"]),
-        ("¿Capacita regularmente al personal en ciberseguridad?", ["Sí", "A veces", "No", "No sé"])
-    ])
-]
+segmentos = {
+    "Gestión y Visibilidad": [
+        ("¿Quién es el responsable de TI y ciberseguridad?", ["Dedicado y certificado", "Personal administrativo", "Proveedor externo", "Nadie"]),
+        ("¿Hay monitoreo regular de seguridad?", ["Diario", "Semanal", "Solo ante incidentes", "No"]),
+        ("¿Existe inventario actualizado de activos?", ["Sí, detallado", "Parcial", "No actualizado", "No"])
+    ],
+    "Protección de Red": [
+        ("¿Tienen firewall de hardware?", ["Sí, bien configurado", "Sí, pero mal configurado", "Solo software en PC", "No"]),
+        ("¿Quién gestiona el firewall?", ["Especialista en seguridad", "TI interno no dedicado", "Proveedor general", "No se gestiona"]),
+        ("¿Wi-Fi está separado y seguro?", ["Sí, WPA3 y redes separadas", "Solo una red segura", "No seguro", "No sé"])
+    ],
+    "Protección de Dispositivos": [
+        ("¿Todos tienen antivirus con EDR?", ["Sí, empresarial en todos", "En la mayoría", "Gratuitos", "No"]),
+        ("¿Actualizaciones automáticas activas?", ["Sí, automatizadas", "Sí, manuales", "Irregulares", "No"]),
+        ("¿Política de contraseñas fuertes?", ["Sí, con gestor", "Inconsistente", "No clara", "No"]),
+        ("¿MFA activado en cuentas críticas?", ["Sí en todas", "En algunas", "Pocas", "Ninguna"])
+    ],
+    "Respaldo y Continuidad": [
+        ("¿Backups diarios de datos críticos?", ["Sí, diarios", "Semanales", "Mensuales", "Nunca"]),
+        ("¿Prueban restaurar backups?", ["Sí, documentado", "Ocasional", "Nunca", "No sé"]),
+        ("¿Backups offline/inmutables?", ["Sí", "No", "No sé", "Desconozco"]),
+        ("¿Plan de continuidad del negocio?", ["Sí, probado", "Documentado sin probar", "Idea básica", "No"])
+    ]
+}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        respuestas = {}
-        for k, v in request.form.items():
-            respuestas[k] = v
+        respuestas = dict(request.form)
+        return render_template("resultados.html", respuestas=respuestas)
+    return render_template("index.html", segmentos=segmentos)
 
-        # Cálculo básico de puntaje por ahora
-        puntaje = 0
-        max_puntaje = 0
-        for segmento, preguntas in PREGUNTAS:
-            for idx, (texto, opciones) in enumerate(preguntas):
-                if opciones:
-                    max_puntaje += 3
-                    valor = respuestas.get(f"p_{segmento}_{idx}", "")
-                    if valor == "0": puntaje += 3
-                    elif valor == "1": puntaje += 2
-                    elif valor == "2": puntaje += 1
-
-        porcentaje = (puntaje / max_puntaje) * 100 if max_puntaje else 0
-        return render_template("resultados.html", respuestas=respuestas, porcentaje=porcentaje, preguntas=PREGUNTAS)
-
-    return render_template("index.html", preguntas=PREGUNTAS)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
