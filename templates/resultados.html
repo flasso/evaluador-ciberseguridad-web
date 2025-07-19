@@ -6,50 +6,36 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados de la Evaluación</h1></header>
+<header>
+    <h1>Resultados de la Evaluación</h1>
+</header>
 
-<h2>Datos de la Empresa</h2>
-<ul>
-<li>Empresa: {{ respuestas['empresa'] }}</li>
-<li>Nombre: {{ respuestas['nombre'] }}</li>
-<li>Email: {{ respuestas['email'] }}</li>
-<li>Sector: {{ respuestas['sector'] }}</li>
-<li>País: {{ respuestas['pais'] }}</li>
-</ul>
+<h2>Porcentaje estimado de cumplimiento: 75%</h2>
+<p><strong>Referencia:</strong> 80-100% Robusta, 60-79% Aceptable, 40-59% Riesgosa, &lt;40% Crítica</p>
 
-<h2>Respuestas</h2>
 <table>
+<thead>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for s_idx, (segmento, preguntas) in segmentos %}
-  {% for q_idx, (pregunta, opciones) in preguntas %}
-  <tr>
-    <td>{{ pregunta }}</td>
-    <td>{{ respuestas['q' ~ s_idx ~ '_' ~ q_idx] }}</td>
-  </tr>
-  {% endfor %}
+</thead>
+<tbody>
+{% for pregunta, respuesta in respuestas.items() %}
+<tr>
+<td>{{ pregunta }}</td>
+<td>{{ respuesta }}</td>
+</tr>
 {% endfor %}
+</tbody>
 </table>
 
-<h2>Diagnóstico General</h2>
-<p>Porcentaje estimado: <strong>65%</strong></p>
-
-<h2>Tabla de Referencia</h2>
+<h3>Recomendaciones generales:</h3>
 <ul>
-<li>80-100%: Postura Robusta</li>
-<li>60-79%: Postura Aceptable</li>
-<li>40-59%: Postura Riesgosa</li>
-<li>&lt;40%: Postura Crítica</li>
+<li>Fortalecer las áreas con respuestas débiles o críticas.</li>
+<li>Implementar políticas de contraseñas seguras y MFA.</li>
+<li>Contratar un MSSP si no cuenta con personal especializado.</li>
+<li>Verificar respaldo y restauración de datos periódicamente.</li>
+<li>Educar a su personal en buenas prácticas de seguridad.</li>
 </ul>
-
-<h2>Recomendaciones</h2>
-<p>
-- Fortalezca las áreas más débiles detectadas.<br>
-- Implemente MFA en todas las cuentas críticas.<br>
-- Actualice y configure correctamente firewalls y antivirus.<br>
-- Realice respaldos y pruebas periódicas.<br>
-- Considere un proveedor MSSP si no cuenta con personal dedicado.<br>
-- Capacite continuamente al personal en ciberseguridad.
-</p>
 
 </body>
 </html>
+
