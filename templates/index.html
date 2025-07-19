@@ -6,16 +6,20 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<header>
+  <h1>Evaluador de Postura de Ciberseguridad</h1>
+</header>
 <img src="/static/logo.png" alt="Logo" width="100">
+
 <form method="post">
   <fieldset>
     <legend>Datos de la Empresa</legend>
     <input name="empresa" placeholder="Empresa" required>
     <input name="nombre" placeholder="Nombre" required>
     <input name="email" type="email" placeholder="Email" required>
+    <label>Sector:</label>
     <select name="sector" required>
-      <option value="">Seleccione sector</option>
+      <option value="">Seleccione</option>
       <option>Servicios</option>
       <option>Manufactura</option>
       <option>Tecnología</option>
@@ -28,19 +32,21 @@
     <input name="pais" placeholder="País" value="Colombia">
   </fieldset>
 
-  {% for s_idx, (segmento, preguntas) in segmentos %}
-  <fieldset>
-    <legend>{{ segmento }}</legend>
-    {% for q_idx, (pregunta, opciones) in preguntas %}
-    <label>{{ pregunta }}</label><br>
-    {% for opcion in opciones %}
-      <input type="radio" name="q{{s_idx}}_{{q_idx}}" value="{{ opcion }}" required> {{ opcion }}<br>
-    {% endfor %}
-    {% endfor %}
-  </fieldset>
+  {% for segmento in segmentos %}
+    <fieldset>
+      <legend>{{ segmento[0] }}</legend>
+      {% for q_idx, pregunta_opciones in segmento[1] %}
+        <label>{{ pregunta_opciones[0] }}</label><br>
+        {% for opcion in pregunta_opciones[1] %}
+          <input type="radio" name="q{{ loop.parent.loop.index0 }}_{{ q_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
+        {% endfor %}
+      {% endfor %}
+    </fieldset>
   {% endfor %}
 
   <button type="submit">Enviar</button>
 </form>
+
 </body>
 </html>
+
