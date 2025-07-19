@@ -3,30 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Resultados</title>
-<style>
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; }
-  h1 { color: #003366; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 8px; }
-</style>
 </head>
 <body>
 <img src="{{ url_for('static', filename='logo.png') }}" width="120">
 <h1>Resultados de la Evaluación</h1>
-<p><strong>Empresa:</strong> {{ datos_empresa.empresa }}</p>
-<p><strong>Nombre:</strong> {{ datos_empresa.nombre }}</p>
-<p><strong>Email:</strong> {{ datos_empresa.email }}</p>
-<p><strong>Sector:</strong> {{ datos_empresa.sector }}</p>
-<p><strong>País:</strong> {{ datos_empresa.pais }}</p>
-
-<h2>Respuestas</h2>
-<table>
+<table border="1">
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() if not pregunta in ['empresa','nombre','email','sector','pais'] %}
+{% for pregunta, respuesta in respuestas.items() %}
 <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
 {% endfor %}
 </table>
-
-<p><strong>Recomendación general:</strong> Revise las áreas con respuestas débiles e implemente mejoras con apoyo especializado.</p>
+<p>Recomendación general: analice las áreas con respuestas débiles y fortalezca su postura de ciberseguridad con apoyo profesional si es necesario.</p>
 </body>
 </html>
