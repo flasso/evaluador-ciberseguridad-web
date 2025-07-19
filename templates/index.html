@@ -18,19 +18,24 @@
     <input name="pais" placeholder="País" value="Colombia">
   </fieldset>
 
-  {% for s_idx, (segmento, preguntas) in enumerate(segmentos) %}
-  <fieldset>
-    <legend>{{ segmento }}</legend>
-    {% for p_idx, (pregunta, opciones) in enumerate(preguntas) %}
-      <p><strong>{{ pregunta }}</strong></p>
-      {% for o_idx, opcion in enumerate(opciones) %}
-        <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
+  {% for s_idx in range(segmentos|length) %}
+    {% set segmento = segmentos[s_idx][0] %}
+    {% set preguntas = segmentos[s_idx][1] %}
+    <fieldset>
+      <legend>{{ segmento }}</legend>
+      {% for p_idx in range(preguntas|length) %}
+        {% set pregunta = preguntas[p_idx][0] %}
+        {% set opciones = preguntas[p_idx][1] %}
+        <p><strong>{{ pregunta }}</strong></p>
+        {% for opcion in opciones %}
+          <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required> {{ opcion }}<br>
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
-  </fieldset>
+    </fieldset>
   {% endfor %}
 
   <button type="submit">Enviar</button>
 </form>
 </body>
 </html>
+
