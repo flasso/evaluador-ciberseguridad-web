@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,44 +8,42 @@
 <body>
 <header>
     <h1>Evaluador de Postura de Ciberseguridad</h1>
+    <img src="/static/logo.png" alt="Logo" width="120">
 </header>
 
 <form method="post">
-    <fieldset>
-        <legend>Datos de la Empresa</legend>
-        <input name="empresa" placeholder="Empresa" required>
-        <input name="nombre" placeholder="Nombre" required>
-        <input name="email" type="email" placeholder="Email" required>
-        <select name="sector" required>
-            <option value="">Seleccione sector</option>
-            <option>Servicios</option>
-            <option>Manufactura</option>
-            <option>Tecnología</option>
-            <option>Alimentos</option>
-            <option>Legales</option>
-            <option>Contables</option>
-            <option>Distribución</option>
-            <option>Otros</option>
-        </select>
-        <input name="pais" placeholder="País" value="Colombia">
-    </fieldset>
+  <fieldset>
+    <legend>Datos de la Empresa</legend>
+    <input name="empresa" placeholder="Empresa" required>
+    <input name="nombre" placeholder="Nombre" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <select name="sector" required>
+      <option value="">Seleccione sector</option>
+      <option>Servicios</option>
+      <option>Manufactura</option>
+      <option>Tecnología</option>
+      <option>Alimentos</option>
+      <option>Legales</option>
+      <option>Contables</option>
+      <option>Distribución</option>
+      <option>Otros</option>
+    </select>
+    <input name="pais" placeholder="País" value="Colombia" required>
+  </fieldset>
 
-    {% for segmento, preguntas in segmentos %}
-    <fieldset>
-        <legend>{{ segmento }}</legend>
-        {% for pregunta, opciones in preguntas %}
-            <p>{{ pregunta }}</p>
-            {% for opcion in opciones %}
-                <label>
-                    <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
-                </label><br>
-            {% endfor %}
-        {% endfor %}
-    </fieldset>
+  {% for s_idx, (segmento, preguntas) in enumerate(segmentos) %}
+  <fieldset>
+    <legend>{{ segmento }}</legend>
+    {% for q_idx, pregunta in enumerate(preguntas) %}
+      <p>{{ pregunta }}</p>
+      {% for o_idx in range(4) %}
+        <input type="radio" name="q{{s_idx}}_{{q_idx}}" value="{{o_idx}}" required> {{ opciones[o_idx] }}<br>
+      {% endfor %}
     {% endfor %}
+  </fieldset>
+  {% endfor %}
 
-    <button type="submit">Enviar</button>
+  <button type="submit">Enviar</button>
 </form>
-
 </body>
 </html>
