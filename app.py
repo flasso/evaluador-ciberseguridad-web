@@ -24,11 +24,23 @@ segmentos = [
     ])
 ]
 
+# Mapa para mostrar preguntas legibles en los resultados
+pregunta_map = {
+    "empresa": "Empresa",
+    "nombre": "Nombre",
+    "email": "Email",
+    "sector": "Sector",
+    "pais": "País"
+}
+for segmento in segmentos:
+    for pregunta, _ in segmento[1]:
+        pregunta_map[pregunta] = pregunta
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         respuestas = dict(request.form)
-        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
+        return render_template("resultados.html", respuestas=respuestas, pregunta_map=pregunta_map)
     return render_template("index.html", segmentos=segmentos)
 
 if __name__ == "__main__":

@@ -11,8 +11,8 @@
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% for clave, respuesta in respuestas.items() %}
+<tr><td>{{ pregunta_map[clave] }}</td><td>{{ respuesta }}</td></tr>
 {% endfor %}
 </table>
 
