@@ -6,31 +6,27 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados</h1></header>
-<p>Gracias por completar la evaluación. Aquí están tus resultados:</p>
+<header><h1>Resultados de la Evaluación</h1></header>
+<p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
+
+<p><strong>Postura: {{ porcentaje }}%</strong></p>
+<p>
+{% if porcentaje >= 90 %}🏆 Postura avanzada.
+{% elif porcentaje >= 70 %}✅ Postura sólida.
+{% elif porcentaje >= 40 %}🔶 Postura básica.
+{% else %}🚨 Riesgo crítico.
+{% endif %}
+</p>
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for clave, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta_map[clave] }}</td><td>{{ respuesta }}</td></tr>
+{% for pregunta, respuesta in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
 {% endfor %}
 </table>
 
-<h2>Postura general: 70%</h2>
-<p>Tabla de referencia: <br>
-80-100% Robusta<br>
-60-79% Aceptable<br>
-40-59% Riesgosa<br>
-Menos de 40% Crítica</p>
-
-<h3>Recomendaciones:</h3>
-<ul>
-<li>Fortalezca las áreas con respuestas débiles.</li>
-<li>Implemente autenticación multifactor.</li>
-<li>Haga pruebas de restauración de respaldos regularmente.</li>
-<li>Considere apoyo de un proveedor especializado si no cuenta con personal dedicado.</li>
-<li>Capacite a su personal sobre buenas prácticas de ciberseguridad.</li>
-</ul>
-
+<h2>Tabla de Referencia</h2>
+<p>0-39%: Riesgo crítico | 40-69%: Básica | 70-89%: Sólida | 90-100%: Avanzada</p>
+<p>Recomendaciones: Mejore los controles con puntaje bajo, implemente MFA, respalde y pruebe restauración, capacite empleados, gestione firewall correctamente.</p>
 </body>
 </html>
