@@ -1,49 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador de Ciberseguridad</title>
+<title>Resultados</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-    <h1>Evaluador de Postura de Ciberseguridad</h1>
-    <img src="/static/logo.png" alt="Logo" width="120">
-</header>
+<header><h1>Resultados</h1></header>
+<p>Gracias por completar la evaluación. Aquí están tus resultados:</p>
 
-<form method="post">
-  <fieldset>
-    <legend>Datos de la Empresa</legend>
-    <input name="empresa" placeholder="Empresa" required>
-    <input name="nombre" placeholder="Nombre" required>
-    <input name="email" type="email" placeholder="Email" required>
-    <select name="sector" required>
-      <option value="">Seleccione sector</option>
-      <option>Servicios</option>
-      <option>Manufactura</option>
-      <option>Tecnología</option>
-      <option>Alimentos</option>
-      <option>Legales</option>
-      <option>Contables</option>
-      <option>Distribución</option>
-      <option>Otros</option>
-    </select>
-    <input name="pais" placeholder="País" value="Colombia" required>
-  </fieldset>
+<table>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for pregunta, respuesta in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% endfor %}
+</table>
 
-  {% for s_idx, (segmento, preguntas) in enumerate(segmentos) %}
-  <fieldset>
-    <legend>{{ segmento }}</legend>
-    {% for q_idx, pregunta in enumerate(preguntas) %}
-      <p>{{ pregunta }}</p>
-      {% for o_idx in range(4) %}
-        <input type="radio" name="q{{s_idx}}_{{q_idx}}" value="{{o_idx}}" required> {{ opciones[o_idx] }}<br>
-      {% endfor %}
-    {% endfor %}
-  </fieldset>
-  {% endfor %}
+<h2>Postura general: 70%</h2>
+<p>Tabla de referencia: <br>
+80-100% Robusta<br>
+60-79% Aceptable<br>
+40-59% Riesgosa<br>
+Menos de 40% Crítica</p>
 
-  <button type="submit">Enviar</button>
-</form>
+<h3>Recomendaciones:</h3>
+<ul>
+<li>Fortalezca las áreas con respuestas débiles.</li>
+<li>Implemente autenticación multifactor.</li>
+<li>Haga pruebas de restauración de respaldos regularmente.</li>
+<li>Considere apoyo de un proveedor especializado si no cuenta con personal dedicado.</li>
+<li>Capacite a su personal sobre buenas prácticas de ciberseguridad.</li>
+</ul>
+
 </body>
 </html>
