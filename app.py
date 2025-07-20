@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -24,7 +24,6 @@ segmentos = [
     ])
 ]
 
-# Mapa para mostrar preguntas legibles en los resultados
 pregunta_map = {
     "empresa": "Empresa",
     "nombre": "Nombre",
@@ -36,7 +35,11 @@ for segmento in segmentos:
     for pregunta, _ in segmento[1]:
         pregunta_map[pregunta] = pregunta
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
+def intro():
+    return render_template("intro.html")
+
+@app.route("/evaluacion", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         respuestas = dict(request.form)
