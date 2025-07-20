@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -27,15 +27,15 @@ segmentos = [
     ])
 ]
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+def intro():
+    return render_template('intro.html')
+
+@app.route('/evaluacion', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         respuestas = dict(request.form)
         return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos)
-    return render_template('intro.html')
-
-@app.route('/evaluacion', methods=['GET'])
-def evaluacion():
     return render_template('index.html', segmentos=segmentos)
 
 if __name__ == "__main__":
