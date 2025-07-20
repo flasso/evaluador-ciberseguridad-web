@@ -6,27 +6,33 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados de la Evaluación</h1></header>
-<p>Gracias por completar la evaluación. Aquí está tu diagnóstico:</p>
-
-<p><strong>Postura: {{ porcentaje }}%</strong></p>
-<p>
-{% if porcentaje >= 90 %}🏆 Postura avanzada.
-{% elif porcentaje >= 70 %}✅ Postura sólida.
-{% elif porcentaje >= 40 %}🔶 Postura básica.
-{% else %}🚨 Riesgo crítico.
-{% endif %}
-</p>
+<header><h1>Resultados</h1></header>
+<p>Gracias por completar la evaluación. Aquí está su diagnóstico:</p>
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+    {% endfor %}
 {% endfor %}
 </table>
 
-<h2>Tabla de Referencia</h2>
-<p>0-39%: Riesgo crítico | 40-69%: Básica | 70-89%: Sólida | 90-100%: Avanzada</p>
-<p>Recomendaciones: Mejore los controles con puntaje bajo, implemente MFA, respalde y pruebe restauración, capacite empleados, gestione firewall correctamente.</p>
+<h2>Postura general: 68% (ejemplo)</h2>
+<p>Referencia: 0-39% Riesgo Crítico | 40-69% Básica | 70-89% Sólida | 90-100% Avanzada</p>
+
+<h2>Recomendaciones</h2>
+<ul>
+<li>✅ Mantener las buenas prácticas identificadas.</li>
+<li>⚠️ Para los controles con respuestas como "No" o "Irregular", recomendamos:</li>
+<ul>
+  <li>Definir un responsable de ciberseguridad si no existe.</li>
+  <li>Capacitar al personal al menos 1 vez al año.</li>
+  <li>Revisar y automatizar los respaldos y pruebas de restauración.</li>
+  <li>Implementar MFA en todas las cuentas críticas.</li>
+  <li>Revisar configuración y gestión del firewall.</li>
+</ul>
+<li>💡 Considere apoyarse en un proveedor MSP para evaluar y ejecutar mejoras.</li>
+</ul>
 </body>
 </html>
