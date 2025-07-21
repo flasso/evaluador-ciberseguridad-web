@@ -6,7 +6,10 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Formulario de Evaluación de Ciberseguridad</h1></header>
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-height:80px;">
+    <h1>Formulario de Evaluación de Ciberseguridad</h1>
+</header>
 
 <form method="POST">
 {% for segmento, preguntas in segmentos %}
