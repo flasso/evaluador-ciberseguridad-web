@@ -2,32 +2,39 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultados</title>
+<title>Resultados de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados de su Evaluación</h1></header>
+<header><h1>Resultados de la Evaluación</h1></header>
+
+<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
 
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for segmento, preguntas in segmentos %}
-    {% for pregunta, opciones in preguntas %}
-        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
-    {% endfor %}
+{% for pregunta, respuesta in respuestas.items() %}
+<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
 {% endfor %}
 </table>
 
-<p><strong>Postura general estimada:</strong> 68% (ejemplo)</p>
-<p>Referencia: 0-39% Riesgo Crítico | 40-69% Básica | 70-89% Sólida | 90-100% Avanzada</p>
+<h2>Postura general: {{ porcentaje }}%</h2>
+
+<p>
+<b>Tabla de referencia:</b><br>
+0-39% 🚨 Riesgo Crítico – Urge tomar medidas inmediatas.<br>
+40-69% 🔶 Básica – Requiere mejoras importantes.<br>
+70-89% ✅ Sólida – Buenos fundamentos, seguir optimizando.<br>
+90-100% 🏆 Avanzada – Excelente nivel, mantener y auditar.
+</p>
 
 <h2>Recomendaciones específicas</h2>
 <ul>
-<li>✅ Mantenga las buenas prácticas donde obtuvo respuestas óptimas.</li>
-<li>⚠️ Mejore las áreas con respuestas bajas: revise configuración de firewall, capacite personal, automatice respaldos, implemente MFA.</li>
-<li>💡 Un proveedor MSP puede ayudarle a priorizar acciones y acompañar la ejecución.</li>
+{% for recomendacion in recomendaciones %}
+<li>{{ recomendacion }}</li>
+{% endfor %}
 </ul>
+
+<p>💡 <b>Consejo final:</b> Un <i>Managed Security Service Provider (MSSP)</i> puede apoyarle a implementar mejoras priorizadas y gestionar su ciberseguridad profesionalmente.</p>
 
 </body>
 </html>
-
-
