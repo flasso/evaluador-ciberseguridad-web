@@ -2,39 +2,47 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultados de Evaluación</title>
+<title>Resultados de la Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header><h1>Resultados de la Evaluación</h1></header>
 
-<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
+<h2>Datos generales</h2>
+<ul>
+<li><b>Empresa:</b> {{ respuestas.get('empresa') }}</li>
+<li><b>Contacto:</b> {{ respuestas.get('contacto') }}</li>
+<li><b>Email:</b> {{ respuestas.get('email') }}</li>
+<li><b>Sector:</b> {{ respuestas.get('sector') }}</li>
+<li><b>País:</b> {{ respuestas.get('pais') }}</li>
+<li><b>Número de equipos:</b> {{ respuestas.get('equipos') }}</li>
+</ul>
 
+<h2>Respuestas</h2>
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for pregunta, respuesta in respuestas.items() %}
-<tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+    {% endfor %}
 {% endfor %}
 </table>
 
-<h2>Postura general: {{ porcentaje }}%</h2>
-
-<p>
-<b>Tabla de referencia:</b><br>
-0-39% 🚨 Riesgo Crítico – Urge tomar medidas inmediatas.<br>
-40-69% 🔶 Básica – Requiere mejoras importantes.<br>
-70-89% ✅ Sólida – Buenos fundamentos, seguir optimizando.<br>
-90-100% 🏆 Avanzada – Excelente nivel, mantener y auditar.
-</p>
-
-<h2>Recomendaciones específicas</h2>
+<h2>Recomendaciones generales</h2>
 <ul>
-{% for recomendacion in recomendaciones %}
-<li>{{ recomendacion }}</li>
-{% endfor %}
+<li>✅ Mantenga las buenas prácticas actuales en las áreas fuertes.</li>
+<li>⚠️ Mejore las áreas con respuestas bajas: defina responsable de TI/ciberseguridad, capacite al personal, respalde datos con frecuencia, habilite MFA, configure correctamente su firewall y gestione contraseñas seguras.</li>
+<li>💡 <b>Un proveedor MSP (Managed Service Provider) puede apoyarle en la implementación y gestión efectiva de estos controles.</b></li>
 </ul>
 
-<p>💡 <b>Consejo final:</b> Un <i>Managed Security Service Provider (MSSP)</i> puede apoyarle a implementar mejoras priorizadas y gestionar su ciberseguridad profesionalmente.</p>
+<h2>Tabla de Referencia</h2>
+<table>
+<tr><th>Porcentaje</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
+<tr><td>0-39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes (ejemplo: firewall bien configurado, MFA, respaldos diarios).</td></tr>
+<tr><td>40-69%</td><td>🔶 Postura Básica</td><td>Mejorar gestión de controles actuales, capacitar personal y automatizar procesos clave.</td></tr>
+<tr><td>70-89%</td><td>✅ Postura Sólida</td><td>Optimizar y auditar periódicamente (ejemplo: pruebas de restauración, monitoreo 24/7).</td></tr>
+<tr><td>90-100%</td><td>🏆 Postura Avanzada</td><td>Mantener y reforzar proactivamente con planes de mejora continua.</td></tr>
+</table>
 
 </body>
 </html>

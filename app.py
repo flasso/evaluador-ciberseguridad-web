@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Segmentos y preguntas
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
@@ -28,9 +27,6 @@ segmentos = [
     ])
 ]
 
-# Ponderación: 3 → óptimo … 0 → crítico
-valores = [3, 2, 1, 0]
-
 @app.route("/", methods=["GET"])
 def intro():
     return render_template("intro.html")
@@ -39,30 +35,7 @@ def intro():
 def evaluacion():
     if request.method == "POST":
         respuestas = dict(request.form)
-        puntaje_total = 0
-        puntaje_maximo = 0
-        recomendaciones = []
-
-        for segmento, preguntas in segmentos:
-            for pregunta, opciones in preguntas:
-                respuesta = respuestas.get(pregunta)
-                if respuesta in opciones:
-                    idx = opciones.index(respuesta)
-                    puntos = valores[idx]
-                    puntaje_total += puntos
-                    puntaje_maximo += 3
-                    if puntos <=1:
-                        recomendaciones.append(f"🔷 Mejore: {pregunta} (actual: {respuesta})")
-
-        porcentaje = round((puntaje_total / puntaje_maximo) * 100) if puntaje_maximo > 0 else 0
-
-        # Añadir consejo final
-        recomendaciones.append("💡 Recomendación: considere contar con un proveedor MSP que le apoye en la gestión e implementación de las mejoras necesarias.")
-
-        return render_template("resultados.html",
-                               respuestas=respuestas,
-                               porcentaje=porcentaje,
-                               recomendaciones=recomendaciones)
+        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
 
     return render_template("index.html", segmentos=segmentos)
 
