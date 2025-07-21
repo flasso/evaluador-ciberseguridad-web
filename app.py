@@ -2,10 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Preguntas organizadas en segmentos
+# Segmentos con preguntas y opciones
 segmentos = [
     ("Gestión y Visibilidad", [
-        ("¿Quién es el responsable de TI?", [
+        ("¿Quién es el responsable de TI/ciberseguridad?", [
             "Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
         ("¿Monitorean la seguridad regularmente?", [
             "Diario/24x7", "Semanal", "Mensual", "No"]),
@@ -17,25 +17,25 @@ segmentos = [
             "Sí, gestionado", "Sí, mal configurado", "Solo software", "No firewall"]),
         ("¿Quién gestiona el firewall?", [
             "Experto interno", "Proveedor MSSP", "TI no especializado", "No hay firewall"]),
-        ("¿Wi-Fi está segura y separada para invitados?", [
+        ("¿Wi-Fi está segura y segmentada?", [
             "Sí, WPA3 y segmentada", "Sí, pero débil", "No segura", "No"]),
     ]),
     ("Protección de Dispositivos", [
-        ("¿Tienen antivirus con EDR en todos los equipos?", [
-            "Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
-        ("¿Las contraseñas son seguras y se actualizan periódicamente?", [
-            "Sí, con política definida y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
-        ("¿Actualizan el sistema operativo y software con parches recientes?", [
+        ("¿Tienen antivirus/EDR en todos los equipos?", [
+            "Sí, EDR", "Sí, básico", "Gratis", "No"]),
+        ("¿Las contraseñas son seguras y actualizadas periódicamente?", [
+            "Sí, con política y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
+        ("¿Actualizan sistemas y software con parches recientes?", [
             "Automatizado", "Manual", "Irregular", "No"]),
-        ("¿Tienen MFA (Autenticación Multifactor) activada en cuentas críticas?", [
-            "Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
+        ("¿Tienen MFA en cuentas críticas?", [
+            "Sí, en todas", "Sí, algunas", "Pocas", "No"]),
     ]),
     ("Respaldo y Conciencia", [
         ("¿Respaldan datos críticos a diario?", [
             "Sí, diario", "Semanal", "Mensual", "No"]),
         ("¿Prueban restauración de respaldos?", [
             "Sí, programada", "Ocasional", "Nunca", "No sabe"]),
-        ("¿Capacita regularmente a sus empleados en ciberseguridad?", [
+        ("¿Capacitan regularmente al personal en ciberseguridad?", [
             "Al menos 1 vez/año", "Sí, pero informal", "Rara vez", "Nunca"]),
         ("¿Tiene responsable para las copias de seguridad?", [
             "Personal especializado", "TI no especializado", "Nadie asignado", "No se hace"]),
@@ -55,5 +55,3 @@ def evaluacion():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
-
