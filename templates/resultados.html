@@ -2,30 +2,46 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resultados</title>
+<title>Resultados de la Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados</h1></header>
+<header><h1>Resultados de la Evaluación</h1></header>
+
 <p>Gracias por completar la evaluación. Aquí está su diagnóstico:</p>
 
+<h2>Respuestas</h2>
 <table>
 <tr><th>Pregunta</th><th>Respuesta</th></tr>
 {% for segmento, preguntas in segmentos %}
     {% for pregunta, opciones in preguntas %}
-        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+        <tr>
+            <td>{{ pregunta }}</td>
+            <td>{{ respuestas.get(pregunta, "No respondido") }}</td>
+        </tr>
     {% endfor %}
 {% endfor %}
 </table>
 
-<h2>Postura general: 68% (ejemplo)</h2>
-<p>Referencia: 0-39% Riesgo Crítico | 40-69% Básica | 70-89% Sólida | 90-100% Avanzada</p>
+<h2>Postura General</h2>
+<p>Su puntaje estimado es <strong>68%</strong> (Ejemplo). </p>
+
+<p>Escala de referencia:</p>
+<ul>
+    <li>0–39% 🚨 Riesgo Crítico: Corregir urgentemente los controles existentes y agregar los faltantes.</li>
+    <li>40–69% 🔶 Postura Básica: Mejorar la gestión de los controles actuales (ej: capacitación, automatización).</li>
+    <li>70–89% ✅ Postura Sólida: Optimizar (ej: pruebas de restauración, monitoreo 24/7).</li>
+    <li>90–100% 🏆 Postura Avanzada: Mantener y auditar proactivamente.</li>
+</ul>
 
 <h2>Recomendaciones</h2>
 <ul>
-<li>✅ Mantenga sus buenas prácticas actuales.</li>
-<li>⚠️ Revise las áreas donde respondió bajo: configure correctamente su firewall, automatice actualizaciones, capacite empleados periódicamente, verifique respaldos y habilite MFA en todas las cuentas críticas.</li>
-<li>💡 Un proveedor MSP puede asesorarle para priorizar mejoras y ejecutar un plan integral.</li>
+    <li>✅ Mantenga las buenas prácticas actuales, como la gestión de respaldos diarios, MFA y EDR.</li>
+    <li>⚠️ Revise las áreas débiles identificadas, como contraseñas inconsistentes, falta de pruebas de restauración o firewall mal configurado.</li>
+    <li>🔷 Implemente políticas de capacitación anual en ciberseguridad para todo el personal.</li>
+    <li>🔷 Automatice las actualizaciones de software para reducir brechas.</li>
+    <li>💡 Considere trabajar con un <strong>MSP (Proveedor de Servicios Gestionados)</strong> para evaluar, priorizar y ejecutar las mejoras necesarias con eficacia.</li>
 </ul>
+
 </body>
 </html>
