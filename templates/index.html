@@ -65,7 +65,8 @@
   {% for s_idx, segmento in segmentos %}
   <div class="segmento">
     <h3>{{ segmento[0] }}</h3>
-    {% for p_idx, pregunta in segmento[1] %}
+    {% for p_idx, (pregunta, opciones) in segmento[1]|enumerate %}
+
     <div class="pregunta">
       <strong>{{ pregunta[0] }}</strong>
       <div class="opciones">
