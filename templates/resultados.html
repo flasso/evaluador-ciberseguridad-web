@@ -8,43 +8,74 @@
 <body>
 <header><h1>Resultados de la Evaluación</h1></header>
 
-<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
+<p><strong>Postura general:</strong> {{ porcentaje }}% — {{ nivel }}</p>
 
-<h2>Postura General</h2>
-<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
-<p><strong>Nivel:</strong> {{ categoria }}</p>
-
-<h2>Respuestas</h2>
+<h2>Tabla de Referencia</h2>
 <table>
-<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+<thead>
+<tr>
+<th>Rango (%)</th>
+<th>Nivel de Postura</th>
+<th>Acciones Recomendadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–39%</td>
+<td>🚨 Riesgo Crítico</td>
+<td>Corregir urgentemente los controles existentes y agregar los faltantes</td>
+</tr>
+<tr>
+<td>40–69%</td>
+<td>🔶 Postura Básica</td>
+<td>Mejorar gestión y capacitar personal</td>
+</tr>
+<tr>
+<td>70–89%</td>
+<td>✅ Postura Sólida</td>
+<td>Optimizar procesos y auditar periódicamente</td>
+</tr>
+<tr>
+<td>90–100%</td>
+<td>🏆 Postura Avanzada</td>
+<td>Mantener y revisar proactivamente</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Respuestas Detalladas</h2>
+<table>
+<thead>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+</thead>
 <tbody>
 {% for segmento, preguntas in segmentos %}
     {% for pregunta, opciones in preguntas %}
-        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+    <tr>
+        <td>{{ pregunta }}</td>
+        <td>
+            {% for valor, texto in opciones %}
+                {% if respuestas[pregunta] == valor %}
+                    {{ texto }}
+                {% endif %}
+            {% endfor %}
+        </td>
+    </tr>
     {% endfor %}
 {% endfor %}
 </tbody>
 </table>
 
-<h2>Tabla de referencia</h2>
-<table>
-<thead>
-<tr><th>Rango (%)</th><th>Nivel</th><th>Acciones Recomendadas</th></tr>
-</thead>
-<tbody>
-<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
-<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
-<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
-<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
-</tbody>
-</table>
-
-<h2>Recomendaciones</h2>
+<h2>Recomendaciones Específicas</h2>
 <ul>
-<li>✅ Mantenga las prácticas actuales bien implementadas.</li>
-<li>⚠️ Mejore las áreas débiles identificadas en las respuestas.</li>
-<li>💡 Considere contratar un <strong>Proveedor de Servicios Gestionados (MSP)</strong> para priorizar, implementar y monitorear estas acciones.</li>
+<li>Revisar y asegurar la correcta configuración del firewall y segmentación de Wi-Fi.</li>
+<li>Implementar MFA y políticas de contraseñas robustas y consistentes.</li>
+<li>Capacitar regularmente al personal en ciberseguridad.</li>
+<li>Comprobar la restauración de respaldos y asignar responsables claros.</li>
+<li>💡 <strong>Un proveedor MSP puede ayudarle a priorizar, implementar y monitorear las medidas para mejorar su postura.</strong></li>
 </ul>
+
+<p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
 
 </body>
 </html>
