@@ -2,25 +2,63 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluación</title>
+<title>Evaluación de Ciberseguridad</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
-<img src="{{ url_for('static', filename='logo.png') }}" style="max-width:150px;"><br>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
+    <h1>Evaluador de Postura de Ciberseguridad</h1>
+</header>
 
 <form method="post">
-{% for segmento, preguntas in segmentos %}
-    <h2>{{ segmento }}</h2>
-    {% for pregunta, opciones in preguntas %}
+
+<h2>Datos de la Empresa</h2>
+<label>Nombre de la empresa: <input type="text" name="empresa" required></label>
+<label>Persona de contacto: <input type="text" name="contacto" required></label>
+<label>Email: <input type="email" name="email" required></label>
+<label>Sector:
+<select name="sector" required>
+    <option value="">Seleccione…</option>
+    <option>Servicios</option>
+    <option>Manufactura</option>
+    <option>Tecnología</option>
+    <option>Alimentos</option>
+    <option>Legales</option>
+    <option>Contables</option>
+    <option>Distribución</option>
+    <option>Otros</option>
+</select>
+</label>
+<label>País: <input type="text" name="pais" value="Colombia" required></label>
+<label>Número de equipos:
+<select name="num_equipos" required>
+    <option value="">Seleccione…</option>
+    <option>1–50</option>
+    <option>51–150</option>
+    <option>151–300</option>
+    <option>301–500</option>
+    <option>Más de 500</option>
+</select>
+</label>
+
+{% for segmento in segmentos %}
+    <h2>{{ segmento[0] }}</h2>
+    {% for pregunta, opciones in segmento[1] %}
         <p><strong>{{ pregunta }}</strong></p>
-        {% for valor, opcion in opciones %}
-            <input type="radio" name="{{ pregunta }}" value="{{ valor }}" required> {{ opcion }}<br>
+        {% for idx, opcion in enumerate(opciones) %}
+            <label>
+                <input type="radio" name="{{ pregunta }}" value="{{ idx }}" required>
+                {{ opcion }}
+            </label><br>
         {% endfor %}
     {% endfor %}
 {% endfor %}
-<br>
-<button type="submit">Enviar</button>
+
+<p><button type="submit">Enviar Respuestas</button></p>
+
 </form>
+
 </body>
 </html>
