@@ -49,14 +49,16 @@
     {% for segmento, preguntas in segmentos %}
     <fieldset>
         <legend>{{ segmento }}</legend>
-        {% for pregunta, opciones in preguntas %}
-        <p><strong>{{ pregunta }}</strong></p>
-        {% for opcion in opciones %}
-        <label>
-            <input type="radio" name="{{ pregunta }}" value="{{ loop.index0 }}" required>
-            {{ opcion }}
-        </label><br>
-        {% endfor %}
+        {% for pregunta_opciones in preguntas %}
+            {% set pregunta = pregunta_opciones[0] %}
+            {% set opciones = pregunta_opciones[1] %}
+            <p><strong>{{ pregunta }}</strong></p>
+            {% for opcion in opciones %}
+            <label>
+                <input type="radio" name="{{ pregunta }}" value="{{ loop.index0 }}" required>
+                {{ opcion }}
+            </label><br>
+            {% endfor %}
         {% endfor %}
     </fieldset>
     {% endfor %}
