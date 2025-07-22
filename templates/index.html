@@ -2,82 +2,66 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluación de Ciberseguridad</title>
+<title>Formulario de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-
 <header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:150px;">
     <h1>Evaluador de Postura de Ciberseguridad</h1>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width:150px;">
 </header>
 
-<form method="post">
+<form method="POST">
+    <fieldset>
+        <legend>Información de la Empresa</legend>
+        <label>Nombre de la empresa:
+            <input type="text" name="empresa" required>
+        </label>
+        <label>Persona de contacto:
+            <input type="text" name="contacto" required>
+        </label>
+        <label>Correo electrónico:
+            <input type="email" name="email" required>
+        </label>
+        <label>Sector:
+            <select name="sector" required>
+                <option value="Servicios">Servicios</option>
+                <option value="Manufactura">Manufactura</option>
+                <option value="Tecnología">Tecnología</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Legales">Legales</option>
+                <option value="Contables">Contables</option>
+                <option value="Distribución">Distribución</option>
+                <option value="Otros">Otros</option>
+            </select>
+        </label>
+        <label>Número de equipos:
+            <select name="equipos" required>
+                <option value="1-50">1-50</option>
+                <option value="51-150">51-150</option>
+                <option value="151-300">151-300</option>
+                <option value="301-500">301-500</option>
+                <option value="500+">Más de 500</option>
+            </select>
+        </label>
+    </fieldset>
 
-<section>
-<h2>Datos de la Empresa</h2>
-
-<label>Nombre de la empresa:
-    <input type="text" name="empresa" placeholder="Nombre de la empresa" required>
-</label>
-
-<label>Persona de contacto:
-    <input type="text" name="contacto" placeholder="Nombre del contacto" required>
-</label>
-
-<label>Email:
-    <input type="email" name="email" placeholder="correo@ejemplo.com" required>
-</label>
-
-<label>Sector:
-    <select name="sector" required>
-        <option value="">Seleccione…</option>
-        <option>Servicios</option>
-        <option>Manufactura</option>
-        <option>Tecnología</option>
-        <option>Alimentos</option>
-        <option>Legales</option>
-        <option>Contables</option>
-        <option>Distribución</option>
-        <option>Otros</option>
-    </select>
-</label>
-
-<label>País:
-    <input type="text" name="pais" value="Colombia" required>
-</label>
-
-<label>Número de equipos:
-    <select name="num_equipos" required>
-        <option value="">Seleccione…</option>
-        <option>1–50</option>
-        <option>51–150</option>
-        <option>151–300</option>
-        <option>301–500</option>
-        <option>Más de 500</option>
-    </select>
-</label>
-</section>
-
-<hr>
-
-{% for segmento in segmentos %}
-<section>
-    <h2>{{ segmento[0] }}</h2>
-    {% for pregunta, opciones in segmento[1] %}
+    {% for segmento, preguntas in segmentos %}
+    <fieldset>
+        <legend>{{ segmento }}</legend>
+        {% for pregunta, opciones in preguntas %}
         <p><strong>{{ pregunta }}</strong></p>
-        {% for idx, opcion in enumerate(opciones) %}
-            <label>
-                <input type="radio" name="{{ pregunta }}" value="{{ idx }}" required>
-                {{ opcion }}
-            </label><br>
+        {% for opcion in opciones %}
+        <label>
+            <input type="radio" name="{{ pregunta }}" value="{{ loop.index0 }}" required>
+            {{ opcion }}
+        </label><br>
         {% endfor %}
+        {% endfor %}
+    </fieldset>
     {% endfor %}
-</section>
-{% endfor %}
 
-<p><button type="submit">Enviar Respuestas</button></p>
-
+    <button type="submit">Enviar</button>
 </form>
 
 </body>
