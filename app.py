@@ -35,9 +35,36 @@ def intro():
 def evaluacion():
     if request.method == 'POST':
         respuestas = dict(request.form)
-        return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos)
+        puntaje_obtenido = 0
+        puntaje_maximo = 0
+
+        for segmento, preguntas in segmentos:
+            for pregunta, opciones in preguntas:
+                valor = respuestas.get(pregunta)
+                if valor is not None and valor.isdigit():
+                    puntaje_obtenido += int(valor)
+                puntaje_maximo += 3
+
+        porcentaje = round((puntaje_obtenido / puntaje_maximo) * 100)
+
+        if porcentaje <= 39:
+            categoria = "🚨 Riesgo Crítico"
+        elif porcentaje <= 69:
+            categoria = "🔶 Postura Básica"
+        elif porcentaje <= 89:
+            categoria = "✅ Postura Sólida"
+        else:
+            categoria = "🏆 Postura Avanzada"
+
+        return render_template(
+            'resultados.html',
+            respuestas=respuestas,
+            segmentos=segmentos,
+            porcentaje=porcentaje,
+            categoria=categoria
+        )
+
     return render_template('index.html', segmentos=segmentos)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
