@@ -35,7 +35,19 @@ def intro():
 def evaluacion():
     if request.method == 'POST':
         respuestas = dict(request.form)
-        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
+        puntaje = 0
+        total = len(respuestas) * 3
+        for k, v in respuestas.items():
+            if v == "Dedicado y certificado" or v == "Diario/24x7" or v == "Sí, detallado" or v == "Sí, gestionado" or v == "Experto interno" or v == "Sí, WPA3 y segmentada" or v == "Sí, EDR" or v == "Sí, con política definida y gestor" or v == "Automatizado" or v == "Sí, en todas" or v == "Sí, diario" or v == "Sí, programada" or v == "Al menos 1 vez/año" or v == "Personal especializado":
+                puntaje += 3
+            elif "Sí" in v or "Interno" in v or "Proveedor" in v:
+                puntaje += 2
+            elif v == "No" or v == "No sabe":
+                puntaje += 0
+            else:
+                puntaje += 1
+        porcentaje = round((puntaje / total) * 100, 1)
+        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos, porcentaje=porcentaje)
     return render_template("index.html", segmentos=segmentos)
 
 if __name__ == "__main__":
