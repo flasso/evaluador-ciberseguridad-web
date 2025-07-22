@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+# Datos de las preguntas organizadas por segmento
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
@@ -35,33 +36,34 @@ def intro():
 def evaluacion():
     if request.method == 'POST':
         respuestas = dict(request.form)
-        puntaje_obtenido = 0
-        puntaje_maximo = 0
 
+        total = 0
+        maximo = 0
+        detalle = []
         for segmento, preguntas in segmentos:
             for pregunta, opciones in preguntas:
-                valor = respuestas.get(pregunta)
-                if valor is not None and valor.isdigit():
-                    puntaje_obtenido += int(valor)
-                puntaje_maximo += 3
+                idx = int(respuestas.get(pregunta, 0))
+                puntaje = 3 - idx  # primera opción = 3 pts, última = 0 pts
+                total += puntaje
+                maximo += 3
+                detalle.append((pregunta, opciones[idx]))
 
-        porcentaje = round((puntaje_obtenido / puntaje_maximo) * 100)
+        porcentaje = round((total / maximo) * 100, 1)
 
-        if porcentaje <= 39:
-            categoria = "🚨 Riesgo Crítico"
-        elif porcentaje <= 69:
-            categoria = "🔶 Postura Básica"
-        elif porcentaje <= 89:
-            categoria = "✅ Postura Sólida"
+        if porcentaje < 40:
+            nivel = "🚨 Riesgo Crítico"
+        elif porcentaje < 70:
+            nivel = "🔶 Postura Básica"
+        elif porcentaje < 90:
+            nivel = "✅ Postura Sólida"
         else:
-            categoria = "🏆 Postura Avanzada"
+            nivel = "🏆 Postura Avanzada"
 
         return render_template(
             'resultados.html',
-            respuestas=respuestas,
-            segmentos=segmentos,
+            detalle=detalle,
             porcentaje=porcentaje,
-            categoria=categoria
+            nivel=nivel
         )
 
     return render_template('index.html', segmentos=segmentos)
