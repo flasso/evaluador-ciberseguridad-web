@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+# Definición de las preguntas organizadas por segmentos
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
@@ -14,10 +15,10 @@ segmentos = [
         ("¿Wi-Fi está segura y separada para invitados?", ["Sí, WPA3 y segmentada", "Sí, pero débil", "No segura", "No"]),
     ]),
     ("Protección de Dispositivos", [
-        ("¿Tienen antivirus con EDR en todos los equipos?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
+        ("¿Tienen antivirus/EDR en todos los equipos?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
         ("¿Las contraseñas son seguras y se actualizan periódicamente?", ["Sí, con política definida y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
         ("¿Actualizan el sistema operativo y software con parches recientes?", ["Automatizado", "Manual", "Irregular", "No"]),
-        ("¿Tienen MFA (Autenticación Multifactor) activada en cuentas críticas?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
+        ("¿Tienen MFA activada en cuentas críticas?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
     ]),
     ("Respaldo y Conciencia", [
         ("¿Respaldan datos críticos a diario?", ["Sí, diario", "Semanal", "Mensual", "No"]),
@@ -27,16 +28,33 @@ segmentos = [
     ])
 ]
 
-@app.route("/")
+@app.route('/')
 def intro():
-    return render_template("intro.html")
+    return render_template('intro.html')
 
-@app.route("/evaluacion", methods=["GET", "POST"])
+@app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
-    if request.method == "POST":
+    if request.method == 'POST':
         respuestas = dict(request.form)
-        return render_template("resultados.html", respuestas=respuestas, segmentos=segmentos)
-    return render_template("index.html", segmentos=segmentos)
+
+        puntaje_total = 0
+        maximo_total = len(segmentos) * 3 * 3  # 3 preguntas promedio por 4 segmentos × 3 pts
+
+        for segmento, preguntas in segmentos:
+            for pregunta, opciones in preguntas:
+                resp_idx = int(respuestas.get(pregunta, 0))
+                puntaje_total += 3 - resp_idx  # 0 (óptimo) … 3 (malo)
+
+        porcentaje = round((puntaje_total / maximo_total) * 100)
+
+        return render_template(
+            'resultados.html',
+            respuestas=respuestas,
+            segmentos=segmentos,
+            porcentaje=porcentaje
+        )
+
+    return render_template('index.html', segmentos=segmentos)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host='0.0.0.0', port=5000)
