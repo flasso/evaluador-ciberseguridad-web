@@ -36,12 +36,12 @@
         </select>
     </label>
 
-    {% for idx, (segmento, preguntas) in enumerate(segmentos) %}
-    <h2>{{ segmento }}</h2>
-    {% for p_idx, (pregunta, opciones) in enumerate(preguntas) %}
-    <p>{{ pregunta }}</p>
-    {% for o_idx, opcion in enumerate(opciones) %}
-        <label><input type="radio" name="p_{{idx}}_{{p_idx}}" value="{{o_idx}}" required> {{ opcion }}</label><br>
+    {% for s_idx, segmento in segmentos %}
+    <h2>{{ segmento[0] }}</h2>
+    {% for p_idx, pregunta_opciones in segmento[1] %}
+    <p>{{ pregunta_opciones[0] }}</p>
+    {% for o_idx, opcion in pregunta_opciones[1] %}
+        <label><input type="radio" name="p_{{s_idx}}_{{p_idx}}" value="{{o_idx}}" required> {{ opcion }}</label><br>
     {% endfor %}
     {% endfor %}
     {% endfor %}
