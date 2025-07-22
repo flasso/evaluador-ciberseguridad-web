@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -27,6 +27,13 @@ segmentos = [
     ])
 ]
 
+pesos = {
+    "¿Respaldan datos críticos a diario?": 2,
+    "¿Prueban restauración de respaldos?": 2,
+    "¿Tienen antivirus/EDR en todos los equipos?": 2,
+    "¿Capacita regularmente a sus empleados en ciberseguridad?": 2,
+}
+
 @app.route('/')
 def intro():
     return render_template('intro.html')
@@ -34,20 +41,31 @@ def intro():
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        respuestas = dict(request.form)
-        puntaje = 0
-        max_puntaje = len(segmentos) * 3 * 3  # 3 preguntas por segmento por 3 pts
-        for idx, (segmento, preguntas) in enumerate(segmentos):
+        respuestas = {}
+        puntos_obtenidos = 0
+        puntos_maximos = 0
+
+        for segmento, preguntas in segmentos:
             for pregunta, opciones in preguntas:
-                valor = respuestas.get(pregunta, "0")
-                try:
-                    valor_int = int(valor)
-                    puntaje += valor_int
-                except:
-                    pass
-        porcentaje = round((puntaje / (len(segmentos) * 12)) * 100, 1)
-        return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos, porcentaje=porcentaje)
+                idx_str = request.form.get(pregunta)
+                idx = int(idx_str) if idx_str else 0
+                respuesta_texto = opciones[idx]
+                respuestas[pregunta] = respuesta_texto
+
+                peso = pesos.get(pregunta, 1)
+                puntos_obtenidos += idx * peso
+                puntos_maximos += 3 * peso
+
+        porcentaje = round((puntos_obtenidos / puntos_maximos) * 100, 1) if puntos_maximos else 0
+
+        return render_template(
+            'resultados.html',
+            respuestas=respuestas,
+            segmentos=segmentos,
+            porcentaje=porcentaje
+        )
+
     return render_template('index.html', segmentos=segmentos)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

@@ -8,13 +8,11 @@
 <body>
 <header><h1>Resultados de la Evaluación</h1></header>
 
-<p>Gracias por completar la evaluación. Aquí están sus resultados detallados:</p>
+<p><strong>Postura general: {{ porcentaje }}%</strong></p>
 
 <h2>Respuestas</h2>
 <table>
-<thead>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-</thead>
+<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
 <tbody>
 {% for segmento, preguntas in segmentos %}
     {% for pregunta, opciones in preguntas %}
@@ -27,33 +25,24 @@
 </tbody>
 </table>
 
-<h2>Postura General</h2>
-<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
-
 <h2>Tabla de referencia</h2>
 <table>
-<thead>
-<tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
-</thead>
+<thead><tr><th>Rango (%)</th><th>Nivel</th><th>Acciones Recomendadas</th></tr></thead>
 <tbody>
 <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
-<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
-<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
-<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+<tr><td>40–69%</td><td>🔶 Básica</td><td>Mejorar gestión y capacitar al personal</td></tr>
+<tr><td>70–89%</td><td>✅ Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+<tr><td>90–100%</td><td>🏆 Avanzada</td><td>Mantener y auditar proactivamente</td></tr>
 </tbody>
 </table>
 
-<h2>Recomendaciones específicas</h2>
+<h2>Recomendaciones generales</h2>
 <ul>
-<li>Revisar las configuraciones del firewall y asegurarse de que sea gestionado correctamente.</li>
-<li>Implementar o mejorar la segmentación de Wi-Fi y el uso de contraseñas fuertes.</li>
-<li>Habilitar MFA en todas las cuentas críticas y reforzar las políticas de contraseñas.</li>
-<li>Verificar que los respaldos sean probados regularmente y se almacenen de forma segura.</li>
-<li>Realizar capacitaciones periódicas al personal sobre ciberseguridad.</li>
-<li>💡 <strong>Considerar la asesoría de un Proveedor de Servicios Gestionados (MSP) para apoyar la implementación y monitoreo de estas medidas.</strong></li>
+<li>Revisar configuraciones críticas como firewall, backups y MFA.</li>
+<li>Capacitar regularmente al personal.</li>
+<li>Implementar mejores políticas de contraseñas y segmentación de red.</li>
+<li>💡 Considere contar con un MSP para acompañar en la gestión e implementación de estas medidas.</li>
 </ul>
-
-<p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
 
 </body>
 </html>
