@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
@@ -27,45 +27,40 @@ segmentos = [
     ])
 ]
 
-pesos = {
-    "¿Respaldan datos críticos a diario?": 2,
-    "¿Prueban restauración de respaldos?": 2,
-    "¿Tienen antivirus/EDR en todos los equipos?": 2,
-    "¿Capacita regularmente a sus empleados en ciberseguridad?": 2,
-}
+ponderacion = {0: 3, 1: 2, 2: 1, 3: 0}
 
 @app.route('/')
 def intro():
-    return render_template('intro.html')
+    return render_template("intro.html")
 
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        respuestas = {}
-        puntos_obtenidos = 0
-        puntos_maximos = 0
+        respuestas = dict(request.form)
+        puntos = 0
+        max_puntos = 0
+        detalle = []
+        for idx, (segmento, preguntas) in enumerate(segmentos):
+            for p_idx, (pregunta, opciones) in enumerate(preguntas):
+                clave = f"p_{idx}_{p_idx}"
+                resp_idx = int(respuestas.get(clave, 3))
+                puntos += ponderacion[resp_idx]
+                max_puntos += 3
+                detalle.append((pregunta, opciones[resp_idx]))
+        porcentaje = round((puntos / max_puntos) * 100)
 
-        for segmento, preguntas in segmentos:
-            for pregunta, opciones in preguntas:
-                idx_str = request.form.get(pregunta)
-                idx = int(idx_str) if idx_str else 0
-                respuesta_texto = opciones[idx]
-                respuestas[pregunta] = respuesta_texto
+        if porcentaje <= 39:
+            nivel = "🚨 Riesgo Crítico"
+        elif porcentaje <= 69:
+            nivel = "🔶 Postura Básica"
+        elif porcentaje <= 89:
+            nivel = "✅ Postura Sólida"
+        else:
+            nivel = "🏆 Postura Avanzada"
 
-                peso = pesos.get(pregunta, 1)
-                puntos_obtenidos += idx * peso
-                puntos_maximos += 3 * peso
+        return render_template("resultados.html", detalle=detalle, porcentaje=porcentaje, nivel=nivel)
 
-        porcentaje = round((puntos_obtenidos / puntos_maximos) * 100, 1) if puntos_maximos else 0
+    return render_template("index.html", segmentos=segmentos)
 
-        return render_template(
-            'resultados.html',
-            respuestas=respuestas,
-            segmentos=segmentos,
-            porcentaje=porcentaje
-        )
-
-    return render_template('index.html', segmentos=segmentos)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

@@ -6,22 +6,47 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Formulario de Evaluación</h1></header>
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" style="height:80px;">
+    <h1>Evaluador de Postura de Ciberseguridad</h1>
+</header>
 
 <form method="post" action="/evaluacion">
-{% for segmento, preguntas in segmentos %}
-<h2>{{ segmento }}</h2>
-{% for pregunta, opciones in preguntas %}
-<p><strong>{{ pregunta }}</strong></p>
-{% for idx, opcion in options|list %}
-<label><input type="radio" name="{{ pregunta }}" value="{{ idx }}" required> {{ opcion }}</label><br>
-{% endfor %}
-{% endfor %}
-{% endfor %}
-<br>
-<input type="submit" value="Enviar">
-</form>
+    <label>Empresa: <input type="text" name="empresa" required></label>
+    <label>Contacto: <input type="text" name="contacto" required></label>
+    <label>Correo: <input type="email" name="correo" required></label>
+    <label>Sector:
+        <select name="sector" required>
+            <option>Tecnología</option>
+            <option>Manufactura</option>
+            <option>Comercio</option>
+            <option>Salud</option>
+            <option>Legal</option>
+            <option>Finanzas</option>
+            <option>Otro</option>
+        </select>
+    </label>
+    <label>Número de equipos:
+        <select name="equipos" required>
+            <option>1-50</option>
+            <option>51-150</option>
+            <option>151-300</option>
+            <option>301-500</option>
+            <option>+500</option>
+        </select>
+    </label>
 
+    {% for idx, (segmento, preguntas) in enumerate(segmentos) %}
+    <h2>{{ segmento }}</h2>
+    {% for p_idx, (pregunta, opciones) in enumerate(preguntas) %}
+    <p>{{ pregunta }}</p>
+    {% for o_idx, opcion in enumerate(opciones) %}
+        <label><input type="radio" name="p_{{idx}}_{{p_idx}}" value="{{o_idx}}" required> {{ opcion }}</label><br>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+
+    <button type="submit">Enviar Respuestas</button>
+</form>
 </body>
 </html>
-
