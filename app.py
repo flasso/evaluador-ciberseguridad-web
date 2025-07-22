@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Definición de las preguntas organizadas por segmentos
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
@@ -36,25 +35,9 @@ def intro():
 def evaluacion():
     if request.method == 'POST':
         respuestas = dict(request.form)
-
-        puntaje_total = 0
-        maximo_total = len(segmentos) * 3 * 3  # 3 preguntas promedio por 4 segmentos × 3 pts
-
-        for segmento, preguntas in segmentos:
-            for pregunta, opciones in preguntas:
-                resp_idx = int(respuestas.get(pregunta, 0))
-                puntaje_total += 3 - resp_idx  # 0 (óptimo) … 3 (malo)
-
-        porcentaje = round((puntaje_total / maximo_total) * 100)
-
-        return render_template(
-            'resultados.html',
-            respuestas=respuestas,
-            segmentos=segmentos,
-            porcentaje=porcentaje
-        )
-
+        return render_template('resultados.html', respuestas=respuestas, segmentos=segmentos)
     return render_template('index.html', segmentos=segmentos)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+

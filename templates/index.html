@@ -2,89 +2,28 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluación de Ciberseguridad</title>
+<title>Formulario de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-<style>
-  .logo {
-    max-width: 150px;
-    display: block;
-    margin: 0 auto;
-  }
-  .segmento {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 1em;
-    margin-bottom: 1em;
-    background-color: #f9f9f9;
-  }
-  .pregunta {
-    margin-bottom: 0.5em;
-  }
-  .opciones {
-    margin-left: 1em;
-  }
-</style>
 </head>
 <body>
-<header>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-    <h1>Evaluador de Postura de Ciberseguridad</h1>
-</header>
-
-<form method="post">
-  <label for="empresa">Nombre de la empresa:</label>
-  <input type="text" id="empresa" name="empresa" required>
-
-  <label for="contacto">Nombre del contacto:</label>
-  <input type="text" id="contacto" name="contacto" required>
-
-  <label for="email">Correo electrónico:</label>
-  <input type="email" id="email" name="email" required>
-
-  <label for="sector">Sector:</label>
-  <select name="sector" id="sector">
-    <option>Servicios</option>
-    <option>Manufactura</option>
-    <option>Tecnología</option>
-    <option>Alimentos</option>
-    <option>Legales</option>
-    <option>Contables</option>
-    <option>Distribución</option>
-    <option>Otros</option>
-  </select>
-
-  <label for="equipos">Número de equipos:</label>
-  <select name="equipos" id="equipos">
-    <option>1-50</option>
-    <option>51-150</option>
-    <option>151-300</option>
-    <option>301-500</option>
-    <option>Más de 500</option>
-  </select>
-
-  {% for s_idx, segmento in segmentos %}
-  <div class="segmento">
-    <h3>{{ segmento[0] }}</h3>
-    {% for p_idx, (pregunta, opciones) in segmento[1]|enumerate %}
-
-    <div class="pregunta">
-      <strong>{{ pregunta[0] }}</strong>
-      <div class="opciones">
-        {% for o_idx, opcion in enumerate(pregunta[1]) %}
+<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<img src="/static/logo.png" alt="Logo" style="width:120px;margin:10px auto;display:block;">
+<form method="POST">
+{% for s_idx, segmento in segmentos %}
+  <fieldset>
+    <legend>{{ segmento[0] }}</legend>
+    {% for pregunta, opciones in segmento[1] %}
+      <p><strong>{{ pregunta }}</strong></p>
+      {% for o_idx, opcion in opciones %}
         <label>
-          <input type="radio" name="q{{ s_idx }}_{{ p_idx }}" value="{{ opcion }}" required>
+          <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required>
           {{ opcion }}
         </label><br>
-        {% endfor %}
-      </div>
-    </div>
+      {% endfor %}
     {% endfor %}
-  </div>
-  {% endfor %}
-
-  <button type="submit">Enviar Respuestas</button>
+  </fieldset>
+{% endfor %}
+<button type="submit">Enviar</button>
 </form>
-
 </body>
 </html>
-
