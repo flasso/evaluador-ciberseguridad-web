@@ -14,36 +14,55 @@
 
 <form method="post">
 
+<section>
 <h2>Datos de la Empresa</h2>
-<label>Nombre de la empresa: <input type="text" name="empresa" required></label>
-<label>Persona de contacto: <input type="text" name="contacto" required></label>
-<label>Email: <input type="email" name="email" required></label>
-<label>Sector:
-<select name="sector" required>
-    <option value="">Seleccione…</option>
-    <option>Servicios</option>
-    <option>Manufactura</option>
-    <option>Tecnología</option>
-    <option>Alimentos</option>
-    <option>Legales</option>
-    <option>Contables</option>
-    <option>Distribución</option>
-    <option>Otros</option>
-</select>
-</label>
-<label>País: <input type="text" name="pais" value="Colombia" required></label>
-<label>Número de equipos:
-<select name="num_equipos" required>
-    <option value="">Seleccione…</option>
-    <option>1–50</option>
-    <option>51–150</option>
-    <option>151–300</option>
-    <option>301–500</option>
-    <option>Más de 500</option>
-</select>
+
+<label>Nombre de la empresa:
+    <input type="text" name="empresa" placeholder="Nombre de la empresa" required>
 </label>
 
+<label>Persona de contacto:
+    <input type="text" name="contacto" placeholder="Nombre del contacto" required>
+</label>
+
+<label>Email:
+    <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+</label>
+
+<label>Sector:
+    <select name="sector" required>
+        <option value="">Seleccione…</option>
+        <option>Servicios</option>
+        <option>Manufactura</option>
+        <option>Tecnología</option>
+        <option>Alimentos</option>
+        <option>Legales</option>
+        <option>Contables</option>
+        <option>Distribución</option>
+        <option>Otros</option>
+    </select>
+</label>
+
+<label>País:
+    <input type="text" name="pais" value="Colombia" required>
+</label>
+
+<label>Número de equipos:
+    <select name="num_equipos" required>
+        <option value="">Seleccione…</option>
+        <option>1–50</option>
+        <option>51–150</option>
+        <option>151–300</option>
+        <option>301–500</option>
+        <option>Más de 500</option>
+    </select>
+</label>
+</section>
+
+<hr>
+
 {% for segmento in segmentos %}
+<section>
     <h2>{{ segmento[0] }}</h2>
     {% for pregunta, opciones in segmento[1] %}
         <p><strong>{{ pregunta }}</strong></p>
@@ -54,6 +73,7 @@
             </label><br>
         {% endfor %}
     {% endfor %}
+</section>
 {% endfor %}
 
 <p><button type="submit">Enviar Respuestas</button></p>
