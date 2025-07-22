@@ -2,51 +2,41 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluación de Ciberseguridad</title>
+<title>Formulario de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-    <img src="{{ url_for('static', filename='logo.png') }}" style="height:80px;">
-    <h1>Evaluador de Postura de Ciberseguridad</h1>
-</header>
+<header><h1>Evaluador de Postura de Ciberseguridad</h1></header>
+<form method="post">
+<label>Empresa: <input type="text" name="empresa" required></label>
+<label>Nombre: <input type="text" name="nombre" required></label>
+<label>Email: <input type="email" name="email" required></label>
+<label>Sector:
+<select name="sector" required>
+<option value="Servicios">Servicios</option>
+<option value="Manufactura">Manufactura</option>
+<option value="Tecnología">Tecnología</option>
+<option value="Alimentos">Alimentos</option>
+<option value="Legales">Legales</option>
+<option value="Contables">Contables</option>
+<option value="Distribución">Distribución</option>
+<option value="Otros">Otros</option>
+</select>
+</label>
+<label>País: <input type="text" name="pais" value="Colombia"></label>
 
-<form method="post" action="/evaluacion">
-    <label>Empresa: <input type="text" name="empresa" required></label>
-    <label>Contacto: <input type="text" name="contacto" required></label>
-    <label>Correo: <input type="email" name="correo" required></label>
-    <label>Sector:
-        <select name="sector" required>
-            <option>Tecnología</option>
-            <option>Manufactura</option>
-            <option>Comercio</option>
-            <option>Salud</option>
-            <option>Legal</option>
-            <option>Finanzas</option>
-            <option>Otro</option>
-        </select>
-    </label>
-    <label>Número de equipos:
-        <select name="equipos" required>
-            <option>1-50</option>
-            <option>51-150</option>
-            <option>151-300</option>
-            <option>301-500</option>
-            <option>+500</option>
-        </select>
-    </label>
+{% for segmento in segmentos %}
+<h2>{{ segmento[0] }}</h2>
+{% set preguntas = segmento[1] %}
+{% for pregunta in preguntas %}
+<p>{{ pregunta[0] }}</p>
+{% for opcion in pregunta[1] %}
+<label><input type="radio" name="{{ pregunta[0] }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
+{% endfor %}
+{% endfor %}
+{% endfor %}
 
-    {% for s_idx, segmento in segmentos %}
-    <h2>{{ segmento[0] }}</h2>
-    {% for p_idx, pregunta_opciones in segmento[1] %}
-    <p>{{ pregunta_opciones[0] }}</p>
-    {% for o_idx, opcion in pregunta_opciones[1] %}
-        <label><input type="radio" name="p_{{s_idx}}_{{p_idx}}" value="{{o_idx}}" required> {{ opcion }}</label><br>
-    {% endfor %}
-    {% endfor %}
-    {% endfor %}
-
-    <button type="submit">Enviar Respuestas</button>
+<p><button type="submit">Enviar</button></p>
 </form>
 </body>
 </html>
