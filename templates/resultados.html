@@ -6,36 +6,39 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados</h1></header>
-
-<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
-
-<table>
-<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-<tbody>
-{% for segmento, preguntas in segmentos %}
-  {% for pregunta, opciones in preguntas %}
-    <tr>
-      <td>{{ pregunta }}</td>
-      <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
-    </tr>
-  {% endfor %}
+<h1>Resultados</h1>
+<h2>Datos de la Empresa</h2>
+<ul>
+{% for pregunta, opciones in segmentos[0][1] %}
+<li><strong>{{ pregunta }}:</strong> {{ respuestas.get(pregunta, 'No respondido') }}</li>
 {% endfor %}
-</tbody>
+</ul>
+
+<h2>Respuestas</h2>
+<table>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+{% for segmento, preguntas in segmentos[1:] %}
+    {% for pregunta, opciones in preguntas %}
+        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+    {% endfor %}
+{% endfor %}
 </table>
 
 <h2>Tabla de referencia</h2>
 <table>
-<thead><tr><th>Rango</th><th>Nivel</th><th>Acciones</th></tr></thead>
+<thead>
+<tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
+</thead>
 <tbody>
-<tr><td>0-39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente controles clave.</td></tr>
-<tr><td>40-69%</td><td>🔶 Básico</td><td>Mejorar gestión y capacitación.</td></tr>
-<tr><td>70-89%</td><td>✅ Sólido</td><td>Optimizar y auditar.</td></tr>
-<tr><td>90-100%</td><td>🏆 Avanzado</td><td>Mantener proactivamente.</td></tr>
+<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
+<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
+<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
 </tbody>
 </table>
 
-<p><strong>Recomendación:</strong> Considere contratar un <b>MSP</b> para apoyar la gestión e implementación de controles.</p>
+<h2>Recomendación</h2>
+<p>💡 <strong>Considere contar con un Proveedor de Servicios Gestionados (MSP) para apoyarle en la gestión, implementación y monitoreo continuo.</strong></p>
 
 </body>
 </html>

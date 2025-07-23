@@ -2,29 +2,29 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Formulario de Evaluación</title>
+<title>Evaluación de Ciberseguridad</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1><img src="/static/logo.png" alt="Logo" style="height:50px;"> Evaluación de Ciberseguridad</h1></header>
-
+<header><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-height:80px;"></header>
+<h1>Formulario de Evaluación</h1>
 <form method="post">
 {% for segmento, preguntas in segmentos %}
-  <h2>{{ segmento }}</h2>
-  {% for pregunta, opciones in preguntas %}
-    <p><strong>{{ pregunta }}</strong></p>
-    {% if opciones[0] == "" %}
-      <input type="text" name="{{ pregunta }}" required><br>
-    {% else %}
-      {% for opcion in opciones %}
-        <label>
-          <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
-        </label><br>
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
+    <h2>{{ segmento }}</h2>
+    {% for pregunta, opciones in preguntas %}
+        <label>{{ pregunta }}</label><br>
+        {% if opciones[0] %}
+            {% for opcion in opciones %}
+            <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}<br>
+            {% else %}
+            <input type="text" name="{{ pregunta }}"><br>
+            {% endfor %}
+        {% else %}
+            <input type="text" name="{{ pregunta }}"><br>
+        {% endif %}
+        <br>
+    {% endfor %}
 {% endfor %}
-<br>
 <button type="submit">Enviar</button>
 </form>
 </body>
