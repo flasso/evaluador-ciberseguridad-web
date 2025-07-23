@@ -6,39 +6,59 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<h1>Resultados</h1>
+<header><h1>Resultados de la Evaluación</h1></header>
+
+<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
+
 <h2>Datos de la Empresa</h2>
 <ul>
-{% for pregunta, opciones in segmentos[0][1] %}
-<li><strong>{{ pregunta }}:</strong> {{ respuestas.get(pregunta, 'No respondido') }}</li>
-{% endfor %}
+<li><strong>Empresa:</strong> {{ respuestas['empresa'] }}</li>
+<li><strong>Contacto:</strong> {{ respuestas['contacto'] }}</li>
+<li><strong>Email:</strong> {{ respuestas['email'] }}</li>
+<li><strong>Sector:</strong> {{ respuestas['sector'] }}</li>
+<li><strong>Número de PCs:</strong> {{ respuestas['pcs'] }}</li>
 </ul>
 
-<h2>Respuestas</h2>
-<table>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-{% for segmento, preguntas in segmentos[1:] %}
-    {% for pregunta, opciones in preguntas %}
-        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
-    {% endfor %}
-{% endfor %}
-</table>
-
-<h2>Tabla de referencia</h2>
+<h2>Respuestas Detalladas</h2>
 <table>
 <thead>
-<tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
 </thead>
 <tbody>
-<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
-<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
-<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
-<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+    <tr>
+        <td>{{ pregunta }}</td>
+        <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
 </tbody>
 </table>
 
-<h2>Recomendación</h2>
-<p>💡 <strong>Considere contar con un Proveedor de Servicios Gestionados (MSP) para apoyarle en la gestión, implementación y monitoreo continuo.</strong></p>
+<h2>Tabla de Referencia</h2>
+<table>
+<thead>
+<tr><th>Rango (%)</th><th>Nivel</th><th>Acciones</th></tr>
+</thead>
+<tbody>
+<tr><td>0-39%</td><td>🚨 Crítico</td><td>Corregir urgentemente</td></tr>
+<tr><td>40-69%</td><td>🔶 Básica</td><td>Mejorar controles actuales</td></tr>
+<tr><td>70-89%</td><td>✅ Sólida</td><td>Optimizar y auditar</td></tr>
+<tr><td>90-100%</td><td>🏆 Avanzada</td><td>Mantener y evaluar</td></tr>
+</tbody>
+</table>
+
+<h2>Recomendaciones Generales</h2>
+<ul>
+<li>Revisar la configuración del firewall y asegurar que sea gestionado correctamente.</li>
+<li>Implementar MFA en todas las cuentas críticas.</li>
+<li>Capacitar periódicamente a los empleados en ciberseguridad.</li>
+<li>Verificar respaldos regularmente.</li>
+<li>💡 Considerar contratar un <strong>MSP</strong> para apoyo continuo en gestión y monitoreo.</li>
+</ul>
+
+<p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
 
 </body>
 </html>
