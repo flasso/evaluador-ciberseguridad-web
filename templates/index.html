@@ -2,60 +2,53 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Evaluador de Ciberseguridad</title>
+<title>Formulario de Evaluación</title>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-    <h1>Evaluador de Ciberseguridad</h1>
-    <img src="/static/logo.png" alt="Logo" style="max-width:150px">
-</header>
+<header><h1>Evaluador de Ciberseguridad</h1></header>
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="150">
 
 <form method="post">
-<h2>Datos de la Empresa</h2>
+<h2>Datos Generales</h2>
 <label>Empresa: <input type="text" name="empresa" required></label>
 <label>Contacto: <input type="text" name="contacto" required></label>
 <label>Email: <input type="email" name="email" required></label>
 
 <label>Sector:
 <select name="sector" required>
-<option>Servicios</option>
-<option>Manufactura</option>
-<option>Tecnología</option>
-<option>Alimentos</option>
-<option>Legales</option>
-<option>Contables</option>
-<option>Distribución</option>
-<option>Otro</option>
+<option value="Servicios">Servicios</option>
+<option value="Manufactura">Manufactura</option>
+<option value="Tecnología">Tecnología</option>
+<option value="Alimentos">Alimentos</option>
+<option value="Legales">Legales</option>
+<option value="Contables">Contables</option>
+<option value="Distribución">Distribución</option>
+<option value="Otros">Otros</option>
 </select>
 </label>
 
 <label>Número de PCs:
 <select name="pcs" required>
-<option>1-50</option>
-<option>51-150</option>
-<option>151-300</option>
-<option>301-500</option>
-<option>+500</option>
+<option value="1-50">1-50</option>
+<option value="51-150">51-150</option>
+<option value="151-300">151-300</option>
+<option value="301-500">301-500</option>
+<option value="500+">Más de 500</option>
 </select>
 </label>
-
-<hr>
 
 {% for segmento, preguntas in segmentos %}
 <h2>{{ segmento }}</h2>
 {% for pregunta, opciones in preguntas %}
-<p><strong>{{ pregunta }}</strong></p>
+<p>{{ pregunta }}</p>
 {% for opcion in opciones %}
-<label>
-<input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
-</label>
+<label><input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
 {% endfor %}
 {% endfor %}
 {% endfor %}
 
-<br>
-<button type="submit">Enviar Evaluación</button>
+<br><button type="submit">Enviar</button>
 </form>
 </body>
 </html>
