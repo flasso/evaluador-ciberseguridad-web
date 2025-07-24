@@ -26,10 +26,10 @@ segmentos = [
         ("¿El Wi-Fi está segmentado y protegido?", ["Sí, WPA3 y segmentada", "Sí, pero débil", "No segura", "No"]),
     ]),
     ("Protección de Dispositivos", [
-        ("¿Tienen antivirus o EDR?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
+        ("¿Tienen antivirus con EDR?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
         ("¿Las contraseñas son seguras y se actualizan?", ["Sí, con política definida y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
         ("¿Se aplican actualizaciones y parches?", ["Automatizado", "Manual", "Irregular", "No"]),
-        ("¿Cuentan con MFA en cuentas clave?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
+        ("¿Cuentan con MFA (Autenticación Multifactor) en cuentas clave?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
         ("¿Cómo gestionan los equipos a distancia?", ["Herramientas seguras (ej. RMM)", "TeamViewer/AnyDesk con control", "Compartir credenciales", "No tienen gestión remota"]),
     ]),
     ("Respaldos y Concienciación", [
