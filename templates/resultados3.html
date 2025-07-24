@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resultados de Evaluación</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<header><h1>Resultados de la Evaluación</h1></header>
+
+<p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
+
+<h2>Postura General</h2>
+<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
+<p><strong>Nivel:</strong> {{ categoria }}</p>
+
+<h2>Respuestas</h2>
+<table>
+<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+<tbody>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+        <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, 'No respondido') }}</td></tr>
+    {% endfor %}
+{% endfor %}
+</tbody>
+</table>
+
+<h2>Tabla de referencia</h2>
+<table>
+<thead>
+<tr><th>Rango (%)</th><th>Nivel</th><th>Acciones Recomendadas</th></tr>
+</thead>
+<tbody>
+<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
+<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
+<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+</tbody>
+</table>
+
+<h2>Recomendaciones</h2>
+<ul>
+<li>✅ Mantenga las prácticas actuales bien implementadas.</li>
+<li>⚠️ Mejore las áreas débiles identificadas en las respuestas.</li>
+<li>💡 Considere contratar un <strong>Proveedor de Servicios Gestionados (MSP)</strong> para priorizar, implementar y monitorear estas acciones.</li>
+</ul>
+
+</body>
+</html>
