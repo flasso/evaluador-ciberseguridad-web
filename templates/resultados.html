@@ -1,59 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Resultados de Evaluación</title>
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <meta charset="UTF-8">
+  <title>Resultados de Evaluación</title>
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header><h1>Resultados de Evaluación</h1></header>
-
-<h2>Datos Generales</h2>
-<ul>
-<li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
-<li><strong>Contacto:</strong> {{ encabezado.contacto }}</li>
-<li><strong>Email:</strong> {{ encabezado.email }}</li>
-<li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-<li><strong>PCs:</strong> {{ encabezado.pcs }}</li>
-</ul>
-
-<h2>Postura General</h2>
-<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
-
-<h2>Tabla de Referencia</h2>
-<table>
-<thead><tr><th>Rango (%)</th><th>Postura</th><th>Acciones</th></tr></thead>
-<tbody>
-<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente</td></tr>
-<tr><td>40–69%</td><td>🔶 Básica</td><td>Mejorar controles actuales</td></tr>
-<tr><td>70–89%</td><td>✅ Sólida</td><td>Optimizar procesos</td></tr>
-<tr><td>90–100%</td><td>🏆 Avanzada</td><td>Mantener y auditar</td></tr>
-</tbody>
-</table>
-
-<h2>Respuestas</h2>
-<table>
-<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-<tbody>
+<header><h1>Resultados de la Evaluación</h1></header>
+<p><strong>Empresa:</strong> {{ empresa }} | <strong>Sector:</strong> {{ sector }} | <strong>PCs:</strong> {{ pcs }}</p>
+<h2>Porcentaje de Postura: {{ porcentaje }}%</h2>
+<table><thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead><tbody>
 {% for segmento, preguntas in segmentos %}
-    {% for pregunta, opciones in preguntas %}
-        <tr>
-            <td>{{ pregunta }}</td>
-            <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
-        </tr>
-    {% endfor %}
+  {% for pregunta, opciones in preguntas %}
+  <tr><td>{{ pregunta }}</td><td>{{ respuestas.get(pregunta, "No respondido") }}</td></tr>
+  {% endfor %}
 {% endfor %}
-</tbody>
-</table>
-
+</tbody></table>
 <h2>Recomendaciones</h2>
 <ul>
-<li>Revisar configuración de firewall y segmentación Wi-Fi.</li>
-<li>Implementar MFA y políticas de contraseñas.</li>
-<li>Pruebas regulares de respaldos y capacitación al personal.</li>
-<li><strong>💡 Considere contratar un MSP para apoyar la gestión y ejecución.</strong></li>
+  <li>📌 0-39% Riesgo Crítico: Prioridad máxima.</li>
+  <li>📌 40-69% Postura Básica: Necesita mejoras urgentes.</li>
+  <li>📌 70-89% Postura Sólida: Buen trabajo, refuerce áreas débiles.</li>
+  <li>📌 90-100% Postura Avanzada: Mantenga su nivel y audite regularmente.</li>
 </ul>
-
 </body>
 </html>
-

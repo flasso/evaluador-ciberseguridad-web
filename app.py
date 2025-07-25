@@ -2,42 +2,34 @@ from flask import Flask, render_template, request
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
-
-# Configuración de correo con Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 
 mail = Mail(app)
 
-# Preguntas y opciones agrupadas por categoría
 segmentos = [
     ("Gestión y Visibilidad", [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"]),
-        ("¿Monitorean la seguridad regularmente?", ["Sí, diariamente", "Sí, semanalmente", "Mensual", "No"]),
         ("¿Tienen inventario actualizado de equipos/datos?", ["Sí, detallado", "Sí, incompleto", "Parcial", "No"]),
-        ("¿Tienen un plan de respuesta ante incidentes?", ["Sí, documentado y probado", "Sí, documentado pero no probado", "No formal", "No"]),
-        ("¿Monitorean el estado de salud de los equipos?", ["Sí, diario", "Sí, semanal", "Solo cuando fallan", "No"]),
+        ("¿Utilizan herramientas de monitoreo?", ["Sí, 24/7", "Sí, periódicamente", "Ocasional", "No"]),
+        ("¿Cómo gestionan remotamente los equipos?", ["Con herramientas seguras", "Por acceso directo", "Solo presencial", "No gestionan"]),
+        ("¿Tienen un plan de respuesta ante incidentes?", ["Sí, formal y probado", "Sí, sin pruebas", "En desarrollo", "No"]),
     ]),
-    ("Protección de Red", [
-        ("¿Tienen firewall o UTM en la red?", ["Sí, gestionado", "Sí, mal configurado", "Solo software", "No firewall"]),
-        ("¿El Wi-Fi está segmentado y protegido?", ["Sí, WPA3 y segmentada", "Sí, pero débil", "No segura", "No"]),
-    ]),
-    ("Protección de Dispositivos", [
-        ("¿Tienen antivirus con EDR?", ["Sí, EDR", "Sí, antivirus básico", "Gratis", "No"]),
-        ("¿Las contraseñas son seguras y se actualizan?", ["Sí, con política definida y gestor", "Sí, pero inconsistente", "No realmente", "No"]),
-        ("¿Se aplican actualizaciones y parches?", ["Automatizado", "Manual", "Irregular", "No"]),
-        ("¿Cuentan con MFA (Autenticación Multifactor) en cuentas clave?", ["Sí, en todas", "Sí, en algunas", "Pocas", "No"]),
-        ("¿Cómo gestionan los equipos a distancia?", ["Herramientas seguras (ej. RMM)", "TeamViewer/AnyDesk con control", "Compartir credenciales", "No tienen gestión remota"]),
-    ]),
-    ("Respaldos y Concienciación", [
-        ("¿Respaldan datos críticos?", ["Sí, diario", "Semanal", "Mensual", "No"]),
-        ("¿Prueban los respaldos?", ["Sí, programada", "Ocasional", "Nunca", "No sabe"]),
-        ("¿Capacitan en ciberseguridad?", ["Al menos 1 vez/año", "Sí, pero informal", "Rara vez", "Nunca"]),
-        ("¿Quién gestiona los respaldos?", ["Personal especializado", "TI no especializado", "Nadie asignado", "No se hace"]),
-    ]),
+    ("Protección y Continuidad", [
+        ("¿Tienen Firewall/UTM?", ["Sí, gestionado", "Sí, mal configurado", "Solo firewall software", "No firewall"]),
+        ("¿Wi-Fi está segura y segmentada?", ["Sí, WPA3 y segmentada", "Sí, pero débil", "No segura", "No"]),
+        ("¿Antivirus con EDR?", ["Sí, EDR", "Sí, antivirus básico", "Antivirus gratuito", "No"]),
+        ("¿MFA (Autenticación Multifactor)?", ["Sí, en todas", "Sí, en algunas", "Solo en pocas", "No"]),
+        ("¿Contraseñas seguras y actualizadas?", ["Sí, con política y gestor", "Sí, pero inconsistentes", "No muy seguras", "No"]),
+        ("¿Actualizan el software con parches?", ["Automatizado", "Manual", "Irregular", "No"]),
+        ("¿Realizan respaldos diarios?", ["Sí, diario", "Semanal", "Mensual", "No"]),
+        ("¿Prueban restauración de respaldos?", ["Sí, programado", "Ocasional", "Nunca", "No sabe"]),
+        ("¿Capacitan al personal regularmente?", ["Sí, al menos 1 vez/año", "Sí, pero informal", "Rara vez", "Nunca"]),
+        ("¿Hay responsable de backups?", ["Especializado", "TI no especializado", "Nadie asignado", "No se hace"]),
+    ])
 ]
 
 @app.route('/')
@@ -47,53 +39,48 @@ def intro():
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        respuestas = request.form.to_dict()
-        encabezado = {
-            "empresa": respuestas.pop("empresa", ""),
-            "contacto": respuestas.pop("contacto", ""),
-            "email": respuestas.pop("email", ""),
-            "sector": respuestas.pop("sector", ""),
-            "pcs": respuestas.pop("pcs", "")
+        respuestas = dict(request.form)
+        email = respuestas.pop("correo", "")
+        empresa = respuestas.pop("empresa", "")
+        sector = respuestas.pop("sector", "")
+        pcs = respuestas.pop("pcs", "")
+        total_pts = 0
+        max_pts = 0
+        puntos = {
+            "Sí, diario": 3, "Sí, programado": 3, "Sí, al menos 1 vez/año": 3,
+            "Automatizado": 3, "Sí, EDR": 3,
+            "Sí, formal y probado": 3,
+            "Sí, 24/7": 3,
+            "Sí, gestionado": 2, "Sí, WPA3 y segmentada": 2,
+            "Sí, en todas": 2,
+            "Sí, con política y gestor": 2,
+            "Especializado": 2
         }
+        penalizaciones = {
+            "No": -1, "Nunca": -1, "No segura": -1, "No sabe": -1, "No se hace": -1, "No muy seguras": -1
+        }
+        for segmento, preguntas in segmentos:
+            for pregunta, opciones in preguntas:
+                resp = respuestas.get(pregunta)
+                if resp in puntos:
+                    total_pts += puntos[resp]
+                    max_pts += 3
+                elif resp in penalizaciones:
+                    total_pts += penalizaciones[resp]
+                    max_pts += 3
+                elif resp:
+                    max_pts += 3
+        porcentaje = max(0, round((total_pts / max_pts) * 100)) if max_pts else 0
 
-        puntaje = 0
-        max_puntaje = len(respuestas) * 3
-        pesos_3 = ["Dedicado y certificado", "Sí, diariamente", "Sí, detallado", "Sí, documentado y probado", "Sí, diario",
-                   "Sí, gestionado", "Sí, WPA3 y segmentada", "Sí, EDR", "Sí, con política definida y gestor",
-                   "Automatizado", "Sí, en todas", "Herramientas seguras (ej. RMM)", "Sí, programada",
-                   "Al menos 1 vez/año", "Personal especializado"]
-        pesos_2 = ["Interno no exclusivo", "Sí, semanalmente", "Sí, incompleto", "Sí, documentado pero no probado", "Sí, semanal",
-                   "Sí, mal configurado", "Sí, pero débil", "Sí, antivirus básico", "Sí, pero inconsistente", "Manual",
-                   "Sí, en algunas", "TeamViewer/AnyDesk con control", "Ocasional", "Sí, pero informal", "TI no especializado"]
+        if email:
+            msg = Message("Resultado de Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=[email])
+            msg.body = f"Empresa: {empresa}
+Sector: {sector}
+Número de PCs: {pcs}
+Postura: {porcentaje}%
 
-        for r in respuestas.values():
-            if r in pesos_3:
-                puntaje += 3
-            elif r in pesos_2:
-                puntaje += 2
-            else:
-                puntaje += 1
+Gracias por usar nuestra herramienta."
+            mail.send(msg)
 
-        porcentaje = round(puntaje / max_puntaje * 100)
-
-        html_resultado = render_template(
-            'resultados.html',
-            respuestas=respuestas,
-            segmentos=segmentos,
-            encabezado=encabezado,
-            porcentaje=porcentaje
-        )
-
-        # Enviar por correo
-        msg = Message(subject=f"Resultados Evaluación de Seguridad - {encabezado['empresa']}",
-                      recipients=[encabezado["email"]],
-                      sender=app.config['MAIL_USERNAME'],
-                      html=html_resultado)
-        mail.send(msg)
-
-        return html_resultado
-
+        return render_template("resultados.html", respuestas=respuestas, porcentaje=porcentaje, segmentos=segmentos, empresa=empresa, sector=sector, pcs=pcs)
     return render_template('index.html', segmentos=segmentos)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
