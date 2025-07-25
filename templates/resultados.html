@@ -1,60 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Resultados de Evaluación</title>
-  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <meta charset="UTF-8">
+    <title>Resultados de Evaluación</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header>
-  <h1>Resultados de la Evaluación</h1>
+    <h1>Resultados de la Evaluación</h1>
 </header>
 
-<p><strong>Empresa:</strong> {{ empresa }}<br>
-<strong>Contacto:</strong> {{ contacto }}<br>
-<strong>Correo:</strong> {{ correo }}<br>
-<strong>Sector:</strong> {{ sector }}<br>
-<strong>Número de PCs:</strong> {{ pcs }}</p>
+<p><strong>Empresa:</strong> {{ empresa }}</p>
+<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
 
 <h2>Respuestas</h2>
 <table>
-  <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-  <tbody>
-    {% for segmento, preguntas in segmentos %}
-      {% for pregunta, opciones in preguntas %}
-        <tr>
-          <td>{{ pregunta }}</td>
-          <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
-        </tr>
-      {% endfor %}
+<thead>
+<tr><th>Pregunta</th><th>Respuesta</th></tr>
+</thead>
+<tbody>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+    <tr>
+        <td>{{ pregunta }}</td>
+        <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
+    </tr>
     {% endfor %}
-  </tbody>
+{% endfor %}
+</tbody>
 </table>
-
-<h2>Postura General</h2>
-<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
 
 <h2>Tabla de referencia</h2>
 <table>
-  <thead><tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr></thead>
-  <tbody>
-    <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
-    <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
-    <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
-    <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
-  </tbody>
+<thead>
+<tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
+</thead>
+<tbody>
+<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
+<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
+<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+</tbody>
 </table>
 
 <h2>Recomendaciones específicas</h2>
 <ul>
-  <li>Revisar configuraciones del firewall y asegurar su gestión adecuada.</li>
-  <li>Usar contraseñas seguras y autenticación multifactor (MFA) en todos los accesos críticos.</li>
-  <li>Automatizar actualizaciones del sistema y parches de seguridad.</li>
-  <li>Respaldar datos a diario y hacer pruebas periódicas de restauración.</li>
-  <li>Capacitar al personal al menos una vez al año en buenas prácticas de ciberseguridad.</li>
-  <li>💡 <strong>Considerar la asesoría de un MSP (Proveedor de Servicios Gestionados) para definir prioridades e implementar medidas efectivas.</strong></li>
+<li>Revisar configuraciones del firewall y gestión remota.</li>
+<li>Verificar que los respaldos se realicen y prueben con frecuencia.</li>
+<li>Capacitar a los empleados regularmente en ciberseguridad.</li>
+<li>Asegurarse del uso de EDR, MFA y actualizaciones automáticas.</li>
+<li><strong>💡 Recomendación:</strong> Considere trabajar con un MSP (Proveedor de Servicios Gestionados) para evaluar, implementar y monitorear mejoras en su ciberseguridad.</li>
 </ul>
 
 <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
+
 </body>
 </html>
+
