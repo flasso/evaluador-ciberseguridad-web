@@ -2,44 +2,53 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario Evaluación Ciberseguridad</title>
+  <title>Evaluación de Ciberseguridad</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-  <header><img src="/static/logo.png" style="max-height:60px;"><h1>Evaluación de Ciberseguridad</h1></header>
-  <form method="post">
-    <label>Empresa:<input type="text" name="empresa" required></label>
-    <label>Correo electrónico:<input type="email" name="correo" required></label>
-    <label>Sector:
-      <select name="sector" required>
-        <option value="Tecnología">Tecnología</option>
-        <option value="Salud">Salud</option>
-        <option value="Educación">Educación</option>
-        <option value="Comercio">Comercio</option>
-        <option value="Otro">Otro</option>
-      </select>
-    </label>
-    <label>Número de PCs:
-      <select name="pcs" required>
-        <option value="1-50">1-50</option>
-        <option value="51-150">51-150</option>
-        <option value="151-300">151-300</option>
-        <option value="301-500">301-500</option>
-        <option value="Más de 500">Más de 500</option>
-      </select>
-    </label>
-    {% for segmento, preguntas in segmentos %}
-      <fieldset>
-        <legend>{{ segmento }}</legend>
-        {% for pregunta, opciones in preguntas %}
-          <p><strong>{{ pregunta }}</strong></p>
-          {% for opcion in opciones %}
-            <label><input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}</label><br>
-          {% endfor %}
-        {% endfor %}
-      </fieldset>
+<header>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="height: 60px;">
+  <h1>Evaluador de Postura de Ciberseguridad</h1>
+</header>
+
+<form method="post">
+  <label for="empresa">Empresa:</label>
+  <input type="text" id="empresa" name="empresa" required>
+
+  <label for="contacto">Nombre de Contacto:</label>
+  <input type="text" id="contacto" name="contacto" required>
+
+  <label for="correo">Correo Electrónico:</label>
+  <input type="email" id="correo" name="correo" required>
+
+  <label for="sector">Sector:</label>
+  <select name="sector" id="sector" required>
+    {% for s in sectores %}
+      <option value="{{ s }}">{{ s }}</option>
     {% endfor %}
-    <button type="submit">Enviar</button>
-  </form>
+  </select>
+
+  <label for="pcs">Número de PCs:</label>
+  <select name="pcs" id="pcs" required>
+    {% for r in pcs %}
+      <option value="{{ r }}">{{ r }}</option>
+    {% endfor %}
+  </select>
+
+  <hr>
+  {% for segmento, preguntas in segmentos %}
+    <fieldset>
+      <legend><strong>{{ segmento }}</strong></legend>
+      {% for pregunta, opciones in preguntas %}
+        <label><strong>{{ pregunta }}</strong></label><br>
+        {% for opcion in opciones %}
+          <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}<br>
+        {% endfor %}
+        <br>
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+  <button type="submit">Enviar Evaluación</button>
+</form>
 </body>
 </html>
