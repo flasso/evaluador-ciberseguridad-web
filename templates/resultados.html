@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Resultados de Evaluación</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<meta charset="UTF-8">
+<title>Resultados de Evaluación</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<style>
+    .critico { color: red; font-weight: bold; font-size: 2em; }
+    .basico { color: orange; font-weight: bold; font-size: 2em; }
+    .solido { color: green; font-weight: bold; font-size: 2em; }
+    .avanzado { color: blue; font-weight: bold; font-size: 2em; }
+</style>
 </head>
 <body>
-<header>
-    <h1>Resultados de la Evaluación</h1>
-</header>
+<header><h1>Resultados de la Evaluación de Ciberseguridad</h1></header>
 
-<p><strong>Empresa:</strong> {{ empresa }}</p>
-<p><strong>Porcentaje de postura:</strong> {{ porcentaje }}%</p>
+<h2>Datos del Participante</h2>
+<ul>
+    <li><strong>Empresa:</strong> {{ respuestas.get("empresa", "No proporcionado") }}</li>
+    <li><strong>Correo:</strong> {{ respuestas.get("correo", "No proporcionado") }}</li>
+    <li><strong>Teléfono:</strong> {{ respuestas.get("telefono", "No proporcionado") }}</li>
+    <li><strong>Sector:</strong> {{ respuestas.get("sector", "No proporcionado") }}</li>
+    <li><strong>Número de PCs:</strong> {{ respuestas.get("pcs", "No proporcionado") }}</li>
+</ul>
 
-<h2>Respuestas</h2>
-<table>
-<thead>
-<tr><th>Pregunta</th><th>Respuesta</th></tr>
-</thead>
-<tbody>
-{% for segmento, preguntas in segmentos %}
-    {% for pregunta, opciones in preguntas %}
-    <tr>
-        <td>{{ pregunta }}</td>
-        <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
-    </tr>
-    {% endfor %}
-{% endfor %}
-</tbody>
-</table>
+<h2>Postura General</h2>
+{% set color_clase =
+    'critico' if porcentaje < 40 else
+    'basico' if porcentaje < 70 else
+    'solido' if porcentaje < 90 else
+    'avanzado'
+%}
+<p class="{{ color_clase }}">Postura: {{ porcentaje }}%</p>
 
 <h2>Tabla de referencia</h2>
 <table>
@@ -43,17 +45,28 @@
 </tbody>
 </table>
 
+<h2>Respuestas</h2>
+<table>
+<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+<tbody>
+{% for segmento, preguntas in segmentos %}
+    {% for pregunta, opciones in preguntas %}
+    <tr>
+        <td>{{ pregunta }}</td>
+        <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</tbody>
+</table>
+
 <h2>Recomendaciones específicas</h2>
 <ul>
-<li>Revisar configuraciones del firewall y gestión remota.</li>
-<li>Verificar que los respaldos se realicen y prueben con frecuencia.</li>
-<li>Capacitar a los empleados regularmente en ciberseguridad.</li>
-<li>Asegurarse del uso de EDR, MFA y actualizaciones automáticas.</li>
-<li><strong>💡 Recomendación:</strong> Considere trabajar con un MSP (Proveedor de Servicios Gestionados) para evaluar, implementar y monitorear mejoras en su ciberseguridad.</li>
+<li>✅ Mantenga las buenas prácticas actuales.</li>
+<li>⚠️ Mejore las áreas con respuestas débiles: definir responsables, habilitar MFA, capacitar empleados, y asegurar respaldos.</li>
+<li>💡 <strong>Considere apoyarse en un proveedor de servicios gestionados (MSP) para implementar y monitorear estas acciones.</strong></li>
 </ul>
 
 <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
-
 </body>
 </html>
-
