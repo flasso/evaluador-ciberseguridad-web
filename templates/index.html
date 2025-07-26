@@ -1,91 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Evaluación de Ciberseguridad</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <style>
-        .logo { max-width: 180px; display: block; margin: 0 auto 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Evaluación de Ciberseguridad</title>
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<header>
-    <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
-    <h1>Formulario de Evaluación</h1>
-    <p>Por favor complete los siguientes datos y responda sinceramente cada pregunta.</p>
-</header>
+  <header>
+    <h1>Formulario de Evaluación de Ciberseguridad</h1>
+    <p>Responda con sinceridad para obtener una evaluación útil.</p>
+  </header>
 
-<form method="post">
+  <form method="POST">
     <fieldset>
-        <legend>Información de la Empresa</legend>
-        <label>Empresa: <input type="text" name="empresa" required></label>
-        <label>Correo electrónico: <input type="email" name="correo" required></label>
-        <label>Sector:
-            <select name="sector" required>
-                <option disabled selected value="">Seleccione...</option>
-                <option>Educación</option>
-                <option>Salud</option>
-                <option>Financiero</option>
-                <option>Industria</option>
-                <option>Servicios</option>
-                <option>Otro</option>
-            </select>
-        </label>
-        <label>Número de PCs:
-            <select name="pcs" required>
-                <option disabled selected value="">Seleccione...</option>
-                <option>1 a 50</option>
-                <option>51 a 150</option>
-                <option>151 a 300</option>
-                <option>301 a 500</option>
-                <option>Más de 500</option>
-            </select>
-        </label>
-        <label>¿Tiene sucursales?
-            <select name="sucursales" required>
-                <option disabled selected value="">Seleccione...</option>
-                <option>Sí</option>
-                <option>No</option>
-            </select>
-        </label>
-        <label>Modelo de trabajo:
-            <select name="modelo" required>
-                <option disabled selected value="">Seleccione...</option>
-                <option>Presencial</option>
-                <option>Híbrido</option>
-                <option>Remoto</option>
-            </select>
-        </label>
-        <label>Servidores:
-            <select name="servidores" required>
-                <option disabled selected value="">Seleccione...</option>
-                <option>Propios</option>
-                <option>Arrendados</option>
-                <option>Ambos</option>
-                <option>No tiene servidores</option>
-            </select>
-        </label>
+      <legend>Datos de la Empresa</legend>
+      <label>Nombre de la empresa: <input type="text" name="empresa" required></label>
+      <label>Correo electrónico: <input type="email" name="correo" required></label>
+      <label>Sector:
+        <select name="sector" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option>Salud</option>
+          <option>Educación</option>
+          <option>Comercio</option>
+          <option>Finanzas</option>
+          <option>Otro</option>
+        </select>
+      </label>
+      <label>Número de PCs:
+        <select name="pcs" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option>1-50</option>
+          <option>51-150</option>
+          <option>151-300</option>
+          <option>301-500</option>
+          <option>Más de 500</option>
+        </select>
+      </label>
+      <label>¿Tienen sucursales?
+        <select name="sucursales" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option>Sí</option>
+          <option>No</option>
+        </select>
+      </label>
+      <label>Modelo de trabajo:
+        <select name="modelo" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option>Presencial</option>
+          <option>Remoto</option>
+          <option>Híbrido</option>
+        </select>
+      </label>
+      <label>Servidores:
+        <select name="servidores" required>
+          <option value="" disabled selected>Seleccione</option>
+          <option>Propios</option>
+          <option>Arrendados</option>
+          <option>Ambos</option>
+          <option>No tienen</option>
+        </select>
+      </label>
     </fieldset>
 
-    <fieldset>
-        <legend>Preguntas de Evaluación</legend>
-        {% for s_idx in range(segmentos|length) %}
-            <h3>{{ segmentos[s_idx][0] }}</h3>
-            {% for p_idx in range(segmentos[s_idx][1]|length) %}
-                {% set pregunta = segmentos[s_idx][1][p_idx][0] %}
-                <label>{{ pregunta }}
-                    <select name="{{ pregunta }}" required>
-                        <option disabled selected value="">Seleccione...</option>
-                        {% for opcion in opciones[s_idx * 10 + p_idx] %}
-                            <option>{{ opcion }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-            {% endfor %}
+    {% for segmento, preguntas in segmentos %}
+      <fieldset>
+        <legend>{{ segmento }}</legend>
+        {% for pregunta, peso in preguntas %}
+          <label>{{ pregunta }}
+            <select name="{{ pregunta }}" required>
+              <option value="" disabled selected>Seleccione</option>
+              {% for opcion in opciones[loop.index0] %}
+                <option>{{ opcion }}</option>
+              {% endfor %}
+            </select>
+          </label>
         {% endfor %}
-    </fieldset>
+      </fieldset>
+    {% endfor %}
 
-    <button type="submit">Enviar</button>
-</form>
+    <button type="submit">Enviar Evaluación</button>
+  </form>
 </body>
 </html>
