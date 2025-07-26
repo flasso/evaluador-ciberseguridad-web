@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
@@ -7,9 +7,19 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
+
 mail = Mail(app)
 
-# ... (por razones de espacio, puedes pedirme el resto si lo necesitas, pero ya está ajustado con los pesos y preguntas nuevas)
+# Simulación de preguntas
+segmentos = [
+    ("Segmento 1", [("Pregunta A", 3), ("Pregunta B", 2)]),
+    ("Segmento 2", [("Pregunta C", 1)]),
+]
+opciones = [
+    ["Opción 1", "Opción 2", "Opción 3", "Opción 4"],
+    ["Opción 1", "Opción 2", "Opción 3", "Opción 4"],
+    ["Opción 1", "Opción 2", "Opción 3", "Opción 4"]
+]
 
 @app.route('/')
 def intro():
@@ -35,7 +45,8 @@ def evaluacion():
                         puntaje += peso * 0.66
                     elif valor == 2:
                         puntaje += peso * 0.33
-                except:
+                except Exception as e:
+                    print(f"❌ Error en pregunta {pregunta}: {e}")
                     valor = -1
                 puntaje_max += peso
                 puntajes_individuales.append((pregunta, respuesta))
@@ -43,7 +54,6 @@ def evaluacion():
 
         porcentaje = int((puntaje / puntaje_max) * 100) if puntaje_max else 0
 
-        # Enviar correo
         body = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
@@ -56,9 +66,19 @@ Postura: {porcentaje}%
 Respuestas:
 """ + "\n".join([f"{pregunta}: {respuesta}" for pregunta, respuesta in puntajes_individuales])
 
-        msg = Message("Resultados de Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
-        msg.body = body
-        mail.send(msg)
+        print("🟢 Preparando para enviar correo...")
+        print(body)
+
+        try:
+            msg = Message("Resultados Evaluación Ciberseguridad", sender=app.config['MAIL_USERNAME'], recipients=["soporte@cloudsoftware.com.co"])
+            msg.body = body
+            mail.send(msg)
+            print("✅ Correo enviado.")
+        except Exception as e:
+            print("❌ Error al enviar correo:", e)
 
         return render_template("resultados.html", respuestas=puntajes_individuales, porcentaje=porcentaje, encabezado=encabezado)
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
+
+if __name__ == "__main__":
+    app.run(debug=True)
