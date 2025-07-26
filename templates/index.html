@@ -2,83 +2,103 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Evaluación de Ciberseguridad</title>
+  <title>Formulario de Evaluación</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <style>
+    img.logo {
+      max-width: 180px;
+      margin-bottom: 1rem;
+    }
+    .segmento {
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Formulario de Evaluación de Ciberseguridad</h1>
-    <p>Responda con sinceridad para obtener una evaluación útil.</p>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    <h1>Evaluador de Ciberseguridad</h1>
+    <p>Por favor complete la siguiente información antes de comenzar la evaluación:</p>
   </header>
 
   <form method="POST">
     <fieldset>
-      <legend>Datos de la Empresa</legend>
-      <label>Nombre de la empresa: <input type="text" name="empresa" required></label>
-      <label>Correo electrónico: <input type="email" name="correo" required></label>
+      <legend>Datos generales</legend>
+      <label>Empresa: <input type="text" name="empresa" required></label>
+      <label>Correo: <input type="email" name="correo" required></label>
       <label>Sector:
         <select name="sector" required>
-          <option value="" disabled selected>Seleccione</option>
+          <option value="">Seleccione...</option>
+          <option>Financiero</option>
           <option>Salud</option>
           <option>Educación</option>
+          <option>Industrial</option>
           <option>Comercio</option>
-          <option>Finanzas</option>
+          <option>Servicios</option>
           <option>Otro</option>
         </select>
       </label>
       <label>Número de PCs:
         <select name="pcs" required>
-          <option value="" disabled selected>Seleccione</option>
-          <option>1-50</option>
-          <option>51-150</option>
-          <option>151-300</option>
-          <option>301-500</option>
+          <option value="">Seleccione...</option>
+          <option>1 a 50</option>
+          <option>51 a 150</option>
+          <option>151 a 300</option>
+          <option>301 a 500</option>
           <option>Más de 500</option>
         </select>
       </label>
       <label>¿Tienen sucursales?
         <select name="sucursales" required>
-          <option value="" disabled selected>Seleccione</option>
+          <option value="">Seleccione...</option>
           <option>Sí</option>
           <option>No</option>
         </select>
       </label>
       <label>Modelo de trabajo:
         <select name="modelo" required>
-          <option value="" disabled selected>Seleccione</option>
+          <option value="">Seleccione...</option>
           <option>Presencial</option>
           <option>Remoto</option>
           <option>Híbrido</option>
         </select>
       </label>
-      <label>Servidores:
+      <label>¿Qué tipo de servidores utiliza?
         <select name="servidores" required>
-          <option value="" disabled selected>Seleccione</option>
+          <option value="">Seleccione...</option>
           <option>Propios</option>
           <option>Arrendados</option>
           <option>Ambos</option>
-          <option>No tienen</option>
+          <option>No tiene</option>
         </select>
       </label>
     </fieldset>
 
+    <hr>
+
+    {% set pregunta_idx = 0 %}
     {% for segmento, preguntas in segmentos %}
-      <fieldset>
-        <legend>{{ segmento }}</legend>
-        {% for pregunta, peso in preguntas %}
-          <label>{{ pregunta }}
-            <select name="{{ pregunta }}" required>
-              <option value="" disabled selected>Seleccione</option>
-              {% for opcion in opciones[loop.index0] %}
-                <option>{{ opcion }}</option>
-              {% endfor %}
-            </select>
-          </label>
+      <section class="segmento">
+        <h2>{{ segmento }}</h2>
+        {% for pregunta in preguntas %}
+          <fieldset>
+            <legend>{{ pregunta }}</legend>
+            {% for opcion in opciones[pregunta_idx] %}
+              <label>
+                <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
+              </label>
+            {% endfor %}
+          </fieldset>
+          {% set pregunta_idx = pregunta_idx + 1 %}
         {% endfor %}
-      </fieldset>
+      </section>
     {% endfor %}
 
-    <button type="submit">Enviar Evaluación</button>
+    <button type="submit">Enviar evaluación</button>
   </form>
 </body>
 </html>
