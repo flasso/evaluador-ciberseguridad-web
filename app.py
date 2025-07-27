@@ -11,7 +11,7 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-# Preguntas y opciones asociadas
+# Lista de preguntas por segmento
 segmentos = [
     ("Gestión y Visibilidad", [
         "¿Quién es el responsable de TI/ciberseguridad?",
@@ -41,7 +41,7 @@ segmentos = [
     ])
 ]
 
-# Opciones para cada pregunta (ordenadas)
+# Opciones por cada pregunta (en el mismo orden)
 opciones = [
     ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
     ["Automatizadas", "Parcialmente", "Manual", "No monitorean"],
@@ -61,24 +61,13 @@ opciones = [
     ["Sí, con roles y pasos claros", "Sí, básico", "No formalizado", "No tienen plan"]
 ]
 
-# Pesos por pregunta (en orden) para evaluación más estricta
+# Pesos por cada pregunta (en el mismo orden)
 pesos = [
-    1,  # responsable TI
-    2,  # monitoreo
-    1,  # inventario
-    2,  # firewall
-    2,  # gestión firewall
-    1,  # WiFi
-    3,  # Antivirus/EDR
-    1,  # contraseñas
-    3,  # parches
-    2,  # MFA
-    4,  # respaldo
-    4,  # restauración
-    3,  # capacitación
-    2,  # responsable backup
-    2,  # gestión remota
-    3   # plan de incidentes
+    1, 2, 1,  # Gestión
+    2, 2, 1,  # Red
+    3, 1, 3, 2,  # Dispositivos
+    4, 4, 3, 2,  # Respaldo
+    2, 3  # Gestión adicional
 ]
 
 @app.route('/')
@@ -93,44 +82,44 @@ def evaluacion():
         total = 0
         maximo = sum(pesos)
         resultados = []
-        for i, pregunta in enumerate([p for _, ps in segmentos for p in ps]):
-            respuesta = respuestas.get(pregunta, "")
-            try:
-                idx = opciones[i].index(respuesta)
-                if idx == 0:
-                    puntaje = pesos[i] * 1
-                elif idx == 1:
-                    puntaje = pesos[i] * 0.66
-                elif idx == 2:
-                    puntaje = pesos[i] * 0.33
-                else:
+        i = 0
+        for segmento, preguntas in segmentos:
+            for pregunta in preguntas:
+                respuesta = respuestas.get(pregunta, "No respondida")
+                try:
+                    idx = opciones[i].index(respuesta)
+                    if idx == 0:
+                        puntaje = pesos[i] * 1
+                    elif idx == 1:
+                        puntaje = pesos[i] * 0.66
+                    elif idx == 2:
+                        puntaje = pesos[i] * 0.33
+                    else:
+                        puntaje = 0
+                except:
                     puntaje = 0
-            except:
-                puntaje = 0
-            total += puntaje
-            resultados.append((pregunta, respuesta))
+                total += puntaje
+                resultados.append((pregunta, respuesta))
+                i += 1
+
         porcentaje = int((total / maximo) * 100) if maximo else 0
 
-        # Envío por correo
         body = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
 PCs: {encabezado['pcs']}
 Sucursales: {encabezado['sucursales']}
-Modelo de Trabajo: {encabezado['modelo']}
+Modelo: {encabezado['modelo']}
 Servidores: {encabezado['servidores']}
 Postura: {porcentaje}%
 
 Respuestas:
 """ + "\n".join([f"{p}: {r}" for p, r in resultados])
 
-        msg = Message("Resultado Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
+        msg = Message("Resultados Evaluación Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
         msg.body = body
         mail.send(msg)
 
         return render_template("resultados.html", respuestas=resultados, porcentaje=porcentaje, encabezado=encabezado)
-    return render_template("index.html", segmentos=segmentos, opciones=opciones)
 
-# CORRECTO PARA RENDER
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    return render_template("index.html", segmentos=segmentos, opciones=opciones)
