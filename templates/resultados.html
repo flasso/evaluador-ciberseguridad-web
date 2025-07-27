@@ -2,81 +2,63 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Resultados de Evaluación</title>
+  <title>Resultados</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <style>
+    .nivel {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .rojo { color: red; }
+    .naranja { color: orange; }
+    .verde { color: green; }
+    .azul { color: blue; }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Resultados de la Evaluación</h1>
-  </header>
+<header>
+  <h1>Resultados de Evaluación</h1>
+</header>
 
-  <section>
-    <h2>Información de la Empresa</h2>
-    <ul>
-      <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
-      <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
-      <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-      <li><strong>PCs:</strong> {{ encabezado.pcs }}</li>
-      <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
-      <li><strong>Modelo:</strong> {{ encabezado.modelo }}</li>
-      <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
-    </ul>
-  </section>
+<p><strong>Empresa:</strong> {{ encabezado['empresa'] }}</p>
+<p><strong>Correo:</strong> {{ encabezado['correo'] }}</p>
+<p><strong>Sector:</strong> {{ encabezado['sector'] }}</p>
+<p><strong>N° PCs:</strong> {{ encabezado['pcs'] }}</p>
+<p><strong>Sucursales:</strong> {{ encabezado['sucursales'] }}</p>
+<p><strong>Modelo:</strong> {{ encabezado['modelo'] }}</p>
+<p><strong>Servidores:</strong> {{ encabezado['servidores'] }}</p>
 
-  <section>
-    <h2>Resumen de Evaluación</h2>
-    <p>
-      <strong style="
-        font-size: 1.5em;
-        {% if porcentaje <= 39 %}
-          color: red;
-        {% elif porcentaje <= 69 %}
-          color: orange;
-        {% elif porcentaje <= 89 %}
-          color: green;
-        {% else %}
-          color: blue;
-        {% endif %}
-      ">
-        Postura de Ciberseguridad: {{ porcentaje }}%
-      </strong>
-    </p>
-  </section>
+<h2>Porcentaje de postura:</h2>
+{% if porcentaje < 40 %}
+  <p class="nivel rojo">{{ porcentaje }}% - Riesgo Crítico 🚨</p>
+{% elif porcentaje < 70 %}
+  <p class="nivel naranja">{{ porcentaje }}% - Postura Básica 🔶</p>
+{% elif porcentaje < 90 %}
+  <p class="nivel verde">{{ porcentaje }}% - Postura Sólida ✅</p>
+{% else %}
+  <p class="nivel azul">{{ porcentaje }}% - Postura Avanzada 🏆</p>
+{% endif %}
 
-  <section>
-    <h2>Tabla de Referencia</h2>
-    <table>
-      <thead>
-        <tr><th>Rango</th><th>Nivel</th><th>Acciones</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir controles clave y crear un plan de seguridad.</td></tr>
-        <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar configuraciones actuales y capacitar personal.</td></tr>
-        <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos, automatizar y monitorear.</td></tr>
-        <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Auditoría proactiva y mejora continua.</td></tr>
-      </tbody>
-    </table>
-  </section>
+<h2>Respuestas</h2>
+<table>
+  <thead>
+    <tr><th>Pregunta</th><th>Respuesta</th></tr>
+  </thead>
+  <tbody>
+    {% for pregunta, respuesta in respuestas %}
+      <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-  <section>
-    <h2>Recomendaciones</h2>
-    <ul>
-      <li>✔️ Fortalezca puntos débiles con puntaje bajo.</li>
-      <li>🔐 Asegure respaldo diario, pruebas de restauración y uso de MFA.</li>
-      <li>💡 Considere apoyarse en un proveedor MSP para implementar mejoras de forma profesional.</li>
-    </ul>
-  </section>
+<h2>Tabla de Referencia</h2>
+<table>
+  <tr><th>Porcentaje</th><th>Nivel</th><th>Recomendación</th></tr>
+  <tr><td>0–39%</td><td>🚨 Crítico</td><td>Corregir urgentemente</td></tr>
+  <tr><td>40–69%</td><td>🔶 Básico</td><td>Fortalecer controles</td></tr>
+  <tr><td>70–89%</td><td>✅ Sólido</td><td>Auditoría y mejoras</td></tr>
+  <tr><td>90–100%</td><td>🏆 Avanzado</td><td>Mantener y revisar</td></tr>
+</table>
 
-  <section>
-    <h2>Detalle de Respuestas</h2>
-    <table>
-      <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-      <tbody>
-        {% for pregunta, respuesta in respuestas %}
-          <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
 </body>
 </html>
