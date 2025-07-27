@@ -3,7 +3,7 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
-# Configuración del correo
+# Configuración de correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -11,37 +11,37 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-# Lista de preguntas por segmento
+# Preguntas por segmento
 segmentos = [
     ("Gestión y Visibilidad", [
         "¿Quién es el responsable de TI/ciberseguridad?",
         "¿Utilizan herramientas de monitoreo del estado de salud de los equipos?",
-        "¿Tienen inventario actualizado de equipos y datos?",
+        "¿Tienen inventario actualizado de equipos y datos?"
     ]),
     ("Protección de Red", [
         "¿Tienen firewall de hardware o UTM?",
         "¿Quién gestiona el firewall?",
-        "¿La red Wi-Fi es segura y segmentada para invitados?",
+        "¿La red Wi-Fi es segura y segmentada para invitados?"
     ]),
     ("Protección de Dispositivos", [
         "¿Tienen Antivirus con EDR en todos los equipos?",
         "¿Las contraseñas son seguras y se actualizan periódicamente?",
         "¿Actualizan el sistema operativo y software con parches recientes?",
-        "¿Tienen MFA (Autenticación Multifactor) activada en cuentas críticas?",
+        "¿Tienen MFA (Autenticación Multifactor) activada en cuentas críticas?"
     ]),
     ("Respaldo y Conciencia", [
         "¿Respaldan datos críticos a diario?",
         "¿Prueban la restauración de los respaldos?",
         "¿Capacitan regularmente a sus empleados en ciberseguridad?",
-        "¿Tienen un responsable de las copias de seguridad?",
+        "¿Tienen un responsable de las copias de seguridad?"
     ]),
     ("Gestión Adicional", [
         "¿Cómo gestionan de forma remota los equipos?",
-        "¿Tienen un plan definido de respuesta en caso de un ataque?",
+        "¿Tienen un plan definido de respuesta en caso de un ataque?"
     ])
 ]
 
-# Opciones por cada pregunta (en el mismo orden)
+# Opciones para cada pregunta
 opciones = [
     ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
     ["Automatizadas", "Parcialmente", "Manual", "No monitorean"],
@@ -61,14 +61,8 @@ opciones = [
     ["Sí, con roles y pasos claros", "Sí, básico", "No formalizado", "No tienen plan"]
 ]
 
-# Pesos por cada pregunta (en el mismo orden)
-pesos = [
-    1, 2, 1,  # Gestión
-    2, 2, 1,  # Red
-    3, 1, 3, 2,  # Dispositivos
-    4, 4, 3, 2,  # Respaldo
-    2, 3  # Gestión adicional
-]
+# Pesos por importancia
+pesos = [1, 2, 1, 2, 2, 1, 3, 1, 3, 2, 4, 4, 3, 2, 2, 3]
 
 @app.route('/')
 def intro():
@@ -82,25 +76,20 @@ def evaluacion():
         total = 0
         maximo = sum(pesos)
         resultados = []
-        i = 0
-        for segmento, preguntas in segmentos:
+        for i, (segmento, preguntas) in enumerate(segmentos):
             for pregunta in preguntas:
-                respuesta = respuestas.get(pregunta, "No respondida")
+                r = respuestas.get(pregunta, "No respondida")
                 try:
-                    idx = opciones[i].index(respuesta)
+                    idx = opciones[len(resultados)].index(r)
                     if idx == 0:
-                        puntaje = pesos[i] * 1
+                        total += pesos[len(resultados)] * 1
                     elif idx == 1:
-                        puntaje = pesos[i] * 0.66
+                        total += pesos[len(resultados)] * 0.66
                     elif idx == 2:
-                        puntaje = pesos[i] * 0.33
-                    else:
-                        puntaje = 0
+                        total += pesos[len(resultados)] * 0.33
                 except:
-                    puntaje = 0
-                total += puntaje
-                resultados.append((pregunta, respuesta))
-                i += 1
+                    pass
+                resultados.append((pregunta, r))
 
         porcentaje = int((total / maximo) * 100) if maximo else 0
 
@@ -121,5 +110,4 @@ Respuestas:
         mail.send(msg)
 
         return render_template("resultados.html", respuestas=resultados, porcentaje=porcentaje, encabezado=encabezado)
-
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
