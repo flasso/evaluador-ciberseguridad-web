@@ -5,55 +5,77 @@
   <title>Resultados de Evaluación</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
-    .resumen { font-weight: bold; }
-    .critico { color: red; }
-    .basico { color: orange; }
-    .solido { color: green; }
-    .avanzado { color: darkblue; }
+    .critico { color: red; font-weight: bold; }
+    .basica { color: orange; font-weight: bold; }
+    .solida { color: green; font-weight: bold; }
+    .avanzada { color: blue; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Resultados de Evaluación</h1>
+    <h1>Resultados de la Evaluación</h1>
   </header>
 
-  <p class="resumen">Empresa: {{ encabezado.empresa }}<br>
-  Sector: {{ encabezado.sector }}<br>
-  N° de PCs: {{ encabezado.pcs }}<br>
-  Sucursales: {{ encabezado.sucursales }}<br>
-  Modelo de trabajo: {{ encabezado.modelo }}<br>
-  Servidores: {{ encabezado.servidores }}</p>
+  <p>Gracias por completar la evaluación. Aquí están sus resultados:</p>
 
-  <h2 class="resumen">Postura de Ciberseguridad: 
-    {% if porcentaje < 40 %}
-      <span class="critico">{{ porcentaje }}% 🚨 Riesgo Crítico</span>
-    {% elif porcentaje < 70 %}
-      <span class="basico">{{ porcentaje }}% 🔶 Postura Básica</span>
-    {% elif porcentaje < 90 %}
-      <span class="solido">{{ porcentaje }}% ✅ Postura Sólida</span>
-    {% else %}
-      <span class="avanzado">{{ porcentaje }}% 🏆 Postura Avanzada</span>
-    {% endif %}
-  </h2>
+  <h2>Información general</h2>
+  <ul>
+    <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
+    <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
+    <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
+    <li><strong>PCs:</strong> {{ encabezado.pcs }}</li>
+    <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
+    <li><strong>Modelo:</strong> {{ encabezado.modelo }}</li>
+    <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
+  </ul>
 
-  <h3>Respuestas:</h3>
+  <h2>Respuestas</h2>
   <table>
     <thead>
       <tr><th>Pregunta</th><th>Respuesta</th></tr>
     </thead>
     <tbody>
       {% for pregunta, respuesta in respuestas %}
-        <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+      <tr>
+        <td>{{ pregunta }}</td>
+        <td>{{ respuesta }}</td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <h3>Recomendaciones Generales</h3>
+  <h2>Postura de Ciberseguridad</h2>
+  <p>
+    <strong>Porcentaje:</strong>
+    {% if porcentaje < 40 %}
+      <span class="critico">{{ porcentaje }}% - Riesgo Crítico</span>
+    {% elif porcentaje < 70 %}
+      <span class="basica">{{ porcentaje }}% - Postura Básica</span>
+    {% elif porcentaje < 90 %}
+      <span class="solida">{{ porcentaje }}% - Postura Sólida</span>
+    {% else %}
+      <span class="avanzada">{{ porcentaje }}% - Postura Avanzada</span>
+    {% endif %}
+  </p>
+
+  <h2>Tabla de Referencia</h2>
+  <table>
+    <thead>
+      <tr><th>Rango (%)</th><th>Nivel</th><th>Acción sugerida</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles y agregar los faltantes</td></tr>
+      <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión y capacitación</td></tr>
+      <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditar regularmente</td></tr>
+      <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y mejorar continuamente</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Recomendaciones Finales</h2>
   <ul>
-    <li>Corregir controles críticos como respaldos, restauración, EDR y MFA.</li>
-    <li>Auditar configuraciones de firewall, red Wi-Fi y antivirus.</li>
-    <li>Establecer políticas claras de gestión, capacitación y monitoreo.</li>
-    <li><strong>Un MSP puede ayudar a implementar mejoras y priorizar acciones.</strong></li>
+    <li>✅ Mantenga y fortalezca las buenas prácticas existentes.</li>
+    <li>⚠️ Refuerce las áreas donde se respondieron con opciones de menor seguridad.</li>
+    <li>💡 Considere trabajar con un proveedor MSP para implementar y mantener controles eficaces.</li>
   </ul>
 
   <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
