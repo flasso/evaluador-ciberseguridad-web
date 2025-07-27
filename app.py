@@ -3,7 +3,7 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
-# Configuración de correo
+# Configuración para envío de correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -11,58 +11,49 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-# Preguntas por segmento
+# Opciones y pesos
 segmentos = [
-    ("Gestión y Visibilidad", [
+    ("Gestión", [
         "¿Quién es el responsable de TI/ciberseguridad?",
-        "¿Utilizan herramientas de monitoreo del estado de salud de los equipos?",
-        "¿Tienen inventario actualizado de equipos y datos?"
+        "¿Tienen inventario actualizado de equipos y datos?",
+        "¿Cuentan con políticas de seguridad documentadas?",
+        "¿Capacitan regularmente al personal en ciberseguridad?",
+        "¿Tienen un plan de respuesta ante incidentes de ciberseguridad?",
+        "¿Actualizan sus sistemas con parches de seguridad?",
+        "¿Cómo gestionan el acceso remoto a los equipos?"
     ]),
-    ("Protección de Red", [
-        "¿Tienen firewall de hardware o UTM?",
-        "¿Quién gestiona el firewall?",
-        "¿La red Wi-Fi es segura y segmentada para invitados?"
-    ]),
-    ("Protección de Dispositivos", [
-        "¿Tienen Antivirus con EDR en todos los equipos?",
-        "¿Las contraseñas son seguras y se actualizan periódicamente?",
-        "¿Actualizan el sistema operativo y software con parches recientes?",
-        "¿Tienen MFA (Autenticación Multifactor) activada en cuentas críticas?"
-    ]),
-    ("Respaldo y Conciencia", [
-        "¿Respaldan datos críticos a diario?",
-        "¿Prueban la restauración de los respaldos?",
-        "¿Capacitan regularmente a sus empleados en ciberseguridad?",
-        "¿Tienen un responsable de las copias de seguridad?"
-    ]),
-    ("Gestión Adicional", [
-        "¿Cómo gestionan de forma remota los equipos?",
-        "¿Tienen un plan definido de respuesta en caso de un ataque?"
+    ("Protección", [
+        "¿Cuentan con antivirus con EDR actualizado?",
+        "¿Realizan copias de seguridad diariamente?",
+        "¿Verifican periódicamente que las copias de seguridad se puedan restaurar?",
+        "¿Tienen segmentación de red y WiFi para invitados?",
+        "¿Tienen políticas de contraseñas seguras implementadas?",
+        "¿Utilizan MFA (Autenticación Multifactor)?",
+        "¿Utilizan herramientas de monitoreo del estado de salud de los equipos?"
     ])
 ]
 
-# Opciones para cada pregunta
 opciones = [
     ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
-    ["Automatizadas", "Parcialmente", "Manual", "No monitorean"],
-    ["Sí, detallado", "Sí, incompleto", "Parcial", "No"],
-    ["Sí, con UTM", "Sí, básico", "Solo software", "No tienen"],
-    ["Equipo experto", "Proveedor externo", "Personal no especializado", "No tienen firewall"],
-    ["Sí, WPA3 y segmentada", "Sí, pero insegura", "Una sola red", "Desconocido"],
-    ["Sí, EDR en todos", "Antivirus básico", "Solo algunos equipos", "No tienen"],
-    ["Sí, con política y gestor", "Sí, pero débil", "No consistente", "No"],
-    ["Automatizado", "Manual", "Irregular", "No actualizan"],
-    ["Sí, en todas", "En algunas", "Solo admins", "No tienen MFA"],
-    ["Sí, diario", "Semanal", "Mensual", "No hacen backup"],
-    ["Sí, programada", "A veces", "Nunca", "No saben"],
-    ["Sí, anual o más", "Informal", "Rara vez", "Nunca"],
-    ["Personal especializado", "TI no especializado", "Nadie asignado", "No se hace"],
-    ["Con TeamViewer/AnyDesk", "VPN interna", "Visitas físicas", "No gestionan"],
-    ["Sí, con roles y pasos claros", "Sí, básico", "No formalizado", "No tienen plan"]
+    ["Sí, con revisión mensual", "Sí, pero sin actualizar", "Parcialmente", "No"],
+    ["Sí, documentadas y aplicadas", "Sí, pero sin seguimiento", "Borradores", "No existen"],
+    ["Anualmente o más", "Ocasionalmente", "Solo al ingreso", "Nunca"],
+    ["Sí, detallado y probado", "Sí, pero sin pruebas", "Básico", "No saben qué hacer"],
+    ["Sí, al día", "Mensualmente", "Ocasionalmente", "No actualizan"],
+    ["VPN corporativa", "Herramientas como TeamViewer/AnyDesk", "Sin control definido", "No aplican"],
+    ["Sí, con consola central", "Solo antivirus básico", "Solo Windows Defender", "No tienen antivirus"],
+    ["Automáticamente a diario", "Semanalmente", "Ocasionalmente", "No hacen backup"],
+    ["Sí, cada mes", "De vez en cuando", "Muy rara vez", "Nunca han probado restaurar"],
+    ["Sí, red segmentada y segura", "Solo red separada", "Contraseña básica", "Una sola red para todo"],
+    ["Requiere longitud y cambios", "Solo longitud mínima", "Solo cambio anual", "Sin política clara"],
+    ["Sí, en cuentas críticas", "Solo en algunas", "En evaluación", "No usan MFA"],
+    ["Sí, con alertas y reportes", "Solo software básico", "Supervisión manual", "No se monitorean"]
 ]
 
-# Pesos por importancia
-pesos = [1, 2, 1, 2, 2, 1, 3, 1, 3, 2, 4, 4, 3, 2, 2, 3]
+# Pesos de cada pregunta según su criticidad
+pesos = [
+    1, 1, 1, 2, 3, 3, 2, 3, 3, 3, 2, 2, 3, 2
+]
 
 @app.route('/')
 def intro():
@@ -71,43 +62,62 @@ def intro():
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        respuestas = dict(request.form)
-        encabezado = {k: respuestas.pop(k) for k in ['empresa', 'correo', 'sector', 'pcs', 'sucursales', 'modelo', 'servidores']}
-        total = 0
-        maximo = sum(pesos)
-        resultados = []
-        for i, (segmento, preguntas) in enumerate(segmentos):
+        respuestas_form = dict(request.form)
+        encabezado = {
+            "empresa": respuestas_form.pop("empresa"),
+            "correo": respuestas_form.pop("correo"),
+            "sector": respuestas_form.pop("sector"),
+            "pcs": respuestas_form.pop("pcs"),
+            "sucursales": respuestas_form.pop("sucursales"),
+            "modelo": respuestas_form.pop("modelo"),
+            "servidores": respuestas_form.pop("servidores")
+        }
+
+        respuestas_lista = []
+        puntaje_total = 0
+        puntaje_max = 0
+
+        pregunta_idx = 0
+        for segmento, preguntas in segmentos:
             for pregunta in preguntas:
-                r = respuestas.get(pregunta, "No respondida")
+                respuesta = respuestas_form.get(pregunta, "")
+                respuestas_lista.append((pregunta, respuesta))
                 try:
-                    idx = opciones[len(resultados)].index(r)
-                    if idx == 0:
-                        total += pesos[len(resultados)] * 1
-                    elif idx == 1:
-                        total += pesos[len(resultados)] * 0.66
-                    elif idx == 2:
-                        total += pesos[len(resultados)] * 0.33
+                    opcion_idx = opciones[pregunta_idx].index(respuesta)
+                    if opcion_idx == 0:
+                        puntaje_total += pesos[pregunta_idx] * 1
+                    elif opcion_idx == 1:
+                        puntaje_total += pesos[pregunta_idx] * 0.66
+                    elif opcion_idx == 2:
+                        puntaje_total += pesos[pregunta_idx] * 0.33
+                    # respuesta 3 no suma
                 except:
                     pass
-                resultados.append((pregunta, r))
+                puntaje_max += pesos[pregunta_idx]
+                pregunta_idx += 1
 
-        porcentaje = int((total / maximo) * 100) if maximo else 0
+        porcentaje = int((puntaje_total / puntaje_max) * 100) if puntaje_max else 0
 
-        body = f"""Empresa: {encabezado['empresa']}
+        # Email con resultados
+        cuerpo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
-PCs: {encabezado['pcs']}
+N° PCs: {encabezado['pcs']}
 Sucursales: {encabezado['sucursales']}
-Modelo: {encabezado['modelo']}
+Modelo Trabajo: {encabezado['modelo']}
 Servidores: {encabezado['servidores']}
 Postura: {porcentaje}%
 
 Respuestas:
-""" + "\n".join([f"{p}: {r}" for p, r in resultados])
+""" + "\n".join([f"{p}: {r}" for p, r in respuestas_lista])
 
-        msg = Message("Resultados Evaluación Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
-        msg.body = body
+        msg = Message("Resultado Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
+        msg.body = cuerpo
         mail.send(msg)
 
-        return render_template("resultados.html", respuestas=resultados, porcentaje=porcentaje, encabezado=encabezado)
+        return render_template("resultados.html", respuestas=respuestas_lista, porcentaje=porcentaje, encabezado=encabezado)
+
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
+
+if __name__ == "__main__":
+    app.run(debug=True)
