@@ -5,28 +5,40 @@
   <title>Resultados de Evaluación</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
-    .porcentaje-alto { color: green; font-weight: bold; }
-    .porcentaje-medio { color: orange; font-weight: bold; }
-    .porcentaje-bajo { color: red; font-weight: bold; }
+    .critico { color: red; font-weight: bold; }
+    .basico { color: orange; font-weight: bold; }
+    .solido { color: green; font-weight: bold; }
+    .avanzado { color: blue; font-weight: bold; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Resultados de la Evaluación</h1>
-  </header>
+  <header><h1>Resultados de la Evaluación</h1></header>
 
-  <h2>Información General</h2>
+  <h2>Datos del participante</h2>
   <ul>
     <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
     <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
     <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-    <li><strong>N° de PCs:</strong> {{ encabezado.pcs }}</li>
+    <li><strong>Número de PCs:</strong> {{ encabezado.pcs }}</li>
     <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
-    <li><strong>Modelo de Trabajo:</strong> {{ encabezado.modelo }}</li>
-    <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
+    <li><strong>Modelo de trabajo:</strong> {{ encabezado.modelo }}</li>
+    <li><strong>Tipo de servidores:</strong> {{ encabezado.servidores }}</li>
   </ul>
 
-  <h2>Respuestas</h2>
+  <h2>Postura General</h2>
+  <p><strong>Porcentaje de postura:</strong>
+    {% if porcentaje < 40 %}
+      <span class="critico">{{ porcentaje }}% 🚨 Riesgo Crítico</span>
+    {% elif porcentaje < 70 %}
+      <span class="basico">{{ porcentaje }}% 🔶 Postura Básica</span>
+    {% elif porcentaje < 90 %}
+      <span class="solido">{{ porcentaje }}% ✅ Postura Sólida</span>
+    {% else %}
+      <span class="avanzado">{{ porcentaje }}% 🏆 Postura Avanzada</span>
+    {% endif %}
+  </p>
+
+  <h2>Respuestas entregadas</h2>
   <table>
     <thead>
       <tr><th>Pregunta</th><th>Respuesta</th></tr>
@@ -41,35 +53,19 @@
     </tbody>
   </table>
 
-  <h2>Postura General</h2>
-  {% if porcentaje < 40 %}
-    <p class="porcentaje-bajo">🚨 Postura Crítica: {{ porcentaje }}%</p>
-  {% elif porcentaje < 70 %}
-    <p class="porcentaje-medio">🔶 Postura Básica: {{ porcentaje }}%</p>
-  {% elif porcentaje < 90 %}
-    <p class="porcentaje-alto">✅ Postura Sólida: {{ porcentaje }}%</p>
-  {% else %}
-    <p class="porcentaje-alto">🏆 Postura Avanzada: {{ porcentaje }}%</p>
-  {% endif %}
-
-  <h3>Tabla de referencia</h3>
+  <h2>Tabla de referencia</h2>
   <table>
     <thead>
-      <tr><th>Rango (%)</th><th>Nivel</th><th>Recomendación</th></tr>
+      <tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
     </thead>
     <tbody>
-      <tr><td>0–39%</td><td>🚨 Crítica</td><td>Corregir urgentemente vulnerabilidades y establecer controles mínimos.</td></tr>
-      <tr><td>40–69%</td><td>🔶 Básica</td><td>Refinar prácticas y fortalecer políticas.</td></tr>
-      <tr><td>70–89%</td><td>✅ Sólida</td><td>Mantener y auditar periódicamente.</td></tr>
-      <tr><td>90–100%</td><td>🏆 Avanzada</td><td>Seguir monitoreando y mejorando proactivamente.</td></tr>
+      <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
+      <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
+      <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+      <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
     </tbody>
   </table>
 
-  <h2>Recomendaciones</h2>
-  <ul>
-    <li>✅ Fortalezca las políticas de backup, MFA, y gestión de incidentes.</li>
-    <li>🔧 Implemente controles técnicos sólidos y entrenamiento continuo.</li>
-    <li>💡 Considere el acompañamiento de un MSP (Proveedor de Servicios Gestionados) para implementar y monitorear su estrategia de ciberseguridad.</li>
-  </ul>
+  <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
 </body>
 </html>

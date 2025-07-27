@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_mail import Mail, Message
+import logging
 
 app = Flask(__name__)
 
-# Configuración de correo
+# Configuración del correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -11,53 +12,39 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-segmentos = [
-    ("Gestión y Planeación", [
-        "¿Quién es el responsable de TI/ciberseguridad?",
-        "¿Utilizan herramientas de monitoreo del estado de salud de los equipos?",
-        "¿Tienen inventario actualizado de equipos y datos?",
-        "¿El software y sistemas están actualizados con los últimos parches?",
-        "¿Capacitan regularmente a sus empleados en ciberseguridad?",
-        "¿Tienen un plan definido de respuesta ante incidentes?",
-    ]),
-    ("Protección de Red", [
-        "¿Tienen firewall físico o UTM correctamente configurado?",
-        "¿Quién gestiona el firewall/UTM?",
-        "¿El Wi-Fi está segmentado y protegido?",
-    ]),
-    ("Accesos y autenticación", [
-        "¿Utilizan contraseñas robustas y cambiadas regularmente?",
-        "¿Tienen habilitada la Autenticación Multifactor (MFA)?",
-    ]),
-    ("Copias de Seguridad", [
-        "¿Realizan respaldos diarios de su información crítica?",
-        "¿Verifican periódicamente que los respaldos pueden restaurarse?",
-    ]),
-    ("Gestión Remota y Antivirus", [
-        "¿Cómo gestionan los equipos de forma remota?",
-        "¿Cuentan con antivirus con EDR en todos los equipos?",
-    ])
-]
-
+# Opciones por pregunta
 opciones = [
-    ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
-    ["Sí, monitoreo activo", "Solo alertas básicas", "Depende del usuario", "No se monitorea"],
-    ["Sí, completo y actualizado", "Sí, parcial", "Obsoleto", "No tienen"],
-    ["Sí, actualizados de forma automática", "Sí, manualmente", "De vez en cuando", "No se actualizan"],
-    ["Sí, cada 6-12 meses", "Sí, 1 vez al año", "Solo al ingresar", "No se capacita"],
-    ["Sí, con roles y responsables", "Sí, básico", "Lo estamos creando", "No tenemos plan"],
-    ["Sí, configurado profesionalmente", "Sí, pero básico", "Solo software en PC", "No tienen firewall"],
-    ["TI especializado", "Personal no especializado", "Proveedor externo", "Nadie lo gestiona"],
-    ["Sí, con red por segmento", "Una red protegida", "Red única con contraseña", "Abierta o sin protección"],
-    ["Sí, complejas y gestionadas", "Sí, pero sin política clara", "Solo algunas áreas", "Cualquiera crea su clave"],
-    ["Sí, en todos los accesos", "Solo correos y VPN", "En pruebas", "No usamos MFA"],
-    ["Sí, diariamente y verificado", "Sí, diariamente", "Ocasionalmente", "No se hacen"],
-    ["Sí, mensualmente", "Sí, 1 vez al año", "Lo hemos hecho alguna vez", "Nunca se prueba"],
-    ["Con herramientas como TeamViewer/AnyDesk", "Acceso remoto limitado", "Conexiones esporádicas", "No se gestiona remotamente"],
-    ["Sí, EDR con monitoreo", "Solo antivirus básico", "Antivirus sin actualizar", "No tienen"],
+    ['Dedicado y certificado', 'Interno no exclusivo', 'Proveedor externo', 'Ninguno'],  # TI
+    ['Sí, con alertas y reportes automáticos', 'Sí, manualmente', 'Solo cuando hay problemas', 'No'],
+    ['Sí, actualizado mensualmente', 'Sí, pero con retrasos', 'Parcial', 'No'],
+    ['Sí, con controles definidos', 'Solo antivirus', 'Lo maneja proveedor', 'No tienen'],
+    ['Sí, con doble autenticación (MFA)', 'Contraseñas fuertes', 'Contraseñas básicas', 'Sin política'],
+    ['Sí, red separada y cifrada', 'Solo clave segura', 'Compartida con clientes', 'Abierta'],
+    ['Sí, con backup diario probado', 'Backup semanal', 'Backup sin prueba', 'No hacen respaldo'],
+    ['Sí, se hacen pruebas de recuperación', 'Solo respaldan', 'No han probado nunca', 'No saben'],
+    ['Sí, cada mes', 'Cada semestre', 'Una vez al año', 'Nunca'],
+    ['Sí, tienen protocolo y responsable', 'Hay una guía básica', 'Solo reacción espontánea', 'No saben qué hacer'],
+    ['Sí, con monitoreo remoto y soporte', 'Solo soporte en sitio', 'Uso Team/AnyDesk sin control', 'Ninguno'],
+    ['Sí, con parches automáticos', 'Solo críticas', 'Depende del proveedor', 'No actualizan'],
+    ['Antivirus con EDR', 'Antivirus tradicional', 'Solo Windows Defender', 'No tiene'],
+    ['Sí, al menos cada 6 meses', 'Una vez al año', 'Solo nuevo personal', 'Nunca'],
+    ['Sí, reciben formación y simulacros', 'Capacitación básica', 'Solo charlas internas', 'Nunca'],
+    ['Sí, hacen seguimiento centralizado', 'Hay revisión periódica', 'Revisión solo ante fallas', 'No monitorean'],
+    ['Propios en oficina', 'Arrendados en datacenter', 'Mixto', 'No tienen']
 ]
 
-pesos = [4, 4, 2, 5, 4, 5, 5, 3, 3, 3, 5, 5, 5, 3, 5]
+# Pesos por pregunta (según importancia)
+pesos = [2, 2, 1, 2, 2, 2, 3, 3, 2, 3, 2, 2, 3, 2, 3, 2, 2]
+
+# Segmentos
+segmentos = [
+    ("Gestión de TI", [opciones[0]]),
+    ("Inventario y monitoreo", [opciones[1], opciones[2]]),
+    ("Controles y políticas", [opciones[3], opciones[4], opciones[5]]),
+    ("Respaldos y recuperación", [opciones[6], opciones[7]]),
+    ("Cultura de seguridad", [opciones[8], opciones[9], opciones[13], opciones[14]]),
+    ("Infraestructura", [opciones[10], opciones[11], opciones[12], opciones[15], opciones[16]])
+]
 
 @app.route('/')
 def intro():
@@ -66,47 +53,57 @@ def intro():
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        form = request.form
-        encabezado = {k: form.get(k, "") for k in ['empresa', 'correo', 'sector', 'pcs', 'sucursales', 'modelo', 'servidores']}
-        respuestas = []
+        respuestas = dict(request.form)
+        encabezado = {k: respuestas.pop(k) for k in ['empresa', 'correo', 'sector', 'pcs', 'sucursales', 'modelo', 'servidores']}
+        
         puntaje = 0
-        total = 0
+        puntaje_max = 0
+        puntajes_individuales = []
+        idx = 0
 
-        for idx, (segmento, preguntas) in enumerate(segmentos):
-            for p_idx, pregunta in enumerate(preguntas):
-                respuesta = form.get(pregunta, "No respondida")
-                respuestas.append((pregunta, respuesta))
+        for grupo in opciones:
+            pregunta_texto = list(respuestas.keys())[idx]
+            respuesta_usuario = respuestas.get(pregunta_texto, '')
+            try:
+                pos = grupo.index(respuesta_usuario)
+                if pos == 0:
+                    puntaje += pesos[idx] * 1
+                elif pos == 1:
+                    puntaje += pesos[idx] * 0.66
+                elif pos == 2:
+                    puntaje += pesos[idx] * 0.33
+                # pos 3 (peor): 0 puntos
+            except:
+                pass
+            puntaje_max += pesos[idx]
+            puntajes_individuales.append((pregunta_texto, respuesta_usuario))
+            idx += 1
 
-                try:
-                    nivel = opciones[len(respuestas)-1].index(respuesta)
-                    if nivel == 0:
-                        puntaje += pesos[len(respuestas)-1] * 1
-                    elif nivel == 1:
-                        puntaje += pesos[len(respuestas)-1] * 0.66
-                    elif nivel == 2:
-                        puntaje += pesos[len(respuestas)-1] * 0.33
-                except:
-                    pass
-                total += pesos[len(respuestas)-1]
-
-        porcentaje = int((puntaje / total) * 100) if total else 0
+        porcentaje = int((puntaje / puntaje_max) * 100) if puntaje_max else 0
 
         # Enviar correo
-        body = f"""Empresa: {encabezado['empresa']}
+        cuerpo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
-N° PCs: {encabezado['pcs']}
+N° de PCs: {encabezado['pcs']}
 Sucursales: {encabezado['sucursales']}
-Modelo de trabajo: {encabezado['modelo']}
-Tipo de servidores: {encabezado['servidores']}
-Postura de Ciberseguridad: {porcentaje}%
+Modelo de Trabajo: {encabezado['modelo']}
+Servidores: {encabezado['servidores']}
+Postura: {porcentaje}%
 
 Respuestas:
-""" + "\n".join([f"{p}: {r}" for p, r in respuestas])
+""" + "\n".join([f"{p}: {r}" for p, r in puntajes_individuales])
 
-        msg = Message("Resultados Evaluación Ciberseguridad", sender=app.config['MAIL_USERNAME'], recipients=["soporte@cloudsoftware.com.co"])
-        msg.body = body
+        msg = Message("Resultados Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
+        msg.body = cuerpo
         mail.send(msg)
 
-        return render_template("resultados.html", respuestas=respuestas, porcentaje=porcentaje, encabezado=encabezado)
+        return render_template("resultados.html", respuestas=puntajes_individuales, porcentaje=porcentaje, encabezado=encabezado)
+
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
+
+# Ejecutar para Render
+if __name__ == '__main__':
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    app.run(host='0.0.0.0', port=5000)
