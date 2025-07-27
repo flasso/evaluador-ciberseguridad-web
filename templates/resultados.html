@@ -5,67 +5,57 @@
   <title>Resultados de Evaluación</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
-    .porcentaje {
-      font-size: 2em;
-      font-weight: bold;
-      padding: 0.5em;
-      text-align: center;
-    }
-    .bajo { background-color: #ffdddd; color: #a30000; }
-    .medio { background-color: #fff3cd; color: #856404; }
-    .alto { background-color: #d4edda; color: #155724; }
-    .avanzado { background-color: #cce5ff; color: #004085; }
+    .resumen { font-weight: bold; }
+    .critico { color: red; }
+    .basico { color: orange; }
+    .solido { color: green; }
+    .avanzado { color: darkblue; }
   </style>
 </head>
 <body>
-  <header><h1>Resultados de Evaluación de Ciberseguridad</h1></header>
+  <header>
+    <h1>Resultados de Evaluación</h1>
+  </header>
 
-  <h2>Datos Generales</h2>
-  <ul>
-    <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
-    <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
-    <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-    <li><strong>N° de PCs:</strong> {{ encabezado.pcs }}</li>
-    <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
-    <li><strong>Modelo:</strong> {{ encabezado.modelo }}</li>
-    <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
-  </ul>
+  <p class="resumen">Empresa: {{ encabezado.empresa }}<br>
+  Sector: {{ encabezado.sector }}<br>
+  N° de PCs: {{ encabezado.pcs }}<br>
+  Sucursales: {{ encabezado.sucursales }}<br>
+  Modelo de trabajo: {{ encabezado.modelo }}<br>
+  Servidores: {{ encabezado.servidores }}</p>
 
-  <h2>Resumen</h2>
-  <div class="porcentaje 
-    {% if porcentaje < 40 %}bajo
-    {% elif porcentaje < 70 %}medio
-    {% elif porcentaje < 90 %}alto
-    {% else %}avanzado{% endif %}">
-    Postura: {{ porcentaje }}%
-  </div>
+  <h2 class="resumen">Postura de Ciberseguridad: 
+    {% if porcentaje < 40 %}
+      <span class="critico">{{ porcentaje }}% 🚨 Riesgo Crítico</span>
+    {% elif porcentaje < 70 %}
+      <span class="basico">{{ porcentaje }}% 🔶 Postura Básica</span>
+    {% elif porcentaje < 90 %}
+      <span class="solido">{{ porcentaje }}% ✅ Postura Sólida</span>
+    {% else %}
+      <span class="avanzado">{{ porcentaje }}% 🏆 Postura Avanzada</span>
+    {% endif %}
+  </h2>
 
-  <h2>Respuestas</h2>
+  <h3>Respuestas:</h3>
   <table>
-    <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+    <thead>
+      <tr><th>Pregunta</th><th>Respuesta</th></tr>
+    </thead>
     <tbody>
       {% for pregunta, respuesta in respuestas %}
-      <tr>
-        <td>{{ pregunta }}</td>
-        <td>{{ respuesta }}</td>
-      </tr>
+        <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <h2>Tabla de Referencia</h2>
-  <table>
-    <thead><tr><th>Rango (%)</th><th>Postura</th><th>Recomendaciones</th></tr></thead>
-    <tbody>
-      <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles más débiles</td></tr>
-      <tr><td>40–69%</td><td>🔶 Básica</td><td>Mejorar procesos existentes y capacitar</td></tr>
-      <tr><td>70–89%</td><td>✅ Sólida</td><td>Revisar prácticas y fortalecer gestión</td></tr>
-      <tr><td>90–100%</td><td>🏆 Avanzada</td><td>Mantener y auditar periódicamente</td></tr>
-    </tbody>
-  </table>
+  <h3>Recomendaciones Generales</h3>
+  <ul>
+    <li>Corregir controles críticos como respaldos, restauración, EDR y MFA.</li>
+    <li>Auditar configuraciones de firewall, red Wi-Fi y antivirus.</li>
+    <li>Establecer políticas claras de gestión, capacitación y monitoreo.</li>
+    <li><strong>Un MSP puede ayudar a implementar mejoras y priorizar acciones.</strong></li>
+  </ul>
 
-  <h2>Recomendación Final</h2>
-  <p><strong>💡 Un proveedor MSP puede ayudarlo a evaluar, implementar y mantener un plan de ciberseguridad ajustado a sus necesidades.</strong></p>
-
+  <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
 </body>
 </html>
