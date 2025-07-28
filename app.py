@@ -1,10 +1,7 @@
 from flask import Flask, render_template, request
 from flask_mail import Mail, Message
-import os
 
 app = Flask(__name__)
-
-# Configuración de correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -12,40 +9,27 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-# Segmentos de preguntas y sus pesos
-segmentos = [
-    ("Gestión de TI", [
-        ("¿Quién es el responsable de TI/ciberseguridad?", 3)
-    ]),
-    ("Inventario y monitoreo", [
-        ("¿Utilizan herramientas de monitoreo del estado de salud de los equipos?", 2),
-        ("¿Tienen inventario actualizado de equipos y datos?", 2)
-    ]),
-    ("Controles y políticas", [
-        ("¿Tienen políticas formales de ciberseguridad?", 2),
-        ("¿Usan autenticación multifactor (MFA)?", 3),
-        ("¿La red Wi-Fi de su empresa está protegida?", 2)
-    ]),
-    ("Respaldos y recuperación", [
-        ("¿Con qué frecuencia respaldan su información?", 4),
-        ("¿Han probado la restauración de los respaldos?", 4)
-    ]),
-    ("Cultura de seguridad", [
-        ("¿Realizan simulacros o pruebas de seguridad?", 2),
-        ("¿Tienen un plan de respuesta ante incidentes?", 4),
-        ("¿Capacitan regularmente al personal?", 3),
-        ("¿Hacen campañas de concientización?", 2)
-    ]),
-    ("Infraestructura", [
-        ("¿Cómo gestionan los equipos de forma remota?", 3),
-        ("¿Actualizan regularmente los sistemas?", 4),
-        ("¿Qué tipo de antivirus usan?", 4),
-        ("¿Monitorean la seguridad de sus dispositivos?", 2),
-        ("¿Dónde están sus servidores?", 2)
-    ])
+# Lista de preguntas con sus textos y pesos
+preguntas_info = [
+    ("responsable_ti", "¿Quién es el responsable de TI/ciberseguridad?", 3),
+    ("monitoreo_salud", "¿Utilizan herramientas de monitoreo del estado de salud de los equipos?", 3),
+    ("inventario", "¿Tienen inventario actualizado de equipos y datos?", 2),
+    ("controles", "¿Tienen controles definidos para gestionar la ciberseguridad?", 2),
+    ("mfa", "¿Utilizan MFA (Autenticación Multifactor)?", 3),
+    ("wifi", "¿Cómo está segmentada y protegida la red Wi-Fi?", 2),
+    ("backups", "¿Qué tipo de respaldos realizan?", 5),
+    ("restauracion", "¿Han probado la restauración de los respaldos?", 5),
+    ("capacitacion", "¿Con qué frecuencia capacitan al personal en ciberseguridad?", 3),
+    ("incidentes", "¿Tienen un plan de respuesta ante incidentes?", 4),
+    ("induccion", "¿Incluyen seguridad digital en la inducción del personal?", 2),
+    ("formacion", "¿Realizan formación continua en seguridad digital?", 2),
+    ("gestion_remota", "¿Cómo gestionan los equipos de forma remota?", 4),
+    ("parches", "¿Cómo manejan la actualización de software y parches?", 3),
+    ("antivirus", "¿Qué tipo de antivirus utilizan?", 5),
+    ("seguimiento", "¿Monitorean los eventos de seguridad?", 3),
+    ("firewall", "¿Qué tipo de firewall/UTM utilizan?", 4)
 ]
 
-# Opciones por pregunta (en el mismo orden que las preguntas)
 opciones = [
     ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
     ["Sí, con alertas y reportes automáticos", "Sí, manualmente", "Solo cuando hay problemas", "No"],
@@ -73,53 +57,59 @@ def intro():
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     if request.method == 'POST':
-        respuestas = dict(request.form)
-        encabezado = {k: respuestas.pop(k) for k in ['empresa', 'correo', 'sector', 'pcs', 'sucursales', 'modelo', 'servidores']}
-        puntaje = 0
-        puntaje_max = 0
-        puntajes_individuales = []
-        idx = 0
-        for segmento, preguntas in segmentos:
-            for pregunta, peso in preguntas:
-                respuesta = respuestas.get(pregunta, "")
+        form = request.form
+        encabezado = {
+            "empresa": form.get("empresa"),
+            "correo": form.get("correo"),
+            "sector": form.get("sector"),
+            "pcs": form.get("pcs"),
+            "sucursales": form.get("sucursales"),
+            "modelo": form.get("modelo"),
+            "servidores": form.get("servidores")
+        }
+
+        respuestas = []
+        puntaje_total = 0
+        puntaje_maximo = 0
+
+        for idx, (clave, texto, peso) in enumerate(preguntas_info):
+            respuesta = form.get(clave)
+            if respuesta:
                 try:
-                    valor = opciones[idx].index(respuesta)
-                    if valor == 0:
-                        puntaje += peso * 1
-                    elif valor == 1:
-                        puntaje += peso * 0.66
-                    elif valor == 2:
-                        puntaje += peso * 0.33
-                except:
-                    valor = -1
-                puntaje_max += peso
-                puntajes_individuales.append((pregunta, respuesta))
-                idx += 1
+                    valor_idx = opciones[idx].index(respuesta)
+                except ValueError:
+                    valor_idx = 3  # Respuesta inválida = peor calificación
+                if valor_idx == 0:
+                    puntaje_total += peso
+                elif valor_idx == 1:
+                    puntaje_total += peso * 0.66
+                elif valor_idx == 2:
+                    puntaje_total += peso * 0.33
+                # valor_idx == 3 no suma nada
+            else:
+                valor_idx = 3
+            puntaje_maximo += peso
+            respuestas.append((texto, respuesta))
 
-        porcentaje = int((puntaje / puntaje_max) * 100) if puntaje_max else 0
+        porcentaje = int((puntaje_total / puntaje_maximo) * 100) if puntaje_maximo else 0
 
-        # Enviar por correo
-        body = f"""Empresa: {encabezado['empresa']}
+        # Enviar email
+        cuerpo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
-N° de PCs: {encabezado['pcs']}
+PCs: {encabezado['pcs']}
 Sucursales: {encabezado['sucursales']}
-Modelo de trabajo: {encabezado['modelo']}
+Modelo: {encabezado['modelo']}
 Servidores: {encabezado['servidores']}
 Postura: {porcentaje}%
 
 Respuestas:
-""" + "\n".join([f"{pregunta}: {respuesta}" for pregunta, respuesta in puntajes_individuales])
+""" + "\n".join([f"{preg}: {resp}" for preg, resp in respuestas])
 
-        msg = Message("Resultados de Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
-        msg.body = body
+        msg = Message("Resultado Evaluación Ciberseguridad", sender=app.config['MAIL_USERNAME'], recipients=["soporte@cloudsoftware.com.co"])
+        msg.body = cuerpo
         mail.send(msg)
 
-        return render_template("resultados.html", respuestas=puntajes_individuales, porcentaje=porcentaje, encabezado=encabezado)
-    
-    return render_template("index.html", segmentos=segmentos, opciones=opciones)
+        return render_template("resultados.html", respuestas=respuestas, porcentaje=porcentaje, encabezado=encabezado)
 
-# BLOQUE NECESARIO PARA RENDER.COM
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    return render_template("index.html", preguntas_info=preguntas_info, opciones=opciones)
