@@ -62,8 +62,8 @@
         <select name="modelo" required>
           <option value="">Seleccione...</option>
           <option>Presencial</option>
-          <option>Híbrido</option>
           <option>Remoto</option>
+          <option>Híbrido</option>
         </select>
       </label>
       <label>¿Qué tipo de servidores utiliza?
@@ -83,7 +83,7 @@
     {% for segmento, preguntas in segmentos %}
       <section class="segmento">
         <h2>{{ segmento }}</h2>
-        {% for pregunta in preguntas %}
+        {% for pregunta, peso in preguntas %}
           <fieldset>
             <legend>{{ pregunta }}</legend>
             {% for opcion in opciones[pregunta_idx] %}
