@@ -1,57 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Resultados</title>
-  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-  <style>
-    .alto { color: green; font-weight: bold; }
-    .medio { color: orange; font-weight: bold; }
-    .bajo { color: red; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<title>Resultados</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
 <header><h1>Resultados de la Evaluación</h1></header>
 
-<h2>Datos generales</h2>
-<ul>
-  <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
-  <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
-  <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-  <li><strong>Número de PCs:</strong> {{ encabezado.pcs }}</li>
-  <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
-  <li><strong>Modelo de Trabajo:</strong> {{ encabezado.modelo }}</li>
-  <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
-</ul>
-
-<h2>Postura de Seguridad</h2>
-<p class="{% if porcentaje >= 90 %}alto{% elif porcentaje >= 70 %}medio{% else %}bajo{% endif %}">
-  <strong>{{ porcentaje }}%</strong>
-</p>
-
-<h3>Tabla de referencia</h3>
-<table>
-  <tr><th>Rango</th><th>Nivel</th><th>Acción</th></tr>
-  <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir controles existentes y agregar los faltantes</td></tr>
-  <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar gestión actual y capacitar personal</td></tr>
-  <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y mantener mejoras</td></tr>
-  <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
-</table>
+<h2>Porcentaje de postura:</h2>
+<p style="font-size:1.5em; color:teal;"><strong>{{ porcentaje }}%</strong></p>
 
 <h2>Respuestas</h2>
 <table>
-  <tr><th>Pregunta</th><th>Respuesta</th></tr>
-  {% for pregunta, respuesta in respuestas %}
-  <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+<thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+<tbody>
+{% for segmento, preguntas in segmentos %}
+  {% for pregunta, opciones in preguntas %}
+  <tr>
+    <td>{{ pregunta }}</td>
+    <td>{{ respuestas.get(pregunta, 'No respondido') }}</td>
+  </tr>
   {% endfor %}
+{% endfor %}
+</tbody>
+</table>
+
+<h2>Tabla de referencia</h2>
+<table>
+<thead>
+<tr><th>Rango (%)</th><th>Nivel</th><th>Acciones Recomendadas</th></tr>
+</thead>
+<tbody>
+<tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
+<tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
+<tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
+<tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+</tbody>
 </table>
 
 <h2>Recomendaciones</h2>
 <ul>
-  <li>Revisar y fortalecer las áreas con puntajes bajos.</li>
-  <li>Capacitar al personal de forma constante.</li>
-  <li>Implementar MFA, antivirus con EDR y respaldo con restauración verificada.</li>
-  <li><strong>Considere trabajar con un proveedor MSP para acompañar su fortalecimiento digital.</strong></li>
+<li>Revisar configuración de firewall y segmentación de red.</li>
+<li>Capacitar regularmente a los empleados en ciberseguridad.</li>
+<li>Probar restauración de respaldos periódicamente.</li>
+<li>Implementar MFA en todas las cuentas críticas.</li>
+<li><strong>Considerar el apoyo de un Proveedor de Servicios Gestionados (MSP) para una gestión profesional.</strong></li>
 </ul>
 
 </body>
