@@ -12,21 +12,21 @@
   </style>
 </head>
 <body>
-  <header><h1>Resultados de la Evaluación</h1></header>
+  <header>
+    <h1>Resultados de la Evaluación</h1>
+  </header>
 
-  <h2>Datos del participante</h2>
-  <ul>
-    <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
-    <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
-    <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
-    <li><strong>Número de PCs:</strong> {{ encabezado.pcs }}</li>
-    <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
-    <li><strong>Modelo de trabajo:</strong> {{ encabezado.modelo }}</li>
-    <li><strong>Tipo de servidores:</strong> {{ encabezado.servidores }}</li>
-  </ul>
+  <p><strong>Empresa:</strong> {{ encabezado.empresa }}</p>
+  <p><strong>Correo:</strong> {{ encabezado.correo }}</p>
+  <p><strong>Sector:</strong> {{ encabezado.sector }}</p>
+  <p><strong>N° de PCs:</strong> {{ encabezado.pcs }}</p>
+  <p><strong>Sucursales:</strong> {{ encabezado.sucursales }}</p>
+  <p><strong>Modelo de Trabajo:</strong> {{ encabezado.modelo }}</p>
+  <p><strong>Servidores:</strong> {{ encabezado.servidores }}</p>
 
   <h2>Postura General</h2>
-  <p><strong>Porcentaje de postura:</strong>
+  <p>
+    <strong>Porcentaje de postura:</strong>
     {% if porcentaje < 40 %}
       <span class="critico">{{ porcentaje }}% 🚨 Riesgo Crítico</span>
     {% elif porcentaje < 70 %}
@@ -38,7 +38,7 @@
     {% endif %}
   </p>
 
-  <h2>Respuestas entregadas</h2>
+  <h2>Respuestas</h2>
   <table>
     <thead>
       <tr><th>Pregunta</th><th>Respuesta</th></tr>
@@ -66,6 +66,15 @@
     </tbody>
   </table>
 
-  <p style="text-align:center; font-style:italic;">"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</p>
+  <h2>Recomendaciones</h2>
+  <ul>
+    <li>Revisar la seguridad de acceso remoto y segmentación de red.</li>
+    <li>Verificar estado de antivirus con EDR y parches de seguridad.</li>
+    <li>Comprobar efectividad del plan de respuesta ante incidentes.</li>
+    <li>Realizar backups diarios y pruebas periódicas de restauración.</li>
+    <li><strong>Considerar contar con un proveedor MSP para apoyar en la implementación y monitoreo.</strong></li>
+  </ul>
+
+  <p style="text-align:center;"><em>"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</em></p>
 </body>
 </html>
