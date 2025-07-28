@@ -2,79 +2,57 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Resultados de Evaluación</title>
+  <title>Resultados</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
-    .critico { color: red; font-weight: bold; }
-    .basico { color: orange; font-weight: bold; }
-    .solido { color: green; font-weight: bold; }
-    .avanzado { color: blue; font-weight: bold; }
+    .alto { color: green; font-weight: bold; }
+    .medio { color: orange; font-weight: bold; }
+    .bajo { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Resultados de la Evaluación</h1>
-  </header>
+<header><h1>Resultados de la Evaluación</h1></header>
 
-  <p><strong>Empresa:</strong> {{ encabezado.empresa }}</p>
-  <p><strong>Correo:</strong> {{ encabezado.correo }}</p>
-  <p><strong>Sector:</strong> {{ encabezado.sector }}</p>
-  <p><strong>N° de PCs:</strong> {{ encabezado.pcs }}</p>
-  <p><strong>Sucursales:</strong> {{ encabezado.sucursales }}</p>
-  <p><strong>Modelo de Trabajo:</strong> {{ encabezado.modelo }}</p>
-  <p><strong>Servidores:</strong> {{ encabezado.servidores }}</p>
+<h2>Datos generales</h2>
+<ul>
+  <li><strong>Empresa:</strong> {{ encabezado.empresa }}</li>
+  <li><strong>Correo:</strong> {{ encabezado.correo }}</li>
+  <li><strong>Sector:</strong> {{ encabezado.sector }}</li>
+  <li><strong>Número de PCs:</strong> {{ encabezado.pcs }}</li>
+  <li><strong>Sucursales:</strong> {{ encabezado.sucursales }}</li>
+  <li><strong>Modelo de Trabajo:</strong> {{ encabezado.modelo }}</li>
+  <li><strong>Servidores:</strong> {{ encabezado.servidores }}</li>
+</ul>
 
-  <h2>Postura General</h2>
-  <p>
-    <strong>Porcentaje de postura:</strong>
-    {% if porcentaje < 40 %}
-      <span class="critico">{{ porcentaje }}% 🚨 Riesgo Crítico</span>
-    {% elif porcentaje < 70 %}
-      <span class="basico">{{ porcentaje }}% 🔶 Postura Básica</span>
-    {% elif porcentaje < 90 %}
-      <span class="solido">{{ porcentaje }}% ✅ Postura Sólida</span>
-    {% else %}
-      <span class="avanzado">{{ porcentaje }}% 🏆 Postura Avanzada</span>
-    {% endif %}
-  </p>
+<h2>Postura de Seguridad</h2>
+<p class="{% if porcentaje >= 90 %}alto{% elif porcentaje >= 70 %}medio{% else %}bajo{% endif %}">
+  <strong>{{ porcentaje }}%</strong>
+</p>
 
-  <h2>Respuestas</h2>
-  <table>
-    <thead>
-      <tr><th>Pregunta</th><th>Respuesta</th></tr>
-    </thead>
-    <tbody>
-      {% for pregunta, respuesta in respuestas %}
-      <tr>
-        <td>{{ pregunta }}</td>
-        <td>{{ respuesta }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<h3>Tabla de referencia</h3>
+<table>
+  <tr><th>Rango</th><th>Nivel</th><th>Acción</th></tr>
+  <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir controles existentes y agregar los faltantes</td></tr>
+  <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar gestión actual y capacitar personal</td></tr>
+  <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y mantener mejoras</td></tr>
+  <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
+</table>
 
-  <h2>Tabla de referencia</h2>
-  <table>
-    <thead>
-      <tr><th>Rango (%)</th><th>Nivel de Postura</th><th>Acciones Recomendadas</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Corregir urgentemente los controles existentes y agregar los faltantes</td></tr>
-      <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Mejorar la gestión de controles actuales y capacitar al personal</td></tr>
-      <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar procesos y auditorías periódicas</td></tr>
-      <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y revisar proactivamente</td></tr>
-    </tbody>
-  </table>
+<h2>Respuestas</h2>
+<table>
+  <tr><th>Pregunta</th><th>Respuesta</th></tr>
+  {% for pregunta, respuesta in respuestas %}
+  <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+  {% endfor %}
+</table>
 
-  <h2>Recomendaciones</h2>
-  <ul>
-    <li>Revisar la seguridad de acceso remoto y segmentación de red.</li>
-    <li>Verificar estado de antivirus con EDR y parches de seguridad.</li>
-    <li>Comprobar efectividad del plan de respuesta ante incidentes.</li>
-    <li>Realizar backups diarios y pruebas periódicas de restauración.</li>
-    <li><strong>Considerar contar con un proveedor MSP para apoyar en la implementación y monitoreo.</strong></li>
-  </ul>
+<h2>Recomendaciones</h2>
+<ul>
+  <li>Revisar y fortalecer las áreas con puntajes bajos.</li>
+  <li>Capacitar al personal de forma constante.</li>
+  <li>Implementar MFA, antivirus con EDR y respaldo con restauración verificada.</li>
+  <li><strong>Considere trabajar con un proveedor MSP para acompañar su fortalecimiento digital.</strong></li>
+</ul>
 
-  <p style="text-align:center;"><em>"En ciberseguridad, la verdad incómoda hoy evita un desastre mañana."</em></p>
 </body>
 </html>
