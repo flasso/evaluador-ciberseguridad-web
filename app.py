@@ -18,12 +18,19 @@ segmentos_con_opciones = [
         ("¿Quién es el responsable de TI/ciberseguridad?", ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"])
     ]),
     ("Inventario y monitoreo", [
-        ("¿Utilizan herramientas de monitoreo del estado de salud de los equipos?", ["Sí, con alertas y reportes automáticos", "Sí, manualmente", "Solo cuando hay problemas", "No"]),
+        ("¿Utilizan herramientas de monitoreo del estado de salud de sus equipos/endpoints (PCs, servidores, móviles)?", ["Sí, con alertas y reportes automáticos", "Sí, manualmente", "Solo cuando hay problemas", "No"]),
         ("¿Tienen inventario actualizado de equipos y datos?", ["Sí, actualizado mensualmente", "Sí, pero con retrasos", "Parcial", "No"])
     ]),
     ("Controles y políticas", [
-        ("¿Tienen políticas y controles de ciberseguridad documentados?", ["Sí, con controles definidos", "Solo antivirus", "Lo maneja proveedor", "No tienen"]),
-        ("¿Utilizan autenticación multifactor (MFA)?", ["Sí, con doble autenticación (MFA)", "Contraseñas fuertes", "Contraseñas básicas", "Sin política"]),
+        # --- PREGUNTA CONSOLIDADA DE POLÍTICAS Y MFA ---
+        ("¿Tienen políticas y controles de ciberseguridad documentados (incluyendo gestión de contraseñas y uso de MFA)?", [
+            "Sí, con políticas detalladas y MFA implementado en servicios clave",
+            "Sí, con políticas definidas y uso de MFA en algunos servicios",
+            "Sí, solo políticas de contraseñas fuertes (mayúsculas, minúsculas, números, caracteres especiales)",
+            "Sí, solo políticas de contraseñas básicas (letras y números)",
+            "Lo maneja un proveedor externo (desconozco los detalles)",
+            "No tienen"
+        ]),
         ("¿Tienen Wi-Fi separado para invitados/clientes?", ["Sí, red separada y cifrada", "Solo clave segura", "Compartida con clientes", "Abierta"])
     ]),
     ("Respaldos y recuperación", [
@@ -32,7 +39,7 @@ segmentos_con_opciones = [
     ]),
     ("Cultura de seguridad", [
         ("¿Capacitan al personal en ciberseguridad?", ["Sí, cada mes", "Cada semestre", "Una vez al año", "Nunca"]),
-        ("¿Tienen un plan de respuesta a incidentos?", ["Sí, tienen protocolo y responsable", "Hay una guía básica", "Solo reacción espontánea", "No saben qué hacer"]),
+        ("¿Tienen un plan de respuesta a incidentes?", ["Sí, tienen protocolo y responsable", "Hay una guía básica", "Solo reacción espontánea", "No saben qué hacer"]),
         ("¿Hacen simulacros o pruebas de seguridad?", ["Sí, al menos cada 6 meses", "Una vez al año", "Solo nuevo personal", "Nunca"]),
         ("¿Incluyen la ciberseguridad en inducción o entrenamiento inicial?", ["Sí, reciben formación y simulacros", "Capacitación básica", "Solo charlas internas", "Nunca"])
     ]),
@@ -40,7 +47,7 @@ segmentos_con_opciones = [
         ("¿Cómo gestionan de manera remota los equipos?", ["Sí, con monitoreo remoto y soporte", "Solo soporte en sitio", "Uso Team/AnyDesk sin control", "Ninguno"]),
         ("¿Aplican parches y actualizaciones de seguridad?", ["Sí, con parches automáticos", "Solo críticas", "Depende del proveedor", "No actualizan"]),
         ("¿Tienen solución de antivirus o EDR?", ["Antivirus con EDR", "Antivirus tradicional", "Solo Windows Defender", "No tiene"]),
-        ("¿Utilizan herramientas de monitoreo del entorno?", ["Sí, hacen seguimiento centralizado", "Hay revisión periódica", "Revisión solo ante fallas", "No monitorean"])
+        ("¿Utilizan herramientas de monitoreo de la red o sistemas para detectar anomalías/amenazas?", ["Sí, hacen seguimiento centralizado", "Hay revisión periódica", "Revisión solo ante fallas", "No monitorean"])
     ])
 ]
 
@@ -64,13 +71,20 @@ def evaluacion():
         resultado_preguntas = []
 
         # Pesos personalizados para algunas preguntas clave
+        # ¡IMPORTANTE! Los índices han sido ajustados debido a la eliminación de la pregunta de MFA.
+        # Originalmente MFA era el índice 4. Ahora la pregunta subsiguiente (Wi-Fi)
+        # y las de segmentos posteriores se "mueven" hacia arriba en el índice.
+        # Controles y políticas ahora tiene 2 preguntas en lugar de 3.
+        # Recuento de preguntas: 1 (Gestión) + 2 (Inventario) + 2 (Controles) + 2 (Respaldos) + 4 (Cultura) + 4 (Infra) = 15 preguntas
         pesos = {
-            6: 5,  # ¿Hacen respaldos periódicos? (índice global 6)
-            7: 5,  # ¿Han probado la restauración de respaldos? (índice global 7)
-            9: 4,  # ¿Tienen un plan de respuesta a incidentes? (índice global 9)
-            13: 5, # ¿Aplican parches y actualizaciones de seguridad? (índice global 13)
-            14: 5  # ¿Tienen solución de antivirus o EDR? (índice global 14)
+            5: 5,  # Era 6: ¿Hacen respaldos periódicos? (Ahora índice 5)
+            6: 5,  # Era 7: ¿Han probado la restauración de respaldos? (Ahora índice 6)
+            8: 4,  # Era 9: ¿Tienen un plan de respuesta a incidentes? (Ahora índice 8)
+            12: 5, # Era 13: ¿Aplican parches y actualizaciones de seguridad? (Ahora índice 12)
+            13: 5  # Era 14: ¿Tienen solución de antivirus o EDR? (Ahora índice 13)
         }
+        # La nueva pregunta de políticas consolidada (índice 3) también podría llevar un peso alto.
+        # Por ejemplo: pesos[3] = 5
 
         for idx_pregunta_global, (pregunta_texto, opciones_disponibles) in enumerate(preguntas_y_opciones_planas):
             respuesta_elegida = respuestas.get(pregunta_texto, "No respondido")
@@ -86,6 +100,8 @@ def evaluacion():
                     puntaje_obtenido += peso_pregunta_actual * 0.66
                 elif idx_opcion_elegida == 2:
                     puntaje_obtenido += peso_pregunta_actual * 0.33
+                elif idx_opcion_elegida == 3: # Si hay una cuarta opción para algo como "básicas"
+                    puntaje_obtenido += peso_pregunta_actual * 0.20 # Un peso más bajo para contraseñas básicas
                 
                 puntaje_total += peso_pregunta_actual
             except ValueError:
@@ -95,7 +111,7 @@ def evaluacion():
 
         porcentaje = round((puntaje_obtenido / puntaje_total) * 100) if puntaje_total else 0
 
-        # --- INICIO: Generación de texto de sugerencias para el correo ---
+        # --- Generación de texto de sugerencias para el correo ---
         sugerencias_texto = """
 ---
 Sugerencias y Próximos Pasos:
@@ -103,7 +119,7 @@ Sugerencias y Próximos Pasos:
 Basado en los resultados de su evaluación, considere las siguientes recomendaciones para mejorar la postura de ciberseguridad de su empresa:
 
 * Identifique sus puntos débiles: Revise sus respuestas para identificar las áreas donde su empresa puede mejorar.
-* Priorice las acciones críticas: Enfóquese primero en implementar controles básicos y desarrollar planes de respuesta a incidentes.
+* Priorice las acciones críticas: Enfóquese primero en implementar controles básicos y desarrollar planes de respuesta a incidentos.
 * Capacitación Continua: Invierta en formación regular para todo su personal.
 * Actualización y monitoreo: Mantenga todos sus sistemas y software actualizados e implemente soluciones de monitoreo.
 * Plan de recuperación: Asegúrese de que sus respaldos de información sean periódicos, seguros y probados.
@@ -114,8 +130,6 @@ Basado en los resultados de su evaluación, considere las siguientes recomendaci
 ¡Atención! Refuerce su Ciberseguridad:
 Dada su postura actual ({porcentaje}%), le recomendamos encarecidamente contar con el apoyo de una empresa especializada en ciberseguridad bajo un modelo de Servicio Gestionado (MSP). Un MSP con trayectoria y soluciones confiables puede ofrecerle monitoreo constante, gestión de amenazas, soporte experto y la implementación de controles avanzados que son cruciales para proteger su negocio de las amenazas actuales. No espere a ser un objetivo para actuar. Invertir en ciberseguridad ahora es invertir en la continuidad de su negocio.
 """
-        # --- FIN: Generación de texto de sugerencias ---
-
 
         cuerpo_correo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
@@ -130,7 +144,7 @@ Postura de Ciberseguridad: {porcentaje}%
 
 ---
 Respuestas Detalladas:
-""" + "\n".join([f"- {p}: {r}" for p, r in resultado_preguntas]) + sugerencias_texto # <-- AQUI SE AÑADE EL TEXTO DE SUGERENCIAS
+""" + "\n".join([f"- {p}: {r}" for p, r in resultado_preguntas]) + sugerencias_texto
 
         try:
             msg = Message(
