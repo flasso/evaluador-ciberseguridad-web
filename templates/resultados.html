@@ -2,55 +2,173 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Resultados de Evaluación</title>
+  <title>Resultados de Evaluación de Ciberseguridad</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
-    .porcentaje {
-      font-size: 2em;
-      font-weight: bold;
+    /* Estilos generales para un toque más moderno */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6; /* Un gris muy claro para el fondo */
+      color: #333;
+      line-height: 1.6;
     }
-    .critico { color: red; }
-    .basico { color: orange; }
-    .solido { color: green; }
-    .avanzado { color: darkblue; }
+    header {
+      background-color: #2c3e50; /* Azul oscuro */
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    section {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      background-color: #fdfdfd;
+    }
+    h2 {
+      color: #34495e; /* Un gris azulado oscuro */
+      border-bottom: 2px solid #3498db; /* Azul vibrante */
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.8em;
+    }
+    p strong {
+      color: #555;
+    }
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .data-item {
+      padding: 0.8rem;
+      background-color: #ecf0f1; /* Gris claro */
+      border-left: 4px solid #3498db; /* Barra azul */
+      border-radius: 4px;
+    }
+    .data-item strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #2c3e50;
+    }
+
+    /* Estilos para el porcentaje */
+    .porcentaje-box {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+    .porcentaje-value {
+      font-size: 4em;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .porcentaje-label {
+      font-size: 1.2em;
+      color: #666;
+    }
+
+    /* Colores para el porcentaje y tabla de referencia (ajustados) */
+    .critico { color: #e74c3c; /* Rojo más fuerte */ background-color: #ffe0e0; border-color: #e74c3c; }
+    .basico { color: #f39c12; /* Naranja más oscuro */ background-color: #fff4e0; border-color: #f39c12; }
+    .solido { color: #27ae60; /* Verde esmeralda */ background-color: #e0fff2; border-color: #27ae60; }
+    .avanzado { color: #2980b9; /* Azul cielo */ background-color: #e0f2ff; border-color: #2980b9; }
+
+    /* Tabla de respuestas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+    th, td {
+      padding: 0.8rem 1.2rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #f8f8f8;
+      font-weight: bold;
+      color: #444;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #fdfdfd;
+    }
+    tbody tr:hover {
+      background-color: #f0f0f0;
+    }
   </style>
 </head>
 <body>
-  <header><h1>Resultados de la Evaluación</h1></header>
+  <header>
+    <h1>Resultados de la Evaluación de Ciberseguridad</h1>
+  </header>
 
-  <p><strong>Empresa:</strong> {{ encabezado.empresa }}</p>
-  <p><strong>Correo:</strong> {{ encabezado.correo }}</p>
-  <p><strong>Sector:</strong> {{ encabezado.sector }}</p>
-  <p><strong>Número de PCs:</strong> {{ encabezado.pcs }}</p>
-  <p><strong>Sucursales:</strong> {{ encabezado.sucursales }}</p>
-  <p><strong>Modelo de trabajo:</strong> {{ encabezado.modelo }}</p>
-  <p><strong>Servidores:</strong> {{ encabezado.servidores }}</p>
+  <main>
+    <section>
+      <h2>Información General de la Empresa</h2>
+      <div class="data-grid">
+        <div class="data-item"><strong>Empresa:</strong> {{ encabezado.empresa }}</div>
+        <div class="data-item"><strong>Correo:</strong> {{ encabezado.correo }}</div>
+        <div class="data-item"><strong>Sector:</strong> {{ encabezado.sector }}</div>
+        <div class="data-item"><strong>Número de PCs:</strong> {{ encabezado.pcs }}</div>
+        <div class="data-item"><strong>Sucursales:</strong> {{ encabezado.sucursales }}</div>
+        <div class="data-item"><strong>Modelo de trabajo:</strong> {{ encabezado.modelo }}</div>
+        <div class="data-item"><strong>Servidores:</strong> {{ encabezado.servidores }}</div>
+      </div>
+    </section>
 
-  <h2>Postura General</h2>
-  {% set clase = 'critico' if porcentaje < 40 else 'basico' if porcentaje < 70 else 'solido' if porcentaje < 90 else 'avanzado' %}
-  <p class="porcentaje {{ clase }}">Postura: {{ porcentaje }}%</p>
+    <section>
+      <h2>Postura General de Ciberseguridad</h2>
+      {% set clase = 'critico' if porcentaje < 40 else 'basico' if porcentaje < 60 else 'solido' if porcentaje < 85 else 'avanzado' %} {# Rangos más exigentes #}
+      <div class="porcentaje-box {{ clase }}">
+        <div class="porcentaje-value">{{ porcentaje }}%</div>
+        <div class="porcentaje-label">Postura General de Ciberseguridad</div>
+      </div>
+    </section>
 
-  <h2>Respuestas</h2>
-  <table>
-    <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-    <tbody>
-      {% for pregunta, respuesta in respuestas %}
-      <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <section>
+      <h2>Tabla de Referencia de Postura</h2>
+      <table>
+        <thead>
+          <tr><th>Rango (%)</th><th>Nivel</th><th>Acciones Clave Recomendadas</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0–39%</td><td class="critico">🚨 Riesgo Crítico</td><td><b>Acciones Urgentes:</b> Implementar controles básicos de seguridad (antivirus, copias de seguridad probadas, parches). Desarrollar un plan de respuesta a incidentes.</td></tr>
+          <tr><td>40–59%</td><td class="basico">🔶 Postura Básica</td><td><b>Fortalecimiento:</b> Reforzar controles y políticas existentes. Implementar MFA. Mejorar la capacitación del personal.</td></tr>
+          <tr><td>60–84%</td><td class="solido">✅ Postura Sólida</td><td><b>Optimización:</b> Realizar auditorías internas y externas. Mejorar monitoreo y detección de amenazas. Reforzar la gestión de vulnerabilidades.</td></tr>
+          <tr><td>85–100%</td><td class="avanzado">🏆 Postura Avanzada</td><td><b>Excelencia Continua:</b> Mantener auditorías regulares. Realizar simulacros de ataques. Explorar certificaciones de seguridad.</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-  <h2>Tabla de referencia</h2>
-  <table>
-    <thead>
-      <tr><th>Rango (%)</th><th>Nivel</th><th>Acciones</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>0–39%</td><td>🚨 Riesgo Crítico</td><td>Implementar controles básicos urgentemente</td></tr>
-      <tr><td>40–69%</td><td>🔶 Postura Básica</td><td>Reforzar controles y políticas existentes</td></tr>
-      <tr><td>70–89%</td><td>✅ Postura Sólida</td><td>Optimizar y monitorear</td></tr>
-      <tr><td>90–100%</td><td>🏆 Postura Avanzada</td><td>Mantener y auditar regularmente</td></tr>
-    </tbody>
-  </table>
+    <section>
+      <h2>Respuestas Detalladas de la Evaluación</h2>
+      <table>
+        <thead><tr><th>Pregunta</th><th>Respuesta Seleccionada</th></tr></thead>
+        <tbody>
+          {% for pregunta, respuesta in respuestas %}
+          <tr><td>{{ pregunta }}</td><td>{{ respuesta }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
 </body>
 </html>
