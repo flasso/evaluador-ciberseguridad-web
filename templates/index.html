@@ -2,47 +2,137 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario de Evaluación</title>
+  <title>Evaluador de Ciberseguridad</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   <style>
+    /* Estilos para el encabezado y el formulario */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background-color: #2c3e50; /* Azul oscuro */
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.1em;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
     img.logo {
       max-width: 180px;
       margin-bottom: 1rem;
+      border-radius: 8px; /* Pequeño borde para suavizar */
     }
-    .segmento {
+    form {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 1.5rem;
       margin-bottom: 2rem;
+      background-color: #fdfdfd;
+    }
+    legend {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #34495e;
+      padding: 0 10px;
+      margin-left: -10px; /* Ajuste para que se vea bien sobre el borde */
+    }
+    .segmento h2 {
+      color: #34495e;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.8em;
     }
     label {
       display: block;
-      margin: 0.5rem 0;
+      margin: 1rem 0 0.5rem 0;
+      font-weight: bold;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: calc(100% - 20px); /* Ajustar el ancho */
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box; /* Incluir padding y borde en el ancho total */
+    }
+    input[type="radio"] {
+      margin-right: 8px;
+    }
+    button[type="submit"] {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      margin-top: 2rem;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #2980b9;
     }
   </style>
 </head>
 <body>
   <header>
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-    <h1>Evaluador de Ciberseguridad</h1>
-    <p>Por favor complete la siguiente información antes de comenzar la evaluación:</p>
+    <h1>Evaluador de Postura de Ciberseguridad</h1>
+    <p>Complete el siguiente formulario con la información de su empresa para obtener un diagnóstico preciso de su nivel de ciberseguridad.</p>
   </header>
 
-  <form method="POST">
+  <form method="POST" action="{{ url_for('evaluacion') }}">
     <fieldset>
-      <legend>Datos generales</legend>
+      <legend>Datos Generales de la Empresa</legend>
       <label>Empresa: <input type="text" name="empresa" required></label>
-      <label>Correo: <input type="email" name="correo" required></label>
-      <label>Sector:
+      <label>Correo de Contacto: <input type="email" name="correo" required></label>
+      <label>Sector de la Empresa:
         <select name="sector" required>
           <option value="">Seleccione...</option>
-          <option>Financiero</option>
+          <option>Servicios</option>
+          <option>Comercio</option>
+          <option>Manufactura / Industrial</option>
           <option>Salud</option>
           <option>Educación</option>
-          <option>Industrial</option>
-          <option>Comercio</option>
-          <option>Servicios</option>
+          <option>Financiero</option>
+          <option>Construcción</option>
+          <option>Logística / Transporte</option>
+          <option>Turismo / Hostelería</option>
+          <option>Agrícola / Agroindustrial</option>
+          <option>Energía / Servicios Públicos</option>
+          <option>Medios / Entretenimiento</option>
+          <option>Organización sin fines de lucro</option>
+          <option>Gobierno / Sector Público</option>
           <option>Otro</option>
         </select>
       </label>
-      <label>Número de PCs:
+      <label>Número aproximado de PCs/Endpoints:
         <select name="pcs" required>
           <option value="">Seleccione...</option>
           <option>1 a 50</option>
@@ -51,43 +141,41 @@
           <option>Más de 250</option>
         </select>
       </label>
-      <label>¿Tienen sucursales?
+      <label>¿Su empresa cuenta con sucursales físicas?:
         <select name="sucursales" required>
           <option value="">Seleccione...</option>
           <option>Sí</option>
           <option>No</option>
         </select>
       </label>
-      <label>Modelo de trabajo:
+      <label>Modelo de trabajo predominante:
         <select name="modelo" required>
           <option value="">Seleccione...</option>
-          <option>Presencial</option>
-          <option>Remoto</option>
-          <option>Híbrido</option>
+          <option>Presencial (todos en oficina)</option>
+          <option>Remoto (todos trabajan desde casa/otros lugares)</option>
+          <option>Híbrido (combinación de presencial y remoto)</option>
         </select>
       </label>
-      <label>¿Qué tipo de servidores utiliza?
+      <label>¿Qué tipo de infraestructura de servidores utiliza?:
         <select name="servidores" required>
           <option value="">Seleccione...</option>
-          <option>Propios</option>
-          <option>Arrendados</option>
-          <option>Ambos</option>
-          <option>No tiene</option>
+          <option>Propios (en sitio)</option>
+          <option>Arrendados (en la nube, IaaS)</option>
+          <option>Ambos (híbrido)</option>
+          <option>No tiene (solo SaaS o pequeños servicios)</option>
         </select>
       </label>
     </fieldset>
 
     <hr>
 
-    {# Ahora iteramos sobre los segmentos. Cada pregunta en el segmento ya trae sus opciones #}
+    {# Secciones de preguntas, donde cada pregunta ya trae sus opciones #}
     {% for segmento_nombre, preguntas_del_segmento in segmentos %}
       <section class="segmento">
         <h2>{{ segmento_nombre }}</h2>
-        {# Cada elemento en preguntas_del_segmento es una tupla: (pregunta_texto, lista_de_opciones) #}
         {% for pregunta_texto, opciones_pregunta in preguntas_del_segmento %} 
           <fieldset>
             <legend>{{ pregunta_texto }}</legend>
-            {# Iteramos sobre las opciones directamente de la tupla de la pregunta #}
             {% for opcion in opciones_pregunta %}
               <label>
                 <input type="radio" name="{{ pregunta_texto }}" value="{{ opcion }}" required> {{ opcion }}
@@ -98,7 +186,7 @@
       </section>
     {% endfor %}
 
-    <button type="submit">Enviar evaluación</button>
+    <button type="submit">Enviar Evaluación</button>
   </form>
 </body>
 </html>
