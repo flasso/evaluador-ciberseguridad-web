@@ -79,11 +79,13 @@
 
     <hr>
 
+    {# El `pregunta_idx` se usa para acceder a las opciones correctas en la lista `opciones` #}
     {% set pregunta_idx = 0 %}
-    {% for segmento, preguntas in segmentos %}
+    {% for segmento, preguntas_del_segmento in segmentos %} {# Renombrado para claridad #}
       <section class="segmento">
         <h2>{{ segmento }}</h2>
-        {% for pregunta, peso in preguntas %}
+        {# AQUI ES EL CAMBIO: 'preguntas_del_segmento' solo contiene las cadenas de texto de las preguntas #}
+        {% for pregunta in preguntas_del_segmento %} 
           <fieldset>
             <legend>{{ pregunta }}</legend>
             {% for opcion in opciones[pregunta_idx] %}

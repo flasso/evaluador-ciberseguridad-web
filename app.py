@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request
 from flask_mail import Mail, Message
+import os
 
 app = Flask(__name__)
+
+# Configuración de Flask-Mail
+# En un entorno de producción real, estos deberían ser variables de entorno de Render
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -41,7 +45,7 @@ segmentos = [
     ])
 ]
 
-# Opciones por pregunta
+# Opciones por pregunta (el orden debe coincidir con el de las preguntas en 'segmentos')
 opciones = [
     ["Dedicado y certificado", "Interno no exclusivo", "Proveedor externo", "Ninguno"],
     ["Sí, con alertas y reportes automáticos", "Sí, manualmente", "Solo cuando hay problemas", "No"],
@@ -74,54 +78,82 @@ def evaluacion():
         puntaje_obtenido = 0
         resultado_preguntas = []
 
+        # Pesos personalizados para algunas preguntas clave
+        # El índice corresponde al orden de la pregunta global (0-indexed)
         pesos = {
-            6: 5,  # Respaldos
-            7: 5,  # Restauración
-            9: 4,  # Plan de incidentes
-            13: 5, # Parches
-            14: 5  # Antivirus
+            6: 5,  # ¿Hacen respaldos periódicos?
+            7: 5,  # ¿Han probado la restauración de respaldos?
+            9: 4,  # ¿Tienen un plan de respuesta a incidentes?
+            13: 5, # ¿Aplican parches y actualizaciones de seguridad?
+            14: 5  # ¿Tienen solución de antivirus o EDR?
         }
 
-        for idx, (segmento, preguntas) in enumerate(segmentos):
-            for pregunta in preguntas:
-                respuesta = respuestas.get(pregunta, "No respondido")
+        # Iterar sobre los segmentos y sus preguntas
+        for idx_segmento, (segmento_nombre, preguntas_del_segmento) in enumerate(segmentos):
+            for pregunta_texto in preguntas_del_segmento:
+                respuesta_elegida = respuestas.get(pregunta_texto, "No respondido")
+                
                 try:
-                    idx_opcion = opciones[len(resultado_preguntas)].index(respuesta)
-                    peso = pesos.get(len(resultado_preguntas), 3)
-                    if idx_opcion == 0:
-                        puntaje_obtenido += peso
-                    elif idx_opcion == 1:
-                        puntaje_obtenido += peso * 0.66
-                    elif idx_opcion == 2:
-                        puntaje_obtenido += peso * 0.33
-                    puntaje_total += peso
-                except:
+                    # El índice de `opciones` corresponde al índice global de la pregunta.
+                    # `len(resultado_preguntas)` nos da ese índice porque se agrega una pregunta por cada iteración.
+                    idx_opcion_elegida = opciones[len(resultado_preguntas)].index(respuesta_elegida)
+                    
+                    # Obtiene el peso de la pregunta actual (si está en 'pesos', si no, usa 3 por defecto)
+                    peso_pregunta_actual = pesos.get(len(resultado_preguntas), 3) 
+
+                    # Calcula el puntaje obtenido para esta pregunta
+                    if idx_opcion_elegida == 0:
+                        puntaje_obtenido += peso_pregunta_actual
+                    elif idx_opcion_elegida == 1:
+                        puntaje_obtenido += peso_pregunta_actual * 0.66
+                    elif idx_opcion_elegida == 2:
+                        puntaje_obtenido += peso_pregunta_actual * 0.33
+                    
+                    # Suma el peso máximo posible de esta pregunta al puntaje total
+                    puntaje_total += peso_pregunta_actual
+                except ValueError:
+                    # Esto maneja el caso donde la respuesta no se encontró en las opciones (ej., pregunta no respondida)
                     pass
-                resultado_preguntas.append((pregunta, respuesta))
+                
+                resultado_preguntas.append((pregunta_texto, respuesta_elegida))
 
         porcentaje = round((puntaje_obtenido / puntaje_total) * 100) if puntaje_total else 0
 
         # Envío de resultados por correo
-        cuerpo = f"""Empresa: {encabezado['empresa']}
+        cuerpo_correo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
 N° de PCs: {encabezado['pcs']}
 Sucursales: {encabezado['sucursales']}
 Modelo de Trabajo: {encabezado['modelo']}
 Servidores: {encabezado['servidores']}
-Postura: {porcentaje}%
 
-Respuestas:
-""" + "\n".join([f"{p}: {r}" for p, r in resultado_preguntas])
+---
+Postura de Ciberseguridad: {porcentaje}%
 
-        msg = Message("Resultados de Evaluación de Ciberseguridad", sender="soporte@cloudsoftware.com.co", recipients=["soporte@cloudsoftware.com.co"])
-        msg.body = cuerpo
-        mail.send(msg)
+---
+Respuestas Detalladas:
+""" + "\n".join([f"- {p}: {r}" for p, r in resultado_preguntas])
+
+        try:
+            # Envía el correo al usuario y a soporte
+            msg = Message(
+                "Resultados de Evaluación de Ciberseguridad - " + encabezado['empresa'], 
+                sender="soporte@cloudsoftware.com.co", 
+                recipients=[encabezado['correo'], "soporte@cloudsoftware.com.co"]
+            )
+            msg.body = cuerpo_correo
+            mail.send(msg)
+        except Exception as e:
+            print(f"Error al enviar correo: {e}") # Para depuración si el correo falla en producción
 
         return render_template("resultados.html", respuestas=resultado_preguntas, porcentaje=porcentaje, encabezado=encabezado)
 
+    # Si el método es GET, se renderiza el formulario de evaluación
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
 
+# Esta parte es CRUCIAL para que la aplicación funcione en Render
+# Obtiene el puerto de la variable de entorno 'PORT' (establecida por Render) o usa 5000 como default.
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
-
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) # 0.0.0.0 asegura que sea accesible desde cualquier IP externa
