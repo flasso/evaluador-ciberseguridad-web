@@ -79,21 +79,23 @@
 
     <hr>
 
-    {# El `pregunta_idx` se usa para acceder a las opciones correctas en la lista `opciones` #}
+    {# Inicializamos el índice global para las preguntas #}
     {% set pregunta_idx = 0 %}
-    {% for segmento, preguntas_del_segmento in segmentos %} {# Renombrado para claridad #}
+    {% for segmento, preguntas_del_segmento in segmentos %}
       <section class="segmento">
         <h2>{{ segmento }}</h2>
-        {# AQUI ES EL CAMBIO: 'preguntas_del_segmento' solo contiene las cadenas de texto de las preguntas #}
+        {# Iteramos sobre cada pregunta dentro del segmento #}
         {% for pregunta in preguntas_del_segmento %} 
           <fieldset>
             <legend>{{ pregunta }}</legend>
+            {# Iteramos sobre las opciones correspondientes a la pregunta actual usando pregunta_idx #}
             {% for opcion in opciones[pregunta_idx] %}
               <label>
                 <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
               </label>
             {% endfor %}
           </fieldset>
+          {# Incrementamos el índice global para la próxima pregunta #}
           {% set pregunta_idx = pregunta_idx + 1 %}
         {% endfor %}
       </section>
