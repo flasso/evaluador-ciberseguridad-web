@@ -79,24 +79,21 @@
 
     <hr>
 
-    {# Inicializamos el índice global para las preguntas #}
-    {% set pregunta_idx = 0 %}
-    {% for segmento, preguntas_del_segmento in segmentos %}
+    {# Ahora iteramos sobre los segmentos. Cada pregunta en el segmento ya trae sus opciones #}
+    {% for segmento_nombre, preguntas_del_segmento in segmentos %}
       <section class="segmento">
-        <h2>{{ segmento }}</h2>
-        {# Iteramos sobre cada pregunta dentro del segmento #}
-        {% for pregunta in preguntas_del_segmento %} 
+        <h2>{{ segmento_nombre }}</h2>
+        {# Cada elemento en preguntas_del_segmento es una tupla: (pregunta_texto, lista_de_opciones) #}
+        {% for pregunta_texto, opciones_pregunta in preguntas_del_segmento %} 
           <fieldset>
-            <legend>{{ pregunta }}</legend>
-            {# Iteramos sobre las opciones correspondientes a la pregunta actual usando pregunta_idx #}
-            {% for opcion in opciones[pregunta_idx] %}
+            <legend>{{ pregunta_texto }}</legend>
+            {# Iteramos sobre las opciones directamente de la tupla de la pregunta #}
+            {% for opcion in opciones_pregunta %}
               <label>
-                <input type="radio" name="{{ pregunta }}" value="{{ opcion }}" required> {{ opcion }}
+                <input type="radio" name="{{ pregunta_texto }}" value="{{ opcion }}" required> {{ opcion }}
               </label>
             {% endfor %}
           </fieldset>
-          {# Incrementamos el índice global para la próxima pregunta #}
-          {% set pregunta_idx = pregunta_idx + 1 %}
         {% endfor %}
       </section>
     {% endfor %}
