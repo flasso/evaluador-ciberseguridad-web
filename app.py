@@ -12,7 +12,6 @@ app.config['MAIL_USERNAME'] = 'soporte@cloudsoftware.com.co'
 app.config['MAIL_PASSWORD'] = 'zuig guvt xgzj rwlq'
 mail = Mail(app)
 
-# --- CAMBIO IMPORTANTE AQUÍ ---
 # Segmentos y preguntas con sus opciones asociadas directamente
 segmentos_con_opciones = [
     ("Gestión de TI", [
@@ -33,7 +32,7 @@ segmentos_con_opciones = [
     ]),
     ("Cultura de seguridad", [
         ("¿Capacitan al personal en ciberseguridad?", ["Sí, cada mes", "Cada semestre", "Una vez al año", "Nunca"]),
-        ("¿Tienen un plan de respuesta a incidentes?", ["Sí, tienen protocolo y responsable", "Hay una guía básica", "Solo reacción espontánea", "No saben qué hacer"]),
+        ("¿Tienen un plan de respuesta a incidentos?", ["Sí, tienen protocolo y responsable", "Hay una guía básica", "Solo reacción espontánea", "No saben qué hacer"]),
         ("¿Hacen simulacros o pruebas de seguridad?", ["Sí, al menos cada 6 meses", "Una vez al año", "Solo nuevo personal", "Nunca"]),
         ("¿Incluyen la ciberseguridad en inducción o entrenamiento inicial?", ["Sí, reciben formación y simulacros", "Capacitación básica", "Solo charlas internas", "Nunca"])
     ]),
@@ -45,20 +44,11 @@ segmentos_con_opciones = [
     ])
 ]
 
-# Ya no necesitamos la lista 'opciones' separada si la incorporamos en 'segmentos_con_opciones'
-# Sin embargo, la necesitamos para el cálculo del puntaje, así que la vamos a generar dinámicamente.
-# Para la evaluación, crearemos una lista plana de preguntas y opciones.
 # Crear un mapeo de preguntas a sus opciones para la lógica de POST y pesos
 preguntas_y_opciones_planas = []
 for _, preguntas_del_segmento in segmentos_con_opciones:
     for pregunta_texto, opciones_pregunta in preguntas_del_segmento:
         preguntas_y_opciones_planas.append((pregunta_texto, opciones_pregunta))
-
-# Ahora, la lista 'opciones' para tu lógica de cálculo de puntaje será:
-opciones_para_calculo = [item[1] for item in preguntas_y_opciones_planas]
-# Y las preguntas para referencia en el POST:
-preguntas_para_referencia = [item[0] for item in preguntas_y_opciones_planas]
-
 
 @app.route("/")
 def intro():
@@ -74,8 +64,6 @@ def evaluacion():
         resultado_preguntas = []
 
         # Pesos personalizados para algunas preguntas clave
-        # El índice corresponde al orden de la pregunta global (0-indexed)
-        # Asegúrate de que estos índices coincidan con el orden de `preguntas_y_opciones_planas`
         pesos = {
             6: 5,  # ¿Hacen respaldos periódicos? (índice global 6)
             7: 5,  # ¿Han probado la restauración de respaldos? (índice global 7)
@@ -84,7 +72,6 @@ def evaluacion():
             14: 5  # ¿Tienen solución de antivirus o EDR? (índice global 14)
         }
 
-        # Iterar sobre las preguntas planificadas para calcular el puntaje
         for idx_pregunta_global, (pregunta_texto, opciones_disponibles) in enumerate(preguntas_y_opciones_planas):
             respuesta_elegida = respuestas.get(pregunta_texto, "No respondido")
             
@@ -102,13 +89,34 @@ def evaluacion():
                 
                 puntaje_total += peso_pregunta_actual
             except ValueError:
-                pass # Manejar caso de respuesta no válida o no encontrada
+                pass
             
             resultado_preguntas.append((pregunta_texto, respuesta_elegida))
 
         porcentaje = round((puntaje_obtenido / puntaje_total) * 100) if puntaje_total else 0
 
-        # Envío de resultados por correo
+        # --- INICIO: Generación de texto de sugerencias para el correo ---
+        sugerencias_texto = """
+---
+Sugerencias y Próximos Pasos:
+
+Basado en los resultados de su evaluación, considere las siguientes recomendaciones para mejorar la postura de ciberseguridad de su empresa:
+
+* Identifique sus puntos débiles: Revise sus respuestas para identificar las áreas donde su empresa puede mejorar.
+* Priorice las acciones críticas: Enfóquese primero en implementar controles básicos y desarrollar planes de respuesta a incidentes.
+* Capacitación Continua: Invierta en formación regular para todo su personal.
+* Actualización y monitoreo: Mantenga todos sus sistemas y software actualizados e implemente soluciones de monitoreo.
+* Plan de recuperación: Asegúrese de que sus respaldos de información sean periódicos, seguros y probados.
+"""
+        # Añadir recomendación de MSP si el porcentaje es bajo
+        if porcentaje < 90:
+            sugerencias_texto += f"""
+¡Atención! Refuerce su Ciberseguridad:
+Dada su postura actual ({porcentaje}%), le recomendamos encarecidamente contar con el apoyo de una empresa especializada en ciberseguridad bajo un modelo de Servicio Gestionado (MSP). Un MSP con trayectoria y soluciones confiables puede ofrecerle monitoreo constante, gestión de amenazas, soporte experto y la implementación de controles avanzados que son cruciales para proteger su negocio de las amenazas actuales. No espere a ser un objetivo para actuar. Invertir en ciberseguridad ahora es invertir en la continuidad de su negocio.
+"""
+        # --- FIN: Generación de texto de sugerencias ---
+
+
         cuerpo_correo = f"""Empresa: {encabezado['empresa']}
 Correo: {encabezado['correo']}
 Sector: {encabezado['sector']}
@@ -122,7 +130,7 @@ Postura de Ciberseguridad: {porcentaje}%
 
 ---
 Respuestas Detalladas:
-""" + "\n".join([f"- {p}: {r}" for p, r in resultado_preguntas])
+""" + "\n".join([f"- {p}: {r}" for p, r in resultado_preguntas]) + sugerencias_texto # <-- AQUI SE AÑADE EL TEXTO DE SUGERENCIAS
 
         try:
             msg = Message(
@@ -137,8 +145,6 @@ Respuestas Detalladas:
 
         return render_template("resultados.html", respuestas=resultado_preguntas, porcentaje=porcentaje, encabezado=encabezado)
 
-    # Si el método es GET, se renderiza el formulario de evaluación
-    # Pasamos 'segmentos_con_opciones' a la plantilla
     return render_template("index.html", segmentos=segmentos_con_opciones)
 
 if __name__ == '__main__':
