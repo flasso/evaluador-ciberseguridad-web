@@ -121,3 +121,7 @@ Respuestas:
         return render_template("resultados.html", respuestas=resultado_preguntas, porcentaje=porcentaje, encabezado=encabezado)
 
     return render_template("index.html", segmentos=segmentos, opciones=opciones)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
+
